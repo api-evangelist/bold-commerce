@@ -1,0 +1,61 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Bold Commerce
+providerId: bold-commerce
+created: '2026-07-10'
+modified: '2026-07-10'
+reconciled: false
+tags:
+- E-Commerce
+- Subscriptions
+- Checkout
+- Pricing
+- Rate Limiting
+- Quotas
+description: >-
+  Bold Commerce does not publish a single fixed numeric rate limit across all
+  of its APIs. Bold applies per-shop / per-token throttling and returns HTTP 429
+  when a client exceeds the allowed request rate; clients should honor the
+  Retry-After header and back off. Individual product APIs (Subscriptions,
+  Checkout, Price Rules, Products) may enforce their own request-rate and
+  pagination limits. List endpoints are paginated, which bounds response size
+  and effective throughput. Numeric per-endpoint limits should be confirmed
+  against Bold's developer documentation during reconciliation.
+notes: >-
+  Exact per-minute request ceilings are not consistently documented publicly as
+  of the review date. Use exponential backoff with jitter, honor Retry-After on
+  429 responses, and page through large collections rather than requesting
+  everything at once.
+sources:
+- https://developer.boldcommerce.com
+- https://developer.boldcommerce.com/guides/checkout/quick-start
+- https://developer.boldcommerce.com/api/subscriptions
+responseCodes:
+  throttled: 429
+limits:
+- name: Per-Token Request Rate
+  scope: token
+  metric: requests
+  limit: not published
+  notes: Bold throttles per API access token / OAuth token and returns 429 when exceeded.
+- name: Per-Shop Request Rate
+  scope: shop
+  metric: requests
+  limit: not published
+  notes: Requests are scoped to a shop_identifier; throttling is applied per shop.
+- name: List Pagination
+  scope: endpoint
+  metric: records
+  limit: paginated
+  notes: List endpoints return paginated results, bounding page size and throughput.
+policies:
+- name: Retry-After
+  description: On a 429 response, honor the Retry-After header before retrying.
+- name: Backoff Strategy
+  description: Implement exponential backoff with jitter for retried requests.
+- name: Pagination
+  description: Page through large collections instead of requesting all records at once.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

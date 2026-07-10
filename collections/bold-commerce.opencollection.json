@@ -1,0 +1,200 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Bold Commerce API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{apiToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Subscriptions", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List subscriptions.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.boldcommerce.com/subscriptions/v1/shops/{{shop_identifier}}/subscriptions" },
+          "docs": "Retrieve a list of subscriptions for the shop."
+        },
+        {
+          "info": { "name": "Create a subscription.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/{{shop_identifier}}/subscriptions",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Create a new subscription."
+        },
+        {
+          "info": { "name": "Retrieve a subscription.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id",
+            "params": [
+              { "name": "subscription_id", "value": "", "type": "path", "description": "The subscription ID." }
+            ]
+          },
+          "docs": "Fetch an individual subscription."
+        },
+        {
+          "info": { "name": "Pause a subscription.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/pause",
+            "params": [
+              { "name": "subscription_id", "value": "", "type": "path", "description": "The subscription ID." }
+            ]
+          },
+          "docs": "Pause subscription processing."
+        },
+        {
+          "info": { "name": "Cancel a subscription.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/cancel",
+            "params": [
+              { "name": "subscription_id", "value": "", "type": "path", "description": "The subscription ID." }
+            ]
+          },
+          "docs": "Cancel an active subscription."
+        },
+        {
+          "info": { "name": "Reactivate a subscription.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/activate",
+            "params": [
+              { "name": "subscription_id", "value": "", "type": "path", "description": "The subscription ID." }
+            ]
+          },
+          "docs": "Reactivate an inactive or cancelled subscription."
+        },
+        {
+          "info": { "name": "List subscription orders.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/orders",
+            "params": [
+              { "name": "subscription_id", "value": "", "type": "path", "description": "The subscription ID." }
+            ]
+          },
+          "docs": "List the orders for a subscription."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Checkout", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Set shipping address.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/{{shop_id}}/:order_id/addresses/shipping",
+            "params": [
+              { "name": "order_id", "value": "", "type": "path", "description": "The public order ID." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Sets the shipping address on the order."
+        },
+        {
+          "info": { "name": "Set billing address.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/{{shop_id}}/:order_id/addresses/billing",
+            "params": [
+              { "name": "order_id", "value": "", "type": "path", "description": "The public order ID." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Sets the billing address on the order."
+        },
+        {
+          "info": { "name": "Add line items.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/{{shop_id}}/:order_id/line_items",
+            "params": [
+              { "name": "order_id", "value": "", "type": "path", "description": "The public order ID." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Add line items to the order."
+        },
+        {
+          "info": { "name": "Add payment.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/{{shop_id}}/:order_id/payments",
+            "params": [
+              { "name": "order_id", "value": "", "type": "path", "description": "The public order ID." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Add a payment to the order."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Price Rules", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List rulesets.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/{{shop_identifier}}/rulesets" },
+          "docs": "List all rulesets available for the specified shop."
+        },
+        {
+          "info": { "name": "Create a ruleset.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/{{shop_identifier}}/rulesets",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Create a new ruleset. Requires the write_price_rulesets scope."
+        },
+        {
+          "info": { "name": "Process final price.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/{{shop_identifier}}/process",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Return the final price for a line item in a cart."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Products", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List products.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.boldcommerce.com/products/v2/shops/{{shop_identifier}}/products" },
+          "docs": "List the products for a shop."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Customers", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List customers.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.boldcommerce.com/customers/v2/shops/{{shop_identifier}}/customers" },
+          "docs": "List the customers for a shop."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Shops", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve shop info.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.boldcommerce.com/shops/v1/info" },
+          "docs": "Retrieve the shop configuration and shop_identifier GUID."
+        }
+      ]
+    }
+  ]
+}

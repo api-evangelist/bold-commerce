@@ -1,0 +1,244 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Bold Commerce
+providerId: bold-commerce
+created: '2026-07-10'
+modified: '2026-07-10'
+reconciled: false
+tags:
+- E-Commerce
+- Subscriptions
+- Checkout
+- Pricing
+- Plans
+description: >-
+  Bold Commerce is sold as a set of merchant apps, each with its own tiered
+  subscription. The APIs (Subscriptions, Checkout, Price Rules, Products,
+  Customers, Shops) are included with the corresponding app subscription rather
+  than sold as a separate metered API product; access is controlled by OAuth
+  scopes and API access tokens. The plans below reflect Bold Subscriptions app
+  pricing (per-month software fee plus a percentage transaction fee on orders
+  containing a subscription product) and Bold Memberships app pricing (tiered by
+  member count). Rates are grounded from Bold's public pricing pages as of the
+  created date and should be re-verified during reconciliation.
+notes: >-
+  Bold Checkout and Bold Price Rules are typically packaged into platform /
+  headless commerce agreements (contact sales) rather than a public
+  self-service price. Transaction fees apply only when orders are processed.
+  Verify current rates on boldcommerce.com pricing pages during reconciliation.
+sources:
+- https://boldcommerce.com/shopify/subscriptions-pricing
+- https://support.boldcommerce.com/hc/en-us/articles/207374243-Bold-Memberships-Pricing-Overview
+- https://developer.boldcommerce.com
+plans:
+- id: subscriptions-launch
+  name: Subscriptions - Launch
+  type: paid
+  description: >-
+    Entry Bold Subscriptions plan for stores under roughly $2.5K in monthly
+    subscription revenue. All features included, plus a 30-day free trial.
+  entries:
+  - label: Monthly Software Fee
+    name: launch_monthly
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '24.99'
+    currency: USD
+    userMultiplied: false
+  - label: Transaction Fee
+    name: launch_transaction_fee
+    type: usage
+    metric: order
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: 2% of each order containing a subscription product
+    userMultiplied: false
+  elements:
+  - name: All Subscriptions Features
+  - name: Subscriptions API Access
+  - name: 30-Day Free Trial
+- id: subscriptions-grow
+  name: Subscriptions - Grow
+  type: paid
+  description: Most popular Bold Subscriptions plan, all features included.
+  entries:
+  - label: Monthly Software Fee
+    name: grow_monthly
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '49.99'
+    currency: USD
+    userMultiplied: false
+  - label: Transaction Fee
+    name: grow_transaction_fee
+    type: usage
+    metric: order
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: 1% of each order containing a subscription product
+    userMultiplied: false
+  elements:
+  - name: All Subscriptions Features
+  - name: Subscriptions API Access
+- id: subscriptions-scale
+  name: Subscriptions - Scale
+  type: paid
+  description: Higher-volume Bold Subscriptions plan with a reduced transaction fee.
+  entries:
+  - label: Monthly Software Fee
+    name: scale_monthly
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '74.99'
+    currency: USD
+    userMultiplied: false
+  - label: Transaction Fee
+    name: scale_transaction_fee
+    type: usage
+    metric: order
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: 0.9% of each order containing a subscription product
+    userMultiplied: false
+  elements:
+  - name: All Subscriptions Features
+  - name: Subscriptions API Access
+- id: subscriptions-ultimate-retention
+  name: Subscriptions - Ultimate Retention
+  type: paid
+  description: >-
+    Top Bold Subscriptions tier adding ProsperStack cancellation prevention,
+    dedicated onboarding, and priority support.
+  entries:
+  - label: Monthly Software Fee
+    name: ultimate_monthly
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '399.99'
+    currency: USD
+    userMultiplied: false
+  - label: Transaction Fee
+    name: ultimate_transaction_fee
+    type: usage
+    metric: order
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: 0.9% of each order containing a subscription product
+    userMultiplied: false
+  elements:
+  - name: ProsperStack Cancellation Prevention
+  - name: Dedicated Onboarding
+  - name: Priority Support
+- id: subscriptions-enterprise
+  name: Subscriptions - Enterprise
+  type: enterprise
+  description: >-
+    Custom pricing for businesses generating over $1M in annual subscription
+    revenue. Contact sales.
+  entries:
+  - label: Enterprise Agreement
+    name: subscriptions_enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+  - name: Dedicated Support
+- id: memberships-tiered
+  name: Memberships - Member-Count Tiers
+  type: paid
+  description: >-
+    Bold Memberships app, priced by active member count, charging a recurring
+    membership fee via Stripe. Bold adds a 1% fee on top of Stripe processing.
+  entries:
+  - label: Up to 50 Members
+    name: memberships_50
+    type: flat
+    metric: subscription
+    limit: 50
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '9.99'
+    currency: USD
+    userMultiplied: false
+  - label: Up to 1000 Members
+    name: memberships_1000
+    type: flat
+    metric: subscription
+    limit: 1000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '49.99'
+    currency: USD
+    userMultiplied: false
+  - label: Up to 10000 Members
+    name: memberships_10000
+    type: flat
+    metric: subscription
+    limit: 10000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '299.99'
+    currency: USD
+    userMultiplied: false
+  elements:
+  - name: Recurring Membership Billing via Stripe
+  - name: Exclusive Content Access
+- id: checkout-price-rules-platform
+  name: Checkout and Price Rules - Platform
+  type: enterprise
+  description: >-
+    Bold Checkout (headless checkout) and Bold Price Rules are packaged into
+    platform / headless commerce agreements rather than a public self-service
+    price. Contact sales.
+  entries:
+  - label: Platform Agreement
+    name: platform_agreement
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Headless Checkout API
+  - name: Price Rules API
+  - name: Products and Customers APIs
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

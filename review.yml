@@ -1,0 +1,102 @@
+aid: bold-commerce
+name: Bold Commerce
+review:
+  question: Does Bold Commerce expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-10'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Bold Commerce's documented public
+    surface (Subscriptions, Checkout, Price Rules, Products, Customers, Shops)
+    is request/response REST over HTTPS. Event delivery, where it exists, is
+    handled by outbound webhooks (for example, Subscriptions webhook
+    subscriptions) - server-to-endpoint HTTP POST, not a client-facing
+    WebSocket or SSE stream on Bold's own API. There is no server-push
+    transport on Bold's own API to model.
+findings:
+  summary: |
+    Bold Commerce does not publish a documented public WebSocket API. Bold is a
+    modular e-commerce platform whose developer APIs (developer.boldcommerce.com)
+    are REST over HTTPS under a single base host, https://api.boldcommerce.com.
+    Documented products include Bold Subscriptions
+    (/subscriptions/v1/shops/{shop_identifier}), Bold Checkout - a headless
+    storefront checkout (/checkout/storefront/...), Bold Price Rules
+    (/price_rules/rules/v2/shops/{shop_identifier}), plus Products, Customers,
+    and Shops APIs. Authentication is a Bearer token: an OAuth 2.0 access token
+    for public integrations or a scoped API access token for private
+    integrations (the storefront checkout surface additionally scopes an order
+    session with a JWT). Asynchronous event notification is delivered via
+    outbound webhooks, not a WebSocket. No realtime, bidirectional, or
+    streaming WebSocket (ws:// or wss://) endpoint is documented on any Bold
+    Commerce API as of the review date.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.boldcommerce.com
+      documented: true
+      note: All Bold product APIs (Subscriptions, Checkout, Price Rules, Products, Customers, Shops) are REST over HTTPS.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Subscriptions exposes webhook subscriptions that POST events to a configured HTTP endpoint. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Bold Commerce's developer documentation as of the review date.
+  authentication:
+    - type: OAuth 2.0
+      note: Authorization-code flow via the Developer Dashboard for public integrations; access token passed as Authorization Bearer.
+    - type: API Access Token
+      note: Scoped, non-expiring token generated in the Bold Account Center for private integrations.
+    - type: JWT
+      note: The storefront checkout surface scopes each order session with a JWT.
+  endpointsConfirmedRest:
+    - GET    https://api.boldcommerce.com/shops/v1/info
+    - GET    https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions
+    - POST   https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions
+    - GET    https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}
+    - PUT    https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}
+    - PATCH  https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}
+    - POST   https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/pause
+    - POST   https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/cancel
+    - POST   https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/activate
+    - POST   https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/line_items
+    - GET    https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/intervals
+    - GET    https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/orders
+    - PUT    https://api.boldcommerce.com/subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/orders/{order_id}/skip
+    - POST   https://api.boldcommerce.com/checkout/storefront/{shop_id}/{order_id}/addresses/shipping
+    - POST   https://api.boldcommerce.com/checkout/storefront/{shop_id}/{order_id}/addresses/billing
+    - POST   https://api.boldcommerce.com/checkout/storefront/{shop_id}/{order_id}/line_items
+    - POST   https://api.boldcommerce.com/checkout/storefront/{shop_id}/{order_id}/payments
+    - GET    https://api.boldcommerce.com/price_rules/rules/v2/shops/{shop_identifier}/rulesets
+    - POST   https://api.boldcommerce.com/price_rules/rules/v2/shops/{shop_identifier}/rulesets
+    - GET    https://api.boldcommerce.com/price_rules/rules/v2/shops/{shop_identifier}/rulesets/{ruleset_id}
+    - POST   https://api.boldcommerce.com/price_rules/rules/v2/shops/{shop_identifier}/process
+    - GET    https://api.boldcommerce.com/products/v2/shops/{shop_identifier}/products
+    - GET    https://api.boldcommerce.com/customers/v2/shops/{shop_identifier}/customers
+sources:
+  - url: https://developer.boldcommerce.com
+    type: Documentation
+    note: Developer hub listing Subscriptions, Price Rules, Checkout (Frontend/Backend/Admin), Products, Customers, Shops. All REST.
+  - url: https://developer.boldcommerce.com/api/subscriptions
+    type: APIReference
+    note: Subscriptions REST endpoints under /subscriptions/v1/shops/{shop_identifier}; OAuth / API access token; webhook subscriptions for events.
+  - url: https://developer.boldcommerce.com/api/checkout
+    type: APIReference
+    note: Headless storefront checkout REST endpoints under /checkout/storefront; JWT-scoped order sessions; explicitly REST only, no WebSocket.
+  - url: https://developer.boldcommerce.com/api/price-rules
+    type: APIReference
+    note: Price Rules REST endpoints under /price_rules/rules/v2/shops/{shop_identifier}; read/write_price_rulesets scopes.
+  - url: https://developer.boldcommerce.com/guides/checkout/quick-start
+    type: Documentation
+    note: Base host https://api.boldcommerce.com; Authorization Bearer; Bold-API-Version-Date header; shop_identifier from Shops API.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Bold Commerce's own public API is
+    request/response REST across its product APIs, with asynchronous event
+    delivery handled by outbound webhooks (server-to-endpoint HTTP POST). No
+    AsyncAPI document was created because there is no client-facing server-push
+    transport (WebSocket or SSE) on Bold's own API to model.

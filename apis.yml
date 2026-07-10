@@ -1,0 +1,179 @@
+aid: bold-commerce
+url: https://raw.githubusercontent.com/api-evangelist/bold-commerce/refs/heads/main/apis.yml
+name: Bold Commerce
+kind: company
+description: Bold Commerce builds modular e-commerce apps and headless commerce APIs
+  for subscriptions, checkout, and pricing. Merchants and developers integrate Bold
+  Subscriptions (recurring orders and branded customer portals), Bold Checkout
+  (a headless, fully customizable checkout across Frontend, Backend, and Admin
+  surfaces), and Bold Price Rules (discounts, promotions, and dynamic pricing),
+  alongside supporting Products, Customers, and Shops APIs. Requests are made
+  against api.boldcommerce.com and authenticated with an OAuth 2.0 access token
+  (public integrations) or a scoped API access token (private integrations),
+  passed as a Bearer token.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- E-Commerce
+- Subscriptions
+- Checkout
+- Pricing
+- Headless Commerce
+- Shopify
+created: '2026-07-10'
+modified: '2026-07-10'
+specificationVersion: '0.19'
+apis:
+- aid: bold-commerce:bold-commerce-subscriptions-api
+  name: Bold Subscriptions API
+  tags:
+  - Subscriptions
+  - Recurring Orders
+  - Customer Portal
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  properties:
+  - url: https://developer.boldcommerce.com/api/subscriptions
+    type: Documentation
+  - url: https://developer.boldcommerce.com/api/subscriptions
+    type: APIReference
+  - url: openapi/bold-commerce-openapi.yml
+    type: OpenAPI
+  - url: collections/bold-commerce.postman_collection.json
+    type: PostmanCollection
+  - url: collections/bold-commerce.opencollection.json
+    type: OpenCollection
+  description: Create, retrieve, update, pause, cancel, and reactivate subscriptions;
+    manage line items, intervals, discount codes, shipping addresses, orders
+    (skip / unskip), and adjustments. Powers custom subscription rules,
+    integrations, reporting, and branded customer portals.
+- aid: bold-commerce:bold-commerce-checkout-api
+  name: Bold Checkout API
+  tags:
+  - Checkout
+  - Headless
+  - Orders
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.boldcommerce.com/api/checkout
+  baseURL: https://api.boldcommerce.com/checkout/storefront
+  properties:
+  - url: https://developer.boldcommerce.com/api/checkout
+    type: Documentation
+  - url: https://developer.boldcommerce.com/guides/checkout/quick-start
+    type: Documentation
+  - url: openapi/bold-commerce-openapi.yml
+    type: OpenAPI
+  - url: collections/bold-commerce.postman_collection.json
+    type: PostmanCollection
+  - url: collections/bold-commerce.opencollection.json
+    type: OpenCollection
+  description: Headless storefront checkout - manage shipping and billing addresses,
+    line items, discounts, shipping lines, taxes, customers, and payments against
+    an order, returning full order and application_state context. A JWT scopes
+    each order session on the storefront surface.
+- aid: bold-commerce:bold-commerce-price-rules-api
+  name: Bold Price Rules API
+  tags:
+  - Pricing
+  - Discounts
+  - Promotions
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.boldcommerce.com/api/price-rules
+  baseURL: https://api.boldcommerce.com/price_rules
+  properties:
+  - url: https://developer.boldcommerce.com/api/price-rules
+    type: Documentation
+  - url: https://developer.boldcommerce.com/api/price-rules
+    type: APIReference
+  - url: openapi/bold-commerce-openapi.yml
+    type: OpenAPI
+  - url: collections/bold-commerce.postman_collection.json
+    type: PostmanCollection
+  - url: collections/bold-commerce.opencollection.json
+    type: OpenCollection
+  description: Create and manage discounts, promotions, and dynamic pricing through
+    rulesets and rules, order conditions, bulk activate / deactivate operations,
+    a storefront ruleset lookup, and a process endpoint that returns the final
+    price for a line item in a cart. Scopes include read_price_rulesets and
+    write_price_rulesets.
+- aid: bold-commerce:bold-commerce-products-api
+  name: Bold Products API
+  tags:
+  - Products
+  - Catalog
+  - Inventory
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.boldcommerce.com/api/products
+  baseURL: https://api.boldcommerce.com/products/v2
+  properties:
+  - url: https://developer.boldcommerce.com/api/products
+    type: Documentation
+  - url: openapi/bold-commerce-openapi.yml
+    type: OpenAPI
+  - url: collections/bold-commerce.postman_collection.json
+    type: PostmanCollection
+  - url: collections/bold-commerce.opencollection.json
+    type: OpenCollection
+  description: Read and manage the product catalog for a shop - list, retrieve,
+    create, update, and delete products and variants scoped to a shop_identifier.
+- aid: bold-commerce:bold-commerce-customers-api
+  name: Bold Customers API
+  tags:
+  - Customers
+  - Profiles
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.boldcommerce.com/api/customers
+  baseURL: https://api.boldcommerce.com/customers/v2
+  properties:
+  - url: https://developer.boldcommerce.com/api/customers
+    type: Documentation
+  - url: openapi/bold-commerce-openapi.yml
+    type: OpenAPI
+  - url: collections/bold-commerce.postman_collection.json
+    type: PostmanCollection
+  - url: collections/bold-commerce.opencollection.json
+    type: OpenCollection
+  description: List, retrieve, create, and update customer records tied to a shop,
+    used across checkout, subscriptions, and pricing to associate orders and
+    recurring plans with shoppers.
+- aid: bold-commerce:bold-commerce-shops-api
+  name: Bold Shops API
+  tags:
+  - Shops
+  - Platform
+  - Configuration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developer.boldcommerce.com/api/shops
+  baseURL: https://api.boldcommerce.com/shops/v1
+  properties:
+  - url: https://developer.boldcommerce.com/api/shops
+    type: Documentation
+  - url: openapi/bold-commerce-openapi.yml
+    type: OpenAPI
+  - url: collections/bold-commerce.postman_collection.json
+    type: PostmanCollection
+  - url: collections/bold-commerce.opencollection.json
+    type: OpenCollection
+  description: Retrieve shop configuration and the shop_identifier GUID required in
+    the path of most Bold API requests, including shop name, domain, platform,
+    and default currency.
+common:
+- type: GitHubOrganization
+  url: https://github.com/bold-commerce
+- type: LinkedIn
+  url: https://www.linkedin.com/company/bold-commerce
+- type: Website
+  url: https://boldcommerce.com
+- type: Documentation
+  url: https://developer.boldcommerce.com
+- type: Plans
+  url: plans/bold-commerce-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/bold-commerce-rate-limits.yml
+- type: FinOps
+  url: finops/bold-commerce-finops.yml
+- url: https://boldcommerce.com/blog
+  type: Blog
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

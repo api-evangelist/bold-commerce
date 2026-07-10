@@ -1,0 +1,96 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Bold Commerce
+providerId: bold-commerce
+created: '2026-07-10'
+modified: '2026-07-10'
+reconciled: false
+tags:
+- E-Commerce
+- Subscriptions
+- Checkout
+- Pricing
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Bold Commerce spend. Bold is billed as merchant app
+  subscriptions, not as a metered API product. The dominant cost drivers are a
+  recurring per-app software fee (for example, Bold Subscriptions at a monthly
+  tier) plus a percentage transaction fee charged on each processed order that
+  contains a subscription product, and, for Bold Memberships, a member-count
+  tier plus a 1% fee on top of Stripe processing. Bold Checkout and Bold Price
+  Rules are generally bundled into platform / headless commerce agreements.
+  Because the transaction fee scales with subscription order volume, GMV growth
+  directly increases Bold spend.
+notes: >-
+  Per-unit rates are grounded from Bold's public pricing pages but not
+  reconciled here; verify current tiers and transaction-fee percentages on
+  boldcommerce.com. Payment processing (for example, Stripe) is a separate
+  charge from a different invoice issuer.
+sources:
+- https://boldcommerce.com/shopify/subscriptions-pricing
+- https://support.boldcommerce.com/hc/en-us/articles/207374243-Bold-Memberships-Pricing-Overview
+- https://developer.boldcommerce.com
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Bold Commerce
+serviceCategory: E-Commerce and Commerce Platform
+billingModel:
+  pricingCategory: Subscription-Plus-Usage
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+  - Adjustment
+focusColumns:
+  ServiceName: Bold Commerce Apps
+  ServiceCategory: E-Commerce and Commerce Platform
+  ProviderName: Bold Commerce
+  PublisherName: Bold Commerce
+  InvoiceIssuerName: Bold Commerce
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription-Plus-Usage
+meters:
+- name: app_subscription_fee
+  description: Recurring monthly software fee for a Bold app tier (for example, Bold Subscriptions).
+  unit: months
+  aggregation: sum
+  dimensions:
+  - shop
+  - app
+  - plan
+- name: subscription_transaction_fee
+  description: Percentage fee charged on each processed order containing a subscription product.
+  unit: orders
+  aggregation: sum
+  dimensions:
+  - shop
+  - plan
+- name: membership_tier_fee
+  description: Bold Memberships monthly fee based on active member-count tier.
+  unit: members
+  aggregation: max
+  dimensions:
+  - shop
+  - tier
+principles:
+- name: Visibility
+  description: Track the per-app monthly fee plus the transaction fee against subscription order volume (GMV) per shop.
+- name: Allocation
+  description: Map each Bold app subscription and its transaction fees to the store / brand / team that owns it.
+- name: Optimization
+  description: Choose the plan tier whose transaction-fee percentage best matches your subscription GMV; higher tiers trade a larger monthly fee for a lower per-order percentage.
+- name: Accountability
+  description: Review monthly Bold invoices against subscription revenue so the effective take-rate stays understood as volume grows.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

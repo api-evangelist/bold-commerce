@@ -1,0 +1,211 @@
+{
+  "info": {
+    "name": "Bold Commerce API",
+    "description": "Modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. Base URL: https://api.boldcommerce.com. Authenticate with a Bearer token - an OAuth 2.0 access token (public integrations) or a scoped API access token (private integrations). Most paths are scoped to a shop_identifier GUID retrieved from the Shops API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{apiToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.boldcommerce.com", "type": "string" },
+    { "key": "apiToken", "value": "", "type": "string" },
+    { "key": "shop_identifier", "value": "", "type": "string" },
+    { "key": "shop_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "List subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscriptions/v1/shops/{{shop_identifier}}/subscriptions", "host": ["{{baseUrl}}"], "path": ["subscriptions", "v1", "shops", "{{shop_identifier}}", "subscriptions"] },
+            "description": "Retrieve a list of subscriptions for the shop."
+          }
+        },
+        {
+          "name": "Create a subscription",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"customer_id\": 0,\n  \"interval_id\": 0,\n  \"line_items\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/subscriptions/v1/shops/{{shop_identifier}}/subscriptions", "host": ["{{baseUrl}}"], "path": ["subscriptions", "v1", "shops", "{{shop_identifier}}", "subscriptions"] },
+            "description": "Create a new subscription."
+          }
+        },
+        {
+          "name": "Retrieve a subscription",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id", "host": ["{{baseUrl}}"], "path": ["subscriptions", "v1", "shops", "{{shop_identifier}}", "subscriptions", ":subscription_id"], "variable": [{ "key": "subscription_id", "value": "" }] },
+            "description": "Fetch an individual subscription."
+          }
+        },
+        {
+          "name": "Pause a subscription",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/pause", "host": ["{{baseUrl}}"], "path": ["subscriptions", "v1", "shops", "{{shop_identifier}}", "subscriptions", ":subscription_id", "pause"], "variable": [{ "key": "subscription_id", "value": "" }] },
+            "description": "Pause subscription processing."
+          }
+        },
+        {
+          "name": "Cancel a subscription",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/cancel", "host": ["{{baseUrl}}"], "path": ["subscriptions", "v1", "shops", "{{shop_identifier}}", "subscriptions", ":subscription_id", "cancel"], "variable": [{ "key": "subscription_id", "value": "" }] },
+            "description": "Cancel an active subscription."
+          }
+        },
+        {
+          "name": "Reactivate a subscription",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/activate", "host": ["{{baseUrl}}"], "path": ["subscriptions", "v1", "shops", "{{shop_identifier}}", "subscriptions", ":subscription_id", "activate"], "variable": [{ "key": "subscription_id", "value": "" }] },
+            "description": "Reactivate an inactive or cancelled subscription."
+          }
+        },
+        {
+          "name": "List subscription orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscriptions/v1/shops/{{shop_identifier}}/subscriptions/:subscription_id/orders", "host": ["{{baseUrl}}"], "path": ["subscriptions", "v1", "shops", "{{shop_identifier}}", "subscriptions", ":subscription_id", "orders"], "variable": [{ "key": "subscription_id", "value": "" }] },
+            "description": "List the orders for a subscription."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkout",
+      "item": [
+        {
+          "name": "Set shipping address",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"address1\": \"123 Main St\",\n  \"city\": \"Winnipeg\",\n  \"country\": \"CA\",\n  \"postal_code\": \"R3C\"\n}" },
+            "url": { "raw": "{{baseUrl}}/checkout/storefront/{{shop_id}}/:order_id/addresses/shipping", "host": ["{{baseUrl}}"], "path": ["checkout", "storefront", "{{shop_id}}", ":order_id", "addresses", "shipping"], "variable": [{ "key": "order_id", "value": "" }] },
+            "description": "Sets the shipping address on the order."
+          }
+        },
+        {
+          "name": "Set billing address",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"address1\": \"123 Main St\",\n  \"city\": \"Winnipeg\",\n  \"country\": \"CA\",\n  \"postal_code\": \"R3C\"\n}" },
+            "url": { "raw": "{{baseUrl}}/checkout/storefront/{{shop_id}}/:order_id/addresses/billing", "host": ["{{baseUrl}}"], "path": ["checkout", "storefront", "{{shop_id}}", ":order_id", "addresses", "billing"], "variable": [{ "key": "order_id", "value": "" }] },
+            "description": "Sets the billing address on the order."
+          }
+        },
+        {
+          "name": "Add line items",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"line_items\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/checkout/storefront/{{shop_id}}/:order_id/line_items", "host": ["{{baseUrl}}"], "path": ["checkout", "storefront", "{{shop_id}}", ":order_id", "line_items"], "variable": [{ "key": "order_id", "value": "" }] },
+            "description": "Add line items to the order."
+          }
+        },
+        {
+          "name": "Add payment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"\",\n  \"amount\": 0\n}" },
+            "url": { "raw": "{{baseUrl}}/checkout/storefront/{{shop_id}}/:order_id/payments", "host": ["{{baseUrl}}"], "path": ["checkout", "storefront", "{{shop_id}}", ":order_id", "payments"], "variable": [{ "key": "order_id", "value": "" }] },
+            "description": "Add a payment to the order."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Price Rules",
+      "item": [
+        {
+          "name": "List rulesets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/price_rules/rules/v2/shops/{{shop_identifier}}/rulesets", "host": ["{{baseUrl}}"], "path": ["price_rules", "rules", "v2", "shops", "{{shop_identifier}}", "rulesets"] },
+            "description": "List all rulesets available for the specified shop."
+          }
+        },
+        {
+          "name": "Create a ruleset",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Spring Sale\",\n  \"active\": true,\n  \"rules\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/price_rules/rules/v2/shops/{{shop_identifier}}/rulesets", "host": ["{{baseUrl}}"], "path": ["price_rules", "rules", "v2", "shops", "{{shop_identifier}}", "rulesets"] },
+            "description": "Create a new ruleset. Requires the write_price_rulesets scope."
+          }
+        },
+        {
+          "name": "Process final price",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"line_items\": []\n}" },
+            "url": { "raw": "{{baseUrl}}/price_rules/rules/v2/shops/{{shop_identifier}}/process", "host": ["{{baseUrl}}"], "path": ["price_rules", "rules", "v2", "shops", "{{shop_identifier}}", "process"] },
+            "description": "Return the final price for a line item in a cart."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/products/v2/shops/{{shop_identifier}}/products", "host": ["{{baseUrl}}"], "path": ["products", "v2", "shops", "{{shop_identifier}}", "products"] },
+            "description": "List the products for a shop."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "List customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/customers/v2/shops/{{shop_identifier}}/customers", "host": ["{{baseUrl}}"], "path": ["customers", "v2", "shops", "{{shop_identifier}}", "customers"] },
+            "description": "List the customers for a shop."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shops",
+      "item": [
+        {
+          "name": "Retrieve shop info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/shops/v1/info", "host": ["{{baseUrl}}"], "path": ["shops", "v1", "info"] },
+            "description": "Retrieve the shop configuration and shop_identifier GUID."
+          }
+        }
+      ]
+    }
+  ]
+}
