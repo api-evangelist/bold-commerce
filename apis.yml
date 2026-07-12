@@ -158,6 +158,12 @@ apis:
     the path of most Bold API requests, including shop name, domain, platform,
     and default currency.
 common:
+- type: TrustCenter
+  url: security/bold-commerce-trust-center.yml
+- type: DomainSecurity
+  url: security/bold-commerce-domain-security.yml
+- type: Authentication
+  url: authentication/bold-commerce-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/bold-commerce
 - type: LinkedIn
