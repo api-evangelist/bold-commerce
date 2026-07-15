@@ -158,6 +158,8 @@ apis:
     the path of most Bold API requests, including shop name, domain, platform,
     and default currency.
 common:
+- type: AgenticAccess
+  url: agentic-access/bold-commerce-agentic-access.yml
 - type: TrustCenter
   url: security/bold-commerce-trust-center.yml
 - type: DomainSecurity
