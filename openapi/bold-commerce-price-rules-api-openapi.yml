@@ -1,0 +1,175 @@
+openapi: 3.0.3
+info:
+  title: Bold Commerce Checkout Price Rules API
+  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. All requests are made against https://api.boldcommerce.com and authenticated with a Bearer token - either an OAuth 2.0 access token (public integrations, obtained through the Developer Dashboard authorization-code flow) or a scoped API access token (private integrations, generated in the Bold Account Center). Most paths are scoped to a shop_identifier GUID that is retrieved from the Shops API. Versioned endpoints accept a Bold-API-Version-Date header. Endpoints below are modeled from Bold's public developer documentation; request and response schemas are representative.
+  version: '1.0'
+  contact:
+    name: Bold Commerce
+    url: https://developer.boldcommerce.com
+servers:
+- url: https://api.boldcommerce.com
+  description: Bold Commerce API
+security:
+- bearerAuth: []
+tags:
+- name: Price Rules
+  description: Discounts, promotions, and dynamic pricing.
+paths:
+  /price_rules/rules/v2/shops/{shop_identifier}/rulesets:
+    get:
+      operationId: listRulesets
+      tags:
+      - Price Rules
+      summary: List rulesets
+      description: List all rulesets available for the specified shop.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      responses:
+        '200':
+          description: A list of rulesets.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rulesets:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Ruleset'
+    post:
+      operationId: createRuleset
+      tags:
+      - Price Rules
+      summary: Create a ruleset
+      description: Create a new ruleset. Requires the write_price_rulesets scope.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ruleset'
+      responses:
+        '201':
+          description: The created ruleset.
+  /price_rules/rules/v2/shops/{shop_identifier}/rulesets/{ruleset_id}:
+    get:
+      operationId: getRuleset
+      tags:
+      - Price Rules
+      summary: Retrieve a ruleset
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - name: ruleset_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The ruleset.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ruleset'
+    put:
+      operationId: updateRuleset
+      tags:
+      - Price Rules
+      summary: Update a ruleset
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - name: ruleset_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ruleset'
+      responses:
+        '200':
+          description: The updated ruleset.
+    delete:
+      operationId: deleteRuleset
+      tags:
+      - Price Rules
+      summary: Delete a ruleset
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - name: ruleset_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The ruleset was deleted.
+  /price_rules/rules/v2/shops/{shop_identifier}/process:
+    post:
+      operationId: processPrice
+      tags:
+      - Price Rules
+      summary: Process the final price for a line item
+      description: Return the final price for a line item in a cart.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                line_items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LineItem'
+      responses:
+        '200':
+          description: The processed prices.
+components:
+  schemas:
+    Ruleset:
+      type: object
+      properties:
+        id:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        active:
+          type: boolean
+        rules:
+          type: array
+          items:
+            type: object
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
+  parameters:
+    ShopIdentifier:
+      name: shop_identifier
+      in: path
+      required: true
+      description: The unique shop GUID, retrieved from the Shops API.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token (public integrations) or scoped API access token (private integrations), passed as Authorization: Bearer {token}.'

@@ -1,0 +1,311 @@
+openapi: 3.0.3
+info:
+  title: Bold Commerce Checkout Subscriptions API
+  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. All requests are made against https://api.boldcommerce.com and authenticated with a Bearer token - either an OAuth 2.0 access token (public integrations, obtained through the Developer Dashboard authorization-code flow) or a scoped API access token (private integrations, generated in the Bold Account Center). Most paths are scoped to a shop_identifier GUID that is retrieved from the Shops API. Versioned endpoints accept a Bold-API-Version-Date header. Endpoints below are modeled from Bold's public developer documentation; request and response schemas are representative.
+  version: '1.0'
+  contact:
+    name: Bold Commerce
+    url: https://developer.boldcommerce.com
+servers:
+- url: https://api.boldcommerce.com
+  description: Bold Commerce API
+security:
+- bearerAuth: []
+tags:
+- name: Subscriptions
+  description: Recurring orders, intervals, and subscription management.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions:
+    get:
+      operationId: listSubscriptions
+      tags:
+      - Subscriptions
+      summary: List subscriptions
+      description: Retrieve a list of subscriptions for the shop.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      responses:
+        '200':
+          description: A list of subscriptions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscriptions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createSubscription
+      tags:
+      - Subscriptions
+      summary: Create a subscription
+      description: Create a new subscription for the shop.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        '201':
+          description: The created subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}:
+    get:
+      operationId: getSubscription
+      tags:
+      - Subscriptions
+      summary: Retrieve a subscription
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      operationId: replaceSubscription
+      tags:
+      - Subscriptions
+      summary: Update a subscription
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        '200':
+          description: The updated subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+    patch:
+      operationId: patchSubscription
+      tags:
+      - Subscriptions
+      summary: Partially update a subscription
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        '200':
+          description: The updated subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/pause:
+    post:
+      operationId: pauseSubscription
+      tags:
+      - Subscriptions
+      summary: Pause a subscription
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The paused subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/cancel:
+    post:
+      operationId: cancelSubscription
+      tags:
+      - Subscriptions
+      summary: Cancel a subscription
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The cancelled subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/activate:
+    post:
+      operationId: activateSubscription
+      tags:
+      - Subscriptions
+      summary: Reactivate a subscription
+      description: Reactivate an inactive or cancelled subscription.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The reactivated subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/line_items:
+    post:
+      operationId: addSubscriptionLineItems
+      tags:
+      - Subscriptions
+      summary: Add line items to a subscription
+      description: Add one or more line items to a subscription.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                line_items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LineItem'
+      responses:
+        '200':
+          description: The updated subscription.
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/intervals:
+    get:
+      operationId: listSubscriptionIntervals
+      tags:
+      - Subscriptions
+      summary: List subscription intervals
+      description: Retrieve a list of available intervals for a subscription.
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: A list of intervals.
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/orders:
+    get:
+      operationId: listSubscriptionOrders
+      tags:
+      - Subscriptions
+      summary: List subscription orders
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: A list of orders for the subscription.
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/orders/{order_id}/skip:
+    put:
+      operationId: skipSubscriptionOrder
+      tags:
+      - Subscriptions
+      summary: Skip an upcoming order
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/SubscriptionId'
+      - name: order_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The skipped order.
+components:
+  parameters:
+    ShopIdentifier:
+      name: shop_identifier
+      in: path
+      required: true
+      description: The unique shop GUID, retrieved from the Shops API.
+      schema:
+        type: string
+    SubscriptionId:
+      name: subscription_id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Authentication is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+          enum:
+          - active
+          - paused
+          - cancelled
+        customer_id:
+          type: integer
+        interval_id:
+          type: integer
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        next_order_datetime:
+          type: string
+          format: date-time
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token (public integrations) or scoped API access token (private integrations), passed as Authorization: Bearer {token}.'

@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: Bold Commerce Checkout Shops API
+  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. All requests are made against https://api.boldcommerce.com and authenticated with a Bearer token - either an OAuth 2.0 access token (public integrations, obtained through the Developer Dashboard authorization-code flow) or a scoped API access token (private integrations, generated in the Bold Account Center). Most paths are scoped to a shop_identifier GUID that is retrieved from the Shops API. Versioned endpoints accept a Bold-API-Version-Date header. Endpoints below are modeled from Bold's public developer documentation; request and response schemas are representative.
+  version: '1.0'
+  contact:
+    name: Bold Commerce
+    url: https://developer.boldcommerce.com
+servers:
+- url: https://api.boldcommerce.com
+  description: Bold Commerce API
+security:
+- bearerAuth: []
+tags:
+- name: Shops
+  description: Shop configuration and shop_identifier lookup.
+paths:
+  /shops/v1/info:
+    get:
+      operationId: getShopInfo
+      tags:
+      - Shops
+      summary: Retrieve shop info
+      description: Retrieve the shop configuration, including the shop_identifier GUID required in the path of most Bold API requests, plus shop name, domain, platform, and default currency.
+      responses:
+        '200':
+          description: The shop info.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Authentication is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
+    Shop:
+      type: object
+      properties:
+        shop_identifier:
+          type: string
+        shop_name:
+          type: string
+        domain:
+          type: string
+        platform:
+          type: string
+        default_currency:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token (public integrations) or scoped API access token (private integrations), passed as Authorization: Bearer {token}.'

@@ -1,0 +1,197 @@
+openapi: 3.0.3
+info:
+  title: Bold Commerce Checkout API
+  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. All requests are made against https://api.boldcommerce.com and authenticated with a Bearer token - either an OAuth 2.0 access token (public integrations, obtained through the Developer Dashboard authorization-code flow) or a scoped API access token (private integrations, generated in the Bold Account Center). Most paths are scoped to a shop_identifier GUID that is retrieved from the Shops API. Versioned endpoints accept a Bold-API-Version-Date header. Endpoints below are modeled from Bold's public developer documentation; request and response schemas are representative.
+  version: '1.0'
+  contact:
+    name: Bold Commerce
+    url: https://developer.boldcommerce.com
+servers:
+- url: https://api.boldcommerce.com
+  description: Bold Commerce API
+security:
+- bearerAuth: []
+tags:
+- name: Checkout
+  description: Headless storefront checkout order operations.
+paths:
+  /checkout/storefront/{shop_id}/{order_id}/addresses/shipping:
+    post:
+      operationId: setShippingAddress
+      tags:
+      - Checkout
+      summary: Set the shipping address
+      description: Sets the shipping address on the order.
+      parameters:
+      - $ref: '#/components/parameters/ShopId'
+      - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: The updated order application state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutState'
+    get:
+      operationId: getShippingAddress
+      tags:
+      - Checkout
+      summary: Retrieve the shipping address
+      parameters:
+      - $ref: '#/components/parameters/ShopId'
+      - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: The shipping address.
+  /checkout/storefront/{shop_id}/{order_id}/addresses/billing:
+    post:
+      operationId: setBillingAddress
+      tags:
+      - Checkout
+      summary: Set the billing address
+      description: Sets the billing address on the order.
+      parameters:
+      - $ref: '#/components/parameters/ShopId'
+      - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: The updated order application state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutState'
+  /checkout/storefront/{shop_id}/{order_id}/line_items:
+    post:
+      operationId: addCheckoutLineItems
+      tags:
+      - Checkout
+      summary: Add line items to the order
+      parameters:
+      - $ref: '#/components/parameters/ShopId'
+      - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                line_items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LineItem'
+      responses:
+        '200':
+          description: The updated order application state.
+  /checkout/storefront/{shop_id}/{order_id}/discounts:
+    post:
+      operationId: applyCheckoutDiscount
+      tags:
+      - Checkout
+      summary: Apply a discount code to the order
+      parameters:
+      - $ref: '#/components/parameters/ShopId'
+      - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+      responses:
+        '200':
+          description: The updated order application state.
+  /checkout/storefront/{shop_id}/{order_id}/payments:
+    post:
+      operationId: addCheckoutPayment
+      tags:
+      - Checkout
+      summary: Add a payment to the order
+      parameters:
+      - $ref: '#/components/parameters/ShopId'
+      - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                amount:
+                  type: integer
+      responses:
+        '200':
+          description: The updated order application state.
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        address1:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        country:
+          type: string
+        postal_code:
+          type: string
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
+    CheckoutState:
+      type: object
+      properties:
+        application_state:
+          type: object
+          description: Complete order context - customer, items, totals, and more.
+  parameters:
+    ShopId:
+      name: shop_id
+      in: path
+      required: true
+      description: The shop identifier for the checkout order.
+      schema:
+        type: string
+    OrderId:
+      name: order_id
+      in: path
+      required: true
+      description: The public order ID for the checkout session.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token (public integrations) or scoped API access token (private integrations), passed as Authorization: Bearer {token}.'

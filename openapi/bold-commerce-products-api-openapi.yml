@@ -1,0 +1,83 @@
+openapi: 3.0.3
+info:
+  title: Bold Commerce Checkout Products API
+  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. All requests are made against https://api.boldcommerce.com and authenticated with a Bearer token - either an OAuth 2.0 access token (public integrations, obtained through the Developer Dashboard authorization-code flow) or a scoped API access token (private integrations, generated in the Bold Account Center). Most paths are scoped to a shop_identifier GUID that is retrieved from the Shops API. Versioned endpoints accept a Bold-API-Version-Date header. Endpoints below are modeled from Bold's public developer documentation; request and response schemas are representative.
+  version: '1.0'
+  contact:
+    name: Bold Commerce
+    url: https://developer.boldcommerce.com
+servers:
+- url: https://api.boldcommerce.com
+  description: Bold Commerce API
+security:
+- bearerAuth: []
+tags:
+- name: Products
+  description: Product catalog for a shop.
+paths:
+  /products/v2/shops/{shop_identifier}/products:
+    get:
+      operationId: listProducts
+      tags:
+      - Products
+      summary: List products
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      responses:
+        '200':
+          description: A list of products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+  /products/v2/shops/{shop_identifier}/products/{product_id}:
+    get:
+      operationId: getProduct
+      tags:
+      - Products
+      summary: Retrieve a product
+      parameters:
+      - $ref: '#/components/parameters/ShopIdentifier'
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        variants:
+          type: array
+          items:
+            type: object
+  parameters:
+    ShopIdentifier:
+      name: shop_identifier
+      in: path
+      required: true
+      description: The unique shop GUID, retrieved from the Shops API.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token (public integrations) or scoped API access token (private integrations), passed as Authorization: Bearer {token}.'
