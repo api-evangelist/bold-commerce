@@ -1,0 +1,24 @@
+{
+  "provider": "bold-commerce",
+  "sources": [
+    "bold-commerce-checkout-api-openapi.yml",
+    "bold-commerce-customers-api-openapi.yml",
+    "bold-commerce-price-rules-api-openapi.yml",
+    "bold-commerce-products-api-openapi.yml",
+    "bold-commerce-shops-api-openapi.yml",
+    "bold-commerce-subscriptions-api-openapi.yml"
+  ],
+  "outputs": [
+    "bold-commerce-checkout-api-openapi.yml",
+    "bold-commerce-customers-api-openapi.yml",
+    "bold-commerce-price-rules-api-openapi.yml",
+    "bold-commerce-products-api-openapi.yml",
+    "bold-commerce-shops-api-openapi.yml",
+    "bold-commerce-subscriptions-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
