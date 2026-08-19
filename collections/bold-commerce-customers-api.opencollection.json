@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Bold Commerce Checkout Customers API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/customers/v2/shops/:shop_identifier/customers",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ]
+          },
+          "docs": "List customers"
+        },
+        {
+          "info": {
+            "name": "Create a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/customers/v2/shops/:shop_identifier/customers",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a customer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

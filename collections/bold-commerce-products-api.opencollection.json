@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Bold Commerce Checkout Products API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Products",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/products/v2/shops/:shop_identifier/products",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ]
+          },
+          "docs": "List products"
+        },
+        {
+          "info": {
+            "name": "Retrieve a product",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/products/v2/shops/:shop_identifier/products/:product_id",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "product_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a product"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

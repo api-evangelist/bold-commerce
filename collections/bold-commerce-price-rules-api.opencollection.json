@@ -1,0 +1,165 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Bold Commerce Checkout Price Rules API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Price Rules",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List rulesets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/:shop_identifier/rulesets",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ]
+          },
+          "docs": "List all rulesets available for the specified shop."
+        },
+        {
+          "info": {
+            "name": "Create a ruleset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/:shop_identifier/rulesets",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new ruleset. Requires the write_price_rulesets scope."
+        },
+        {
+          "info": {
+            "name": "Retrieve a ruleset",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/:shop_identifier/rulesets/:ruleset_id",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "ruleset_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a ruleset"
+        },
+        {
+          "info": {
+            "name": "Update a ruleset",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/:shop_identifier/rulesets/:ruleset_id",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "ruleset_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a ruleset"
+        },
+        {
+          "info": {
+            "name": "Delete a ruleset",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/:shop_identifier/rulesets/:ruleset_id",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "ruleset_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a ruleset"
+        },
+        {
+          "info": {
+            "name": "Process the final price for a line item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/price_rules/rules/v2/shops/:shop_identifier/process",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Return the final price for a line item in a cart."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

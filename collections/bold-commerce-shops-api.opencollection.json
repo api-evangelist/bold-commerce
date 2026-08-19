@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Bold Commerce Checkout Shops API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shops",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve shop info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/shops/v1/info"
+          },
+          "docs": "Retrieve the shop configuration, including the shop_identifier GUID required in the path of most Bold API requests, plus shop name, domain, platform, and default currency."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

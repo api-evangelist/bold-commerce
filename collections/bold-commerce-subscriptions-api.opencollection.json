@@ -1,0 +1,323 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Bold Commerce Checkout Subscriptions API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Subscriptions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List subscriptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ]
+          },
+          "docs": "Retrieve a list of subscriptions for the shop."
+        },
+        {
+          "info": {
+            "name": "Create a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new subscription for the shop."
+        },
+        {
+          "info": {
+            "name": "Retrieve a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a subscription"
+        },
+        {
+          "info": {
+            "name": "Update a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a subscription"
+        },
+        {
+          "info": {
+            "name": "Partially update a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partially update a subscription"
+        },
+        {
+          "info": {
+            "name": "Pause a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id/pause",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Pause a subscription"
+        },
+        {
+          "info": {
+            "name": "Cancel a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id/cancel",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel a subscription"
+        },
+        {
+          "info": {
+            "name": "Reactivate a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id/activate",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Reactivate an inactive or cancelled subscription."
+        },
+        {
+          "info": {
+            "name": "Add line items to a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id/line_items",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add one or more line items to a subscription."
+        },
+        {
+          "info": {
+            "name": "List subscription intervals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id/intervals",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a list of available intervals for a subscription."
+        },
+        {
+          "info": {
+            "name": "List subscription orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id/orders",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List subscription orders"
+        },
+        {
+          "info": {
+            "name": "Skip an upcoming order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.boldcommerce.com/subscriptions/v1/shops/:shop_identifier/subscriptions/:subscription_id/orders/:order_id/skip",
+            "params": [
+              {
+                "name": "shop_identifier",
+                "value": "",
+                "type": "path",
+                "description": "The unique shop GUID, retrieved from the Shops API."
+              },
+              {
+                "name": "subscription_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Skip an upcoming order"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

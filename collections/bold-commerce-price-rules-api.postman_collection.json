@@ -1,0 +1,733 @@
+{
+  "item": [
+    {
+      "id": "76763b1a-f283-4492-ba56-6a077f68c332",
+      "name": "Price Rules",
+      "description": {
+        "content": "Discounts, promotions, and dynamic pricing.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d3b263c0-3666-4ba8-a797-df53c4cb99c1",
+          "name": "List rulesets",
+          "request": {
+            "name": "List rulesets",
+            "description": {
+              "content": "List all rulesets available for the specified shop.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "price_rules",
+                "rules",
+                "v2",
+                "shops",
+                ":shop_identifier",
+                "rulesets"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "shop_identifier",
+                  "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "15f7b73e-ecb6-4bff-a6af-976473fb7afa",
+              "name": "A list of rulesets.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price_rules",
+                    "rules",
+                    "v2",
+                    "shops",
+                    ":shop_identifier",
+                    "rulesets"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "shop_identifier",
+                      "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"rulesets\": [\n    {\n      \"id\": \"string\",\n      \"external_id\": \"string\",\n      \"name\": \"string\",\n      \"active\": false\n    },\n    {\n      \"id\": \"string\",\n      \"external_id\": \"string\",\n      \"name\": \"string\",\n      \"active\": false\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6f8108e8-e407-4d1e-9330-1cfa1c1d450a",
+          "name": "Create a ruleset",
+          "request": {
+            "name": "Create a ruleset",
+            "description": {
+              "content": "Create a new ruleset. Requires the write_price_rulesets scope.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "price_rules",
+                "rules",
+                "v2",
+                "shops",
+                ":shop_identifier",
+                "rulesets"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "shop_identifier",
+                  "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"rules\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c8bcf913-931d-45df-9f0f-1f89eb432869",
+              "name": "The created ruleset.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price_rules",
+                    "rules",
+                    "v2",
+                    "shops",
+                    ":shop_identifier",
+                    "rulesets"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "shop_identifier",
+                      "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"rules\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "31e53d01-fe45-459c-a53f-df1d2f2771ef",
+          "name": "Retrieve a ruleset",
+          "request": {
+            "name": "Retrieve a ruleset",
+            "description": {},
+            "url": {
+              "path": [
+                "price_rules",
+                "rules",
+                "v2",
+                "shops",
+                ":shop_identifier",
+                "rulesets",
+                ":ruleset_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "shop_identifier",
+                  "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "ruleset_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "796628ed-7d00-4abd-b663-3d2239fa33b7",
+              "name": "The ruleset.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price_rules",
+                    "rules",
+                    "v2",
+                    "shops",
+                    ":shop_identifier",
+                    "rulesets",
+                    ":ruleset_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "shop_identifier",
+                      "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ruleset_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"rules\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "652cdcf2-d5d3-4049-a312-d6f3a58b0e25",
+          "name": "Update a ruleset",
+          "request": {
+            "name": "Update a ruleset",
+            "description": {},
+            "url": {
+              "path": [
+                "price_rules",
+                "rules",
+                "v2",
+                "shops",
+                ":shop_identifier",
+                "rulesets",
+                ":ruleset_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "shop_identifier",
+                  "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "ruleset_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"rules\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "99a42633-0ddc-4199-8563-3222ac7a9a34",
+              "name": "The updated ruleset.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price_rules",
+                    "rules",
+                    "v2",
+                    "shops",
+                    ":shop_identifier",
+                    "rulesets",
+                    ":ruleset_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "shop_identifier",
+                      "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ruleset_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<string>\",\n  \"external_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"active\": \"<boolean>\",\n  \"rules\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4732eb44-0862-4539-b1ff-8876e2e4c9cc",
+          "name": "Delete a ruleset",
+          "request": {
+            "name": "Delete a ruleset",
+            "description": {},
+            "url": {
+              "path": [
+                "price_rules",
+                "rules",
+                "v2",
+                "shops",
+                ":shop_identifier",
+                "rulesets",
+                ":ruleset_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "shop_identifier",
+                  "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "ruleset_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "460f32b2-9f4a-478d-8e53-7e4632894f19",
+              "name": "The ruleset was deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price_rules",
+                    "rules",
+                    "v2",
+                    "shops",
+                    ":shop_identifier",
+                    "rulesets",
+                    ":ruleset_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "shop_identifier",
+                      "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ruleset_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "03b5827a-3725-4593-a107-af64e0b29e86",
+          "name": "Process the final price for a line item",
+          "request": {
+            "name": "Process the final price for a line item",
+            "description": {
+              "content": "Return the final price for a line item in a cart.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "price_rules",
+                "rules",
+                "v2",
+                "shops",
+                ":shop_identifier",
+                "process"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "shop_identifier",
+                  "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"line_items\": [\n    {\n      \"product_id\": \"<string>\",\n      \"variant_id\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\"\n    },\n    {\n      \"product_id\": \"<string>\",\n      \"variant_id\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3aa62e84-1e43-4f03-bbe5-4baf66dba347",
+              "name": "The processed prices.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "price_rules",
+                    "rules",
+                    "v2",
+                    "shops",
+                    ":shop_identifier",
+                    "process"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "shop_identifier",
+                      "description": "(Required) The unique shop GUID, retrieved from the Shops API."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"line_items\": [\n    {\n      \"product_id\": \"<string>\",\n      \"variant_id\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\"\n    },\n    {\n      \"product_id\": \"<string>\",\n      \"variant_id\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"price\": \"<integer>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.boldcommerce.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a5469b9b-b5b1-4c41-9648-4a6d5ce7a1e4",
+    "name": "Bold Commerce Checkout Price Rules API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. All requests are made against https://api.boldcommerce.com and authenticated with a Bearer token - either an OAuth 2.0 access token (public integrations, obtained through the Developer Dashboard authorization-code flow) or a scoped API access token (private integrations, generated in the Bold Account Center). Most paths are scoped to a shop_identifier GUID that is retrieved from the Shops API. Versioned endpoints accept a Bold-API-Version-Date header. Endpoints below are modeled from Bold's public developer documentation; request and response schemas are representative.\n\nContact Support:\n Name: Bold Commerce",
+      "type": "text/plain"
+    }
+  }
+}

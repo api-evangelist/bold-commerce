@@ -1,0 +1,194 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Bold Commerce Checkout API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Checkout",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve the shipping address",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.boldcommerce.com/checkout/storefront/:shop_id/:order_id/addresses/shipping",
+            "params": [
+              {
+                "name": "shop_id",
+                "value": "",
+                "type": "path",
+                "description": "The shop identifier for the checkout order."
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The public order ID for the checkout session."
+              }
+            ]
+          },
+          "docs": "Retrieve the shipping address"
+        },
+        {
+          "info": {
+            "name": "Set the shipping address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/:shop_id/:order_id/addresses/shipping",
+            "params": [
+              {
+                "name": "shop_id",
+                "value": "",
+                "type": "path",
+                "description": "The shop identifier for the checkout order."
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The public order ID for the checkout session."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets the shipping address on the order."
+        },
+        {
+          "info": {
+            "name": "Set the billing address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/:shop_id/:order_id/addresses/billing",
+            "params": [
+              {
+                "name": "shop_id",
+                "value": "",
+                "type": "path",
+                "description": "The shop identifier for the checkout order."
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The public order ID for the checkout session."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets the billing address on the order."
+        },
+        {
+          "info": {
+            "name": "Add line items to the order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/:shop_id/:order_id/line_items",
+            "params": [
+              {
+                "name": "shop_id",
+                "value": "",
+                "type": "path",
+                "description": "The shop identifier for the checkout order."
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The public order ID for the checkout session."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add line items to the order"
+        },
+        {
+          "info": {
+            "name": "Apply a discount code to the order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/:shop_id/:order_id/discounts",
+            "params": [
+              {
+                "name": "shop_id",
+                "value": "",
+                "type": "path",
+                "description": "The shop identifier for the checkout order."
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The public order ID for the checkout session."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Apply a discount code to the order"
+        },
+        {
+          "info": {
+            "name": "Add a payment to the order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.boldcommerce.com/checkout/storefront/:shop_id/:order_id/payments",
+            "params": [
+              {
+                "name": "shop_id",
+                "value": "",
+                "type": "path",
+                "description": "The shop identifier for the checkout order."
+              },
+              {
+                "name": "order_id",
+                "value": "",
+                "type": "path",
+                "description": "The public order ID for the checkout session."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a payment to the order"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
