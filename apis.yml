@@ -34,7 +34,7 @@ tags:
 - Shopify
 created: '2026-07-10'
 modified: '2026-07-10'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: bold-commerce:bold-commerce-checkout-api
   name: Bold Commerce Checkout API
