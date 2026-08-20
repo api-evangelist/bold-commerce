@@ -27,6 +27,13 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/bold-commerce.png
 tags:
 - E-Commerce
+- Subscription
+- Checkout
+- Pricing
+- Headless Commerce
+- Shopify
+tags_raw:
+- E-Commerce
 - Subscriptions
 - Checkout
 - Pricing
@@ -138,6 +145,8 @@ apis:
   humanURL: https://developer.boldcommerce.com/api/subscriptions
   baseURL: https://api.boldcommerce.com/subscriptions/v1
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -202,6 +211,8 @@ apis:
   humanURL: https://developer.boldcommerce.com/api/subscriptions
   baseURL: https://api.boldcommerce.com/subscriptions/v1
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
