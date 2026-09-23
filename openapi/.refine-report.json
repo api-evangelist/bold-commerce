@@ -1,12 +1,7 @@
 {
   "provider": "bold-commerce",
   "sources": [
-    "bold-commerce-checkout-api-openapi.yml",
-    "bold-commerce-customers-api-openapi.yml",
-    "bold-commerce-price-rules-api-openapi.yml",
-    "bold-commerce-products-api-openapi.yml",
-    "bold-commerce-shops-api-openapi.yml",
-    "bold-commerce-subscriptions-api-openapi.yml"
+    "_original/bold-commerce-openapi.yml"
   ],
   "outputs": [
     "bold-commerce-checkout-api-openapi.yml",
@@ -19,6 +14,17 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "bold-commerce-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "bold-commerce-checkout-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "bold-commerce-customers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "bold-commerce-price-rules-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "bold-commerce-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "bold-commerce-shops-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "bold-commerce-subscriptions-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

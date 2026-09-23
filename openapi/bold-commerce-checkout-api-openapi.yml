@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: Bold Commerce Checkout API
-  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs. All requests are made against https://api.boldcommerce.com and authenticated with a Bearer token - either an OAuth 2.0 access token (public integrations, obtained through the Developer Dashboard authorization-code flow) or a scoped API access token (private integrations, generated in the Bold Account Center). Most paths are scoped to a shop_identifier GUID that is retrieved from the Shops API. Versioned endpoints accept a Bold-API-Version-Date header. Endpoints below are modeled from Bold's public developer documentation; request and response schemas are representative.
+  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs.
   version: '1.0'
   contact:
     name: Bold Commerce
@@ -141,6 +141,23 @@ paths:
           description: The updated order application state.
 components:
   schemas:
+    CheckoutState:
+      type: object
+      properties:
+        application_state:
+          type: object
+          description: Complete order context - customer, items, totals, and more.
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
     Address:
       type: object
       properties:
@@ -158,36 +175,19 @@ components:
           type: string
         postal_code:
           type: string
-    LineItem:
-      type: object
-      properties:
-        product_id:
-          type: string
-        variant_id:
-          type: string
-        quantity:
-          type: integer
-        price:
-          type: integer
-    CheckoutState:
-      type: object
-      properties:
-        application_state:
-          type: object
-          description: Complete order context - customer, items, totals, and more.
   parameters:
-    ShopId:
-      name: shop_id
-      in: path
-      required: true
-      description: The shop identifier for the checkout order.
-      schema:
-        type: string
     OrderId:
       name: order_id
       in: path
       required: true
       description: The public order ID for the checkout session.
+      schema:
+        type: string
+    ShopId:
+      name: shop_id
+      in: path
+      required: true
+      description: The shop identifier for the checkout order.
       schema:
         type: string
   securitySchemes:
