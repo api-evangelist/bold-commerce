@@ -142,6 +142,17 @@ components:
       schema:
         type: string
   schemas:
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
     Ruleset:
       type: object
       properties:
@@ -157,17 +168,6 @@ components:
           type: array
           items:
             type: object
-    LineItem:
-      type: object
-      properties:
-        product_id:
-          type: string
-        variant_id:
-          type: string
-        quantity:
-          type: integer
-        price:
-          type: integer
   securitySchemes:
     bearerAuth:
       type: http

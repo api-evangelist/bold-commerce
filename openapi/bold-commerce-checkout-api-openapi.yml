@@ -147,17 +147,6 @@ components:
         application_state:
           type: object
           description: Complete order context - customer, items, totals, and more.
-    LineItem:
-      type: object
-      properties:
-        product_id:
-          type: string
-        variant_id:
-          type: string
-        quantity:
-          type: integer
-        price:
-          type: integer
     Address:
       type: object
       properties:
@@ -175,6 +164,17 @@ components:
           type: string
         postal_code:
           type: string
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
   parameters:
     OrderId:
       name: order_id
