@@ -237,27 +237,6 @@ paths:
         '200':
           description: The skipped order.
 components:
-  responses:
-    Unauthorized:
-      description: Authentication is missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    ShopIdentifier:
-      name: shop_identifier
-      in: path
-      required: true
-      description: The unique shop GUID, retrieved from the Shops API.
-      schema:
-        type: string
-    SubscriptionId:
-      name: subscription_id
-      in: path
-      required: true
-      schema:
-        type: string
   schemas:
     LineItem:
       type: object
@@ -270,6 +249,18 @@ components:
           type: integer
         price:
           type: integer
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string
     Subscription:
       type: object
       properties:
@@ -292,18 +283,27 @@ components:
         next_order_datetime:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              field:
-                type: string
+  parameters:
+    SubscriptionId:
+      name: subscription_id
+      in: path
+      required: true
+      schema:
+        type: string
+    ShopIdentifier:
+      name: shop_identifier
+      in: path
+      required: true
+      description: The unique shop GUID, retrieved from the Shops API.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Authentication is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

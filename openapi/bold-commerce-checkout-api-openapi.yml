@@ -140,13 +140,33 @@ paths:
         '200':
           description: The updated order application state.
 components:
+  parameters:
+    OrderId:
+      name: order_id
+      in: path
+      required: true
+      description: The public order ID for the checkout session.
+      schema:
+        type: string
+    ShopId:
+      name: shop_id
+      in: path
+      required: true
+      description: The shop identifier for the checkout order.
+      schema:
+        type: string
   schemas:
-    CheckoutState:
+    LineItem:
       type: object
       properties:
-        application_state:
-          type: object
-          description: Complete order context - customer, items, totals, and more.
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
     Address:
       type: object
       properties:
@@ -164,32 +184,12 @@ components:
           type: string
         postal_code:
           type: string
-    LineItem:
+    CheckoutState:
       type: object
       properties:
-        product_id:
-          type: string
-        variant_id:
-          type: string
-        quantity:
-          type: integer
-        price:
-          type: integer
-  parameters:
-    OrderId:
-      name: order_id
-      in: path
-      required: true
-      description: The public order ID for the checkout session.
-      schema:
-        type: string
-    ShopId:
-      name: shop_id
-      in: path
-      required: true
-      description: The shop identifier for the checkout order.
-      schema:
-        type: string
+        application_state:
+          type: object
+          description: Complete order context - customer, items, totals, and more.
   securitySchemes:
     bearerAuth:
       type: http
