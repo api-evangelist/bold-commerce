@@ -56,14 +56,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Product'
 components:
-  parameters:
-    ShopIdentifier:
-      name: shop_identifier
-      in: path
-      required: true
-      description: The unique shop GUID, retrieved from the Shops API.
-      schema:
-        type: string
   schemas:
     Product:
       type: object
@@ -76,6 +68,14 @@ components:
           type: array
           items:
             type: object
+  parameters:
+    ShopIdentifier:
+      name: shop_identifier
+      in: path
+      required: true
+      description: The unique shop GUID, retrieved from the Shops API.
+      schema:
+        type: string
   securitySchemes:
     bearerAuth:
       type: http

@@ -52,14 +52,6 @@ paths:
         '201':
           description: The created customer.
 components:
-  parameters:
-    ShopIdentifier:
-      name: shop_identifier
-      in: path
-      required: true
-      description: The unique shop GUID, retrieved from the Shops API.
-      schema:
-        type: string
   schemas:
     Customer:
       type: object
@@ -72,6 +64,14 @@ components:
           type: string
         last_name:
           type: string
+  parameters:
+    ShopIdentifier:
+      name: shop_identifier
+      in: path
+      required: true
+      description: The unique shop GUID, retrieved from the Shops API.
+      schema:
+        type: string
   securitySchemes:
     bearerAuth:
       type: http
