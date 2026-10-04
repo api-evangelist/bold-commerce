@@ -256,6 +256,9 @@ apis:
   - type: Documentation
     url: https://developer.boldcommerce.com/api/shops
 common:
+- type: CapabilityMap
+  url: capabilities/bold-commerce-capability-edges.yml
+  name: Bold Commerce Business Capability Map
 - type: AgenticAccess
   url: agentic-access/bold-commerce-agentic-access.yml
 - type: TrustCenter
