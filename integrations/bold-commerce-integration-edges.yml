@@ -1,0 +1,140 @@
+generated: '2026-10-12'
+method: searched
+source:
+- https://zapier.com/apps/bold-commerce/integrations
+checked:
+- https://composio.dev/toolkits/bold-commerce
+- https://monid.ai/tools/bold-commerce
+- https://n8n.io/integrations/bold-commerce/
+- https://zapier.com/apps/bold-commerce/integrations
+summary: null
+marketplace_apps:
+- marketplace: zapier
+  channel: ipaas-listing
+  app: bold-commerce
+  url: https://zapier.com/apps/bold-commerce/integrations
+  external_url: https://boldcommerce.com/
+  partner_tier: BRONZE
+  triggers:
+  - key: newSubscription
+    label: New Subscription
+  - key: newSubscriptionOrder
+    label: New Subscription Order
+  - key: subscriptionCancelled
+    label: Subscription Cancelled
+  actions:
+  - key: skip_order
+    label: Skip Customer's Order
+  searches:
+  - key: find_customer
+    label: Find a Customer
+  - key: find_product
+    label: Find a Product
+edges:
+- partner_name: LeadConnector
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/bold-commerce/integrations/leadconnector
+  direction: third-party
+  category: Marketing Automation
+  partner_url: https://www.leadconnectorhq.com/
+- partner_name: WooCommerce
+  partner: woocommerce
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/bold-commerce/integrations/woocommerce
+  direction: third-party
+  category: eCommerce
+  partner_url: https://woocommerce.com/products/woocommerce-zapier/?utm_source=zapier&utm_medium=website&utm_campaign=integration
+- partner_name: Microsoft Excel
+  partner: null
+  partner_match: null
+  partner_candidate: zapier
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/bold-commerce/integrations/excel
+  direction: third-party
+  category: Microsoft
+  partner_url: https://zapier.com/office.com
+- partner_name: MySQL
+  partner: mysql
+  partner_match: domain
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/bold-commerce/integrations/mysql
+  direction: third-party
+  category: Databases
+  partner_url: https://www.mysql.com/
+- partner_name: Google Forms (Legacy)
+  partner: null
+  partner_match: null
+  partner_candidate: null
+  type: marketplace
+  marketplace: zapier
+  channel: ipaas-usage
+  evidence: https://zapier.com/apps/bold-commerce/integrations/google-forms-legacy
+  direction: third-party
+  category: Forms & Surveys
+  partner_url: http://google.com/
+templates:
+- title: Add subscribers to Klaviyo campaigns when new Bold Commerce subscriptions are created
+  url: https://zapier.com/apps/bold-commerce/integrations/klaviyo/800535/add-subscribers-to-klaviyo-campaigns-when-new-bold-commerce-subscriptions-are-created
+  apps:
+  - bold-commerce
+  - klaviyo
+- title: Add Omnisend subscribers from new cancellations of Bold Commerce subscriptions
+  url: https://zapier.com/apps/bold-commerce/integrations/omnisend/800941/add-omnisend-subscribers-from-new-cancellations-of-bold-commerce-subscriptions
+  apps:
+  - bold-commerce
+  - omnisend
+- title: Send SMS messages in Twilio for new subscription orders in Bold Commerce
+  url: https://zapier.com/apps/bold-commerce/integrations/twilio/801083/send-sms-messages-in-twilio-for-new-subscription-orders-in-bold-commerce
+  apps:
+  - bold-commerce
+  - twilio
+- title: Send Slack channel messages for new Bold Commerce subscription cancellations
+  url: https://zapier.com/apps/bold-commerce/integrations/slack/801095/send-slack-channel-messages-for-new-bold-commerce-subscription-cancellations
+  apps:
+  - bold-commerce
+  - slack
+- title: Create Google Sheets rows for new Bold Commerce subscriptions
+  url: https://zapier.com/apps/bold-commerce/integrations/google-sheets/801120/create-google-sheets-rows-for-new-bold-commerce-subscriptions
+  apps:
+  - bold-commerce
+  - google-sheets
+- title: Create Zendesk users for new Bold Commerce subscribers
+  url: https://zapier.com/apps/bold-commerce/integrations/zendesk/801250/create-zendesk-users-for-new-bold-commerce-subscribers
+  apps:
+  - bold-commerce
+  - zendesk
+- title: Add new contacts to ActiveCampaign automations when new customers subscribe in Bold Commerce
+  url: https://zapier.com/apps/activecampaign/integrations/bold-commerce/801252/add-new-contacts-to-activecampaign-automations-when-new-customers-subscribe-in-bold-commerce
+  apps:
+  - bold-commerce
+  - activecampaign
+- title: Add Agile CRM scores for new Bold Commerce subscription orders
+  url: https://zapier.com/apps/agile-crm/integrations/bold-commerce/801256/add-agile-crm-scores-for-new-bold-commerce-subscription-orders
+  apps:
+  - bold-commerce
+  - agile-crm
+- title: Add new Bold Commerce subscription orders to ShipStation
+  url: https://zapier.com/apps/bold-commerce/integrations/shipstation/801262/add-new-bold-commerce-subscription-orders-to-shipstation
+  apps:
+  - bold-commerce
+  - shipstation
+- title: Add or update TinyEmail subscribers from new Bold Commerce subscriptions
+  url: https://zapier.com/apps/bold-commerce/integrations/tinyemail/1151341/add-or-update-tinyemail-subscribers-from-new-bold-commerce-subscriptions
+  apps:
+  - bold-commerce
+  - tinyemail
+template_total: 10
