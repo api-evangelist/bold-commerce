@@ -7,6 +7,7 @@ checked:
 - https://monid.ai/tools/bold-commerce
 - https://n8n.io/integrations/bold-commerce/
 - https://zapier.com/apps/bold-commerce/integrations
+- shopify/integrations/shopify-integration-edges.yml
 summary: null
 marketplace_apps:
 - marketplace: zapier
@@ -86,6 +87,28 @@ edges:
   direction: third-party
   category: Forms & Surveys
   partner_url: http://google.com/
+- partner_name: Shopify (own)
+  partner: shopify
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://apps.shopify.com/product-upsell
+  mirror_of: shopify/integrations/shopify-integration-edges.yml
+  apps:
+  - Bold AI Upsell & Cross‑Sell
+  - Bold Subscriptions App
+  - 'rePete: AI Reorder Sales Agent'
+  - quickbooks-online
+  - xero-sync
+  listing_count: 5
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  publisher_verified:
+  - Built for Shopify
 templates:
 - title: Add subscribers to Klaviyo campaigns when new Bold Commerce subscriptions are created
   url: https://zapier.com/apps/bold-commerce/integrations/klaviyo/800535/add-subscribers-to-klaviyo-campaigns-when-new-bold-commerce-subscriptions-are-created

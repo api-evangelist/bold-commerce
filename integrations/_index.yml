@@ -28,7 +28,6 @@
   arazzo: null
 - slug: bold-commerce-microsoft-excel
   label: Microsoft Excel
-  partner: microsoft-excel
   partner_name: Microsoft Excel
   category: Microsoft
   type: marketplace
@@ -36,7 +35,7 @@
   channel: ipaas-usage
   evidence: https://zapier.com/apps/bold-commerce/integrations/excel
   source: edge
-  status: pending-generation
+  status: pending-partner-spec
   arazzo: null
 - slug: bold-commerce-mysql
   label: MySQL
@@ -60,4 +59,16 @@
   evidence: https://zapier.com/apps/bold-commerce/integrations/google-forms-legacy
   source: edge
   status: pending-partner-spec
+  arazzo: null
+- slug: bold-commerce-shopify-own
+  label: Shopify (own)
+  partner: shopify
+  partner_name: Shopify (own)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://apps.shopify.com/product-upsell
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
   arazzo: null
