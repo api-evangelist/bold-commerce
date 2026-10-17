@@ -134,6 +134,17 @@ paths:
           description: The processed prices.
 components:
   schemas:
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
     Ruleset:
       type: object
       properties:
@@ -149,17 +160,6 @@ components:
           type: array
           items:
             type: object
-    LineItem:
-      type: object
-      properties:
-        product_id:
-          type: string
-        variant_id:
-          type: string
-        quantity:
-          type: integer
-        price:
-          type: integer
   parameters:
     ShopIdentifier:
       name: shop_identifier

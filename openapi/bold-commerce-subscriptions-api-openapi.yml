@@ -238,17 +238,17 @@ paths:
           description: The skipped order.
 components:
   parameters:
+    SubscriptionId:
+      name: subscription_id
+      in: path
+      required: true
+      schema:
+        type: string
     ShopIdentifier:
       name: shop_identifier
       in: path
       required: true
       description: The unique shop GUID, retrieved from the Shops API.
-      schema:
-        type: string
-    SubscriptionId:
-      name: subscription_id
-      in: path
-      required: true
       schema:
         type: string
   schemas:
