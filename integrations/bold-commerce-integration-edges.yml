@@ -4,6 +4,7 @@ source:
 - https://zapier.com/apps/bold-commerce/integrations
 checked:
 - https://composio.dev/toolkits/bold-commerce
+- https://github.com/meltano/hub
 - https://monid.ai/tools/bold-commerce
 - https://n8n.io/integrations/bold-commerce/
 - https://zapier.com/api/v4/apps/
@@ -135,6 +136,35 @@ edges:
     builder: unknown (not in the directory record)
   detected_by: sweep-workflow-automation.py
   first_seen: '2026-10-15'
+- partner_name: Meltano
+  partner: meltano
+  partner_match: aggregator
+  type: marketplace
+  marketplace: meltano-hub
+  channel: elt-connector
+  relationship: ipaas-bridge
+  direction: third-party
+  evidence: https://hub.meltano.com/extractors/tap-bold--oriskincare
+  category: null
+  contract_reference:
+    register: Meltano Hub (github.com/meltano/hub _data/meltano extractors + loaders)
+    spec_file: null
+    role: elt-connector:meltano-hub
+    registered_name: Bold Commerce
+    matched_domain: boldcommerce.com
+    matched_by: domain
+    detected_by: sweep-data-integration.py
+    detected: '2026-10-18'
+    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
+    plugins:
+    - tap-bold--oriskincare
+    maintenance_status:
+    - unknown
+    quality:
+    - silver
+    builder: 'community (Meltano Hub variant maintainers: oriskincare)'
+  detected_by: sweep-data-integration.py
+  first_seen: '2026-10-18'
 templates:
 - title: Add subscribers to Klaviyo campaigns when new Bold Commerce subscriptions are created
   url: https://zapier.com/apps/bold-commerce/integrations/klaviyo/800535/add-subscribers-to-klaviyo-campaigns-when-new-bold-commerce-subscriptions-are-created
