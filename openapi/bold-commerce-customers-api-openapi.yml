@@ -1,47 +1,86 @@
 openapi: 3.2.0
 info:
-  title: Bold Commerce Customers API
-  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs.
+  title: Bold Subscriptions Customers API
   version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
   contact:
-    name: Bold Commerce
-    url: https://developer.boldcommerce.com
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
 servers:
 - url: https://api.boldcommerce.com
-  description: Bold Commerce API
 security:
-- bearerAuth: []
+- OAuthToken: []
+- APIAccessToken: []
 tags:
 - name: Customers
-  description: Customer records tied to a shop.
+  description: A child resource of Subscriptions. Contains information about customers for a subscription. Use these endpoints to manage customer data for a specific subscription.
 paths:
-  /customers/v2/shops/{shop_identifier}/customers:
+  /subscriptions/v1/shops/{shop_identifier}/customers:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
     get:
-      operationId: listCustomers
       tags:
       - Customers
-      summary: List customers
-      parameters:
-      - $ref: '#/components/parameters/ShopIdentifier'
+      summary: List Customers
+      operationId: ListCustomers
+      description: Retrieve a list of customers.
       responses:
         '200':
-          description: A list of customers.
+          description: Successful operation
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  customers:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Customer'
-    post:
-      operationId: createCustomer
+                $ref: '#/components/schemas/Customers'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      parameters:
+      - $ref: '#/components/parameters/customerSearch'
+      - $ref: '#/components/parameters/customerStatus'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/page'
+  /subscriptions/v1/shops/{shop_identifier}/customers/{customer_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/customer_id_path_param'
+    get:
       tags:
       - Customers
-      summary: Create a customer
+      summary: Get Customer
+      operationId: GetCustomer
+      description: Retrieve a customer by their id.
       parameters:
-      - $ref: '#/components/parameters/ShopIdentifier'
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/customer_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+    put:
+      tags:
+      - Customers
+      summary: Update Customer
+      operationId: UpdateCustomer
+      description: Update a customer by their id.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/customer_id_path_param'
       requestBody:
         required: true
         content:
@@ -49,31 +88,1361 @@ paths:
             schema:
               $ref: '#/components/schemas/Customer'
       responses:
-        '201':
-          description: The created customer.
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/customers/{customer_id}/addresses:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/customer_id_path_param'
+    get:
+      tags:
+      - Customers
+      summary: List Customer Addresses
+      operationId: ListCustomerAddresses
+      description: Retrieve a list of addresses for a customer.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/customer_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer_addresses:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomerAddressEntity'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+    post:
+      tags:
+      - Customers
+      summary: Create Customer Address
+      operationId: CreateCustomerAddress
+      description: Create an address for a customer.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/customer_id_path_param'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer_address:
+                  $ref: '#/components/schemas/UpdateCustomerAddressEntity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer_address:
+                    $ref: '#/components/schemas/CustomerAddressEntity'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/customers/{customer_id}/addresses/{address_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/customer_id_path_param'
+    - $ref: '#/components/parameters/address_id_path_param'
+    put:
+      tags:
+      - Customers
+      summary: Update Customer Address
+      operationId: UpdateCustomerAddress
+      description: Update an address for a customer.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/customer_id_path_param'
+      - $ref: '#/components/parameters/address_id_path_param'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer_address:
+                  $ref: '#/components/schemas/UpdateCustomerAddressEntity'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer_address:
+                    $ref: '#/components/schemas/CustomerAddressEntity'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+    delete:
+      tags:
+      - Customers
+      summary: Delete Customer Address
+      operationId: DeleteCustomerAddress
+      description: Delete an address from a customer.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/customer_id_path_param'
+      - $ref: '#/components/parameters/address_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/customers/{customer_id}/subscriptions:
+    get:
+      tags:
+      - Customers
+      summary: List Customer Subscriptions
+      operationId: ListCustomerSubscriptions
+      description: Retrieve a list of subscriptions for a single customer.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/customer_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscriptions'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
 components:
-  parameters:
-    ShopIdentifier:
-      name: shop_identifier
-      in: path
-      required: true
-      description: The unique shop GUID, retrieved from the Shops API.
-      schema:
-        type: string
   schemas:
-    Customer:
+    UpdateCustomerAddressEntity:
       type: object
+      required:
+      - first_name
+      - last_name
+      - phone
+      - street1
+      - city
+      - province
+      - province_code
+      - country
+      - country_code
+      - zip
+      properties:
+        first_name:
+          type: string
+          description: Customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: Customer's last name(s).
+          example: Doe
+        company:
+          type: string
+          description: Customer's company name.
+          example: Example Company
+        phone:
+          type: string
+          description: Customer's phone number.
+          example: 123-456-7890
+        street1:
+          type: string
+          description: Customer's street address (street name and number).
+          example: 123 example st.
+        street2:
+          type: string
+          description: Address complement (suite number, unit number, etc.).
+          example: '101'
+        city:
+          type: string
+          description: Customer's city.
+          example: Toronto
+        province:
+          type: string
+          description: Customer's province or state, as applicable. Can be an empty string in case the address has no state/province.
+          example: Ontario
+        province_code:
+          type: string
+          description: Customer's province or state code (usually 2 characters), as applicable. If the address has no state/province, leave empty.
+          example: 'ON'
+        country:
+          type: string
+          description: Customer's country name.
+          example: Canada
+        country_code:
+          type: string
+          description: 'Customer''s alpha 2 country code, according to ISO 3166-1 (reference: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).'
+          example: CA
+        zip:
+          type: string
+          description: Customer's postal code.
+          example: M5V 3L9
+        is_default:
+          type: boolean
+          description: Indicates whether this address should be considered the default one for the customer.
+          example: true
+        address_use:
+          type: string
+          description: Address usage (billing, shipping). Only set for WooCommerce.
+    SubscriptionOrderCountEntity:
+      properties:
+        order_count:
+          description: The number of orders created for the subscription.
+          type: integer
+          example: 1
+    SubscriptionNotesEntity:
+      properties:
+        note:
+          description: An internal-only note that you can add to a subscription. For a subscription recurrence, this note appears in the Additional Details section of the created order. Applicable for Shopify Checkout only.
+          type:
+          - string
+          - 'null'
+          example: Staff note
+        order_note:
+          description: A customer-facing note that you can add to a subscription. For the first order, this field retains the note added by the customer. For a subscription recurrence, this note appears in the Note section of the created order. Applicable for Shopify Checkout only.
+          type:
+          - string
+          - 'null'
+          example: Customer note
+    Subscriptions:
+      type: object
+      properties:
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionEntity'
+        pagination:
+          $ref: '#/components/schemas/StandardPaginationEntity'
+    CustomerSubscriptionSummary:
+      type: object
+      required:
+      - bold_platform_customer_id
+      - next_order_date
+      - last_order_date
+      - active_subscription_count
+      - inactive_subscription_count
+      - subscription_order_count
+      - lifetime_value_usd
+      description: Summary of the customer's subscriptions.
+      properties:
+        bold_platform_customer_id:
+          type: integer
+          description: The customer's ID.
+          example: 2
+          readOnly: true
+        next_order_date:
+          type: string
+          description: The cext order date and time for the subscription.
+          example: '2020-01-20T18:00:00Z'
+          readOnly: true
+        last_order_date:
+          type: string
+          description: The most recent order date and time for a subscription.
+          example: '2019-11-20T20:55:27Z'
+          readOnly: true
+        active_subscription_count:
+          type: integer
+          description: The number of active subscriptions.
+          example: 2
+          readOnly: true
+        inactive_subscription_count:
+          type: integer
+          description: The number of inactive subscriptions.
+          example: 1
+          readOnly: true
+        subscription_order_count:
+          type: integer
+          description: The number of subscription orders for this customer. Initial orders count toward this total.
+          example: 5
+          readOnly: true
+        lifetime_value_usd:
+          type: number
+          description: The total value of the order made by this customer in USD.
+          example: 152.12
+          readOnly: true
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    deletedAt:
+      type:
+      - string
+      - 'null'
+      description: The date and time when the object was deleted. Set to `null` when the object was not deleted.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+    Customers:
+      properties:
+        customers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerEntity'
+      type: object
+    CustomerLabel:
+      type: object
+      description: The label assigned to a customer.
+      required:
+      - id
+      - name
+      - created_at
+      - updated_at
+      - deleted_at
       properties:
         id:
           type: integer
-        email:
+          description: The customer label ID.
+          example: 12
+          readOnly: true
+        customer_id:
+          type: integer
+          description: The customer ID.
+          example: 21
+          readOnly: true
+        name:
           type: string
+          description: The content of the label.
+          example: bsub_subscription_active
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+        updated_at:
+          $ref: '#/components/schemas/updatedAt'
+        deleted_at:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/deletedAt'
+    LineItemAttributeEntity:
+      title: LineItemAttributeEntity
+      type: object
+      description: This represents a custom field that can be defined and used to store complementary information about a subscription line item.
+      properties:
+        name:
+          type: string
+          example: size_preference
+          description: The name of the custom field/attribute, up to 250 characters.
+        value:
+          type: string
+          example: XL
+          description: The content of the custom field/attribute.
+        created_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this line item attribute was created.
+          example: '2021-01-17T20:30:40Z'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this line item attribute was last updated. The value is the same as the `created_at` value if the line item attribute has never been updated.
+          example: '2021-01-17T20:30:40Z'
+          readOnly: true
+        subscription_id:
+          description: The ID of the subscription associated to this line item attribute.
+          type: integer
+          readOnly: true
+          example: 435989
+        line_item_id:
+          description: The ID of the subscription line item this line item attribute belongs to.
+          type: integer
+          readOnly: true
+          example: 45734
+    CustomerEntity:
+      type: object
+      required:
+      - id
+      - platform_id
+      - cashier_public_id
+      - first_name
+      - last_name
+      - phone
+      - email
+      - notes
+      - addresses
+      - default_address
+      - subscription_summary
+      - labels
+      - created_at
+      properties:
+        id:
+          description: The customer ID.
+          type: integer
+          readOnly: true
+          example: 2
+        platform_id:
+          description: The customer platform ID.
+          type: string
+          readOnly: true
+          example: '123456790'
+        cashier_public_id:
+          type:
+          - string
+          - 'null'
+          description: The public customer ID generated when using Bold Checkout, set to `null` otherwise.
+          example: null
+          readOnly: true
         first_name:
           type: string
+          description: The customer's first name.
+          example: Jane
         last_name:
           type: string
+          description: The customer's last name.
+          example: Doe
+        email:
+          type: string
+          description: The customer's email
+          example: jane.doe@example.com
+        phone:
+          type: string
+          description: The customer's phone number. For Shopify checkout users, [you can configure phone number requirements in the admin](/guides/subscriptions-v2/create-subscription#how-do-i-make-phone-numbers-optional-when-using-shopify-checkout).
+          example: '12045551234'
+        notes:
+          type: string
+          description: The customer's internal notes. This is applied as a note in the **Customer info** section of Bold Subscriptions admin.
+          example: Loyal customer
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerAddressEntity'
+          readOnly: true
+        default_address:
+          description: The customer's default address.
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/CustomerAddressEntity'
+        subscription_summary:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/CustomerSubscriptionSummary'
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerLabel'
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+    createdAt:
+      type: string
+      description: The date and time when the object was created.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+      readOnly: true
+    SubscriptionEntity:
+      allOf:
+      - type: object
+        x-examples: {}
+        properties:
+          id:
+            type: integer
+            example: 1
+            readOnly: true
+          external_id:
+            type:
+            - string
+            - 'null'
+          customer:
+            example: 'null'
+          shop_id:
+            type: integer
+            example: 1
+            readOnly: true
+          next_order_datetime:
+            type: string
+            example: '2020-01-20T18:00:00Z'
+          next_payment_datetime:
+            type: string
+            example: '2020-01-20T18:00:00Z'
+          next_processing_datetime:
+            type: string
+            example: '2020-01-20T18:00:00Z'
+          subscription_status:
+            type: string
+            enum:
+            - active
+            - inactive
+            - paused
+            - scheduled
+            - processing
+            - app_uninstalled
+            - waiting_sca_authorization
+            example: active
+          status_changed_at:
+            type: string
+            example: '2019-11-20T20:31:55Z'
+            format: date-time
+            readOnly: true
+          sca_url:
+            type:
+            - string
+            - 'null'
+            example: https://bank.com/pCkWhtgQQVM8W/sca
+            readOnly: true
+          payment_method_token:
+            type: string
+            example: jik1w6HrCn17CxXPcKwHTGqqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+          payment_gateway_public_id:
+            type:
+            - string
+            - 'null'
+            example: jik1w6HrCn17CxXPcKwHTGqqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+          payment_rrule:
+            type: string
+            example: DTSTART:20200120T180000Z\nRRULE:FREQ=MONTHLY\nEXDATE:20200220T180000Z
+          payment_rrule_text:
+            type:
+            - string
+            - 'null'
+            example: Monthly
+          order_rrule:
+            type: string
+            example: DTSTART:20200120T180000Z\nRRULE:FREQ=MONTHLY\nEXDATE:20200220T180000Z
+          order_rrule_text:
+            type:
+            - string
+            - 'null'
+            example: Monthly
+          last_payment_datetime:
+            type:
+            - string
+            - 'null'
+            example: '2019-11-20T20:55:26Z'
+          last_order_datetime:
+            type:
+            - string
+            - 'null'
+            example: '2019-11-20T20:55:26Z'
+          last_processed_datetime:
+            type:
+            - string
+            - 'null'
+            example: '2019-11-20T20:55:26Z'
+          current_retries:
+            type: integer
+            example: 3
+          charged_currency:
+            type: string
+            example: CAD
+          base_to_charged_exchange_rate:
+            type: integer
+            example: 1
+          base_currency:
+            type: string
+            example: CAD
+          line_items:
+            type: array
+            items:
+              $ref: '#/components/schemas/LineItemEntity'
+            readOnly: true
+          shipping_lines:
+            type:
+            - array
+            - 'null'
+            items:
+              $ref: '#/components/schemas/ShippingLineEntity'
+            readOnly: true
+          billing_address:
+            $ref: '#/components/schemas/CustomerAddressEntity'
+          shipping_address:
+            type:
+            - object
+            - 'null'
+            allOf:
+            - $ref: '#/components/schemas/CustomerAddressEntity'
+          idempotency_key:
+            type: string
+            example: JwGdN55C4g1z5FXRO8Hp21CMxUxKyo6VcGSf3cUsjCgNyTtoeZcIsGM1We4p7pCe-0
+          placed_at:
+            type:
+            - string
+            - 'null'
+            example: '2012-11-20T20:31:55Z'
+            format: data-time
+          created_at:
+            type: string
+            example: '2019-11-20T20:31:55Z'
+            format: date-time
+            readOnly: true
+          updated_at:
+            type: string
+            example: '2019-11-20T20:31:55Z'
+            format: date-time
+            readOnly: true
+          percent_discount:
+            type:
+            - number
+            - 'null'
+            example: 10
+            readOnly: true
+          discount_code:
+            type: string
+            example: DISCOUNTCODE
+            readOnly: true
+          customer_id:
+            type: integer
+            example: 1697912
+            readOnly: true
+          billing_address_id:
+            type: integer
+            example: 11697812
+          shipping_address_id:
+            type: integer
+            example: 11697812
+          orders_processed:
+            type:
+            - integer
+            - 'null'
+            example: 1
+          last_failure_code:
+            type:
+            - string
+            - 'null'
+            example: card_expired
+            description: This code may help to identify the type of the error.
+            enum:
+            - alt_pp_payment_method_required
+            - bigcommerce_error
+            - card_declined
+            - card_expired
+            - credit_card_not_found
+            - discount_code_use_limit
+            - insufficient_funds
+            - invalid_billing_address
+            - invalid_bold_api_token
+            - invalid_card_expiration_month
+            - invalid_card_expiration_year
+            - invalid_card_number
+            - invalid_customer_email
+            - invalid_discount_code
+            - invalid_payment_method
+            - invalid_security_code
+            - invalid_shipping_address
+            - invalid_zip_code
+            - no_payment_provider
+            - payment_method_declined
+            - plugin_event_failed
+            - shopify_error
+            - stripe_support_required
+            - transaction_declined
+            - out_of_stock_product
+            - unaccepted_credit_card
+            - unknown_error
+            - unsupported_card
+            - unsupported_purchase_type
+            - unsupported_shipping_address
+            - woocommerce_error
+          last_failure_details:
+            type:
+            - object
+            - 'null'
+            description: Default error messages for the last_failure_code field
+            required:
+            - message
+            properties:
+              message:
+                type: string
+                description: Error message
+                example: The order couldn't process because the card was declined.
+          last_failure_reason:
+            type:
+            - string
+            - 'null'
+            example: credit_card
+            description: The reason for the failure
+            enum:
+            - credit_card
+            - gateway
+            - cashier
+            - platform
+            - inventory
+            - other
+      - $ref: '#/components/schemas/SubscriptionNotesEntity'
+      - $ref: '#/components/schemas/SubscriptionOrderCountEntity'
+      required:
+      - id
+      - external_id
+      - customer
+      - shop_id
+      - next_order_datetime
+      - next_payment_datetime
+      - next_processing_datetime
+      - subscription_status
+      - status_changed_at
+      - payment_method_token
+      - payment_gateway_public_id
+      - payment_rrule
+      - payment_rrule_text
+      - order_rrule
+      - order_rrule_text
+      - last_payment_datetime
+      - last_order_datetime
+      - last_processed_datetime
+      - current_retries
+      - charged_currency
+      - base_to_charged_exchange_rate
+      - base_currency
+      - idempotency_key
+      - created_at
+      - updated_at
+      - percent_discount
+      - customer_id
+      - billing_address_id
+      - shipping_address_id
+      - note
+      - order_note
+    Customer:
+      properties:
+        customer:
+          $ref: '#/components/schemas/CustomerEntity'
+      type: object
+    updatedAt:
+      type:
+      - string
+      - 'null'
+      description: The date and time when the object was most recently updated.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+      readOnly: true
+    ShippingLineEntity:
+      type: object
+      description: A shipping line for a subscription.
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the shipping line.
+          readOnly: true
+          example: 36217
+        name:
+          type: string
+          description: The name of the shipping line.
+          example: Standard Shipping
+          readOnly: true
+        code:
+          type: string
+          description: The code of the shipping line.
+          example: Standard Shipping
+          readOnly: true
+        price:
+          type: integer
+          description: The price of the shipping line, in base units (e.g., cents) of the `base_currency` of the associated subscription. For example, a value of `1000` on a subscription with a base currency of USD corresponds to a $10.00 USD shipping line price.
+          example: 1000
+          readOnly: true
+        value:
+          type: integer
+          description: The price of the shipping line, in base units (e.g., cents) of the `base_currency` of the associated subscription. For example, a value of `1000` on a subscription with a base currency of USD corresponds to a $10.00 USD shipping line price.
+          example: 1000
+          readOnly: true
+        value_charged:
+          type:
+          - integer
+          - 'null'
+          description: The price of the shipping line, in base units (e.g., cents) of the `charged_currency` of the associated subscription. For example, a value of `1000` on a subscription with a charged currency of CAD corresponds to a $10.00 CAD shipping line price.
+          example: 1000
+          readOnly: true
+        tag:
+          type:
+          - string
+          - 'null'
+          example: Shipping
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this shipping line was created.
+          example: '2019-10-20T20:31:55Z'
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this shipping line was last updated. The value is the same as the `created_at` value if the shipping line has never been updated.
+          example: '2019-11-20T20:31:55Z'
+          readOnly: true
+        subscription_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription the shipping line belongs to.
+          example: 1
+          readOnly: true
+      required:
+      - id
+      - name
+      - code
+      - price
+      - value
+      - value_charged
+      - tag
+      - created_at
+      - updated_at
+      - subscription_id
+      readOnly: true
+    StandardPaginationEntity:
+      properties:
+        total:
+          type: integer
+          readOnly: true
+          example: 2
+        count:
+          type: integer
+          readOnly: true
+          example: 2
+        per_page:
+          type: integer
+          readOnly: true
+          example: 10
+        total_pages:
+          type: integer
+          readOnly: true
+          example: 1
+        current_page:
+          type: integer
+          readOnly: true
+          example: 1
+      type: object
+      readOnly: true
+    LineItemDiscountEntity:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the line item discount.
+          example: 1
+        subscription_line_item_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription line item the discount belongs to.
+          example: 1
+        shop_id:
+          type: integer
+          description: The ID of the shop.
+          example: 5
+        full_price:
+          type:
+          - integer
+          - 'null'
+          description: The price of the subscription line item without this discount applied.
+          example: 5
+        discount_type:
+          type: string
+          description: The type of discount being applied to the subscription line item.
+          enum:
+          - percentage
+          - fixed
+          - no_discount
+          example: percentage
+        percentage_value:
+          type: number
+          description: The percent discount to apply to the line item price in a range of 0 - 100. Only applied when the value for `discount_type` is `percentage`. For example, a value of `12.5` will discount the line item by 12.5%.
+          example: 10
+        fixed_value:
+          type: integer
+          description: The discount amount in base currency units (e.g. cents). Only applied when the value for `discount_type` is `fixed`. For example, a value of `575` on a subscription with a base currency of USD will discount the line item by $5.75 USD.
+          example: 0
+        fixed_value_charged:
+          type: integer
+          description: The discount amount in base currency units (e.g. cents) of the subscription's `charged_currency`. Only applied when the value for `discount_type` is `fixed`. This value is derived from the `fixed_value` and the subscription's currency properties. For example, with a `fixed_value` of 575, a base currency of USD, a charged currency of CAD, and an exchange rate of 1.5, this value would be 575 * 1.5 = `863`.
+          example: 0
+        description:
+          type: string
+          description: A description of the discount to show to the customer.
+          example: Subscription discount (10%) for Monthly Expansion Pack
+        created_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount added to the subscription line item.
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount was last updated. The value is the same as the `created_at` value if the discount has never been updated.
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount was removed from the subscription line item. The value is null if the discount has never been deleted.
+          readOnly: true
+      required:
+      - id
+      - subscription_line_item_id
+      - shop_id
+      - full_price
+      - discount_type
+      - percentage_value
+      - fixed_value
+      - fixed_value_charged
+      - description
+      - created_at
+      - updated_at
+      - deleted_at
+      readOnly: true
+    CustomerAddressEntity:
+      type: object
+      required:
+      - id
+      - shop_identifier
+      - platform_id
+      - customer_id
+      - platform_type
+      - platform_customer_id
+      - first_name
+      - last_name
+      - company
+      - phone
+      - street1
+      - street2
+      - city
+      - province
+      - province_code
+      - country
+      - country_code
+      - zip
+      - is_default
+      - address_use
+      - address_source
+      - created_at
+      - updated_at
+      - deleted_at
+      properties:
+        id:
+          type: integer
+          description: The address ID.
+          readOnly: true
+          example: 1
+        shop_identifier:
+          type: string
+          description: The platform shop identifier.
+          readOnly: true
+          example: '12345'
+        platform_id:
+          type: string
+          description: The platform address identifier.
+          readOnly: true
+          example: '14'
+        customer_id:
+          type: integer
+          description: The customer ID.
+          readOnly: true
+          example: 2
+        platform_type:
+          type: string
+          enum:
+          - bigcommerce
+          - commercetools
+          - custom
+          - shopify
+          - woocommerce
+          description: The e-commerce platform being used by the shop (might also be 'custom' for no specific e-commerce platform).
+          readOnly: true
+          example: shopify
+        platform_customer_id:
+          type: string
+          readOnly: true
+          description: The ID of the customer on the platform.
+          example: '35'
+        first_name:
+          type: string
+          description: The customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: The customer's last name(s).
+          example: Doe
+        company:
+          type: string
+          description: The customer's company name.
+          example: Example Company
+        phone:
+          type: string
+          description: The customer's phone number.
+          example: 123-456-7890
+        street1:
+          type: string
+          description: The customer's street address (street name and number).
+          example: 123 example st.
+        street2:
+          type: string
+          description: The address complement (suite number, unit number, etc.).
+          example: '101'
+        city:
+          type: string
+          description: The customer's city.
+          example: Toronto
+        province:
+          type: string
+          description: The customer's province or state, as applicable. Can be an empty string in case the address has no state/province.
+          example: Ontario
+        province_code:
+          type: string
+          description: The customer's province or state code (usually 2 characters), as applicable. Can be an empty string in case the address has no state/province.
+          example: 'ON'
+        country:
+          type: string
+          description: The customer's country name.
+          example: Canada
+        country_code:
+          type: string
+          description: 'The customer''s alpha 2 country code, according to ISO 3166-1 (reference: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).'
+          example: CA
+        zip:
+          type: string
+          description: The customer's postal code.
+          example: M5V 3L9
+        is_default:
+          type: boolean
+          description: Defines if this address should be considered the default one for the customer.
+          example: true
+        address_use:
+          type:
+          - string
+          - 'null'
+          description: The address usage (billing, shipping). Only set for WooCommerce, `null` otherwise.
+          example: billing
+        address_source:
+          type: string
+          description: The address source.
+          enum:
+          - platform
+          - bold
+          readOnly: true
+          example: platform
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+        updated_at:
+          $ref: '#/components/schemas/updatedAt'
+        deleted_at:
+          $ref: '#/components/schemas/deletedAt'
+    LineItemEntity:
+      type: object
+      title: ''
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        subscription_id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        platform_id:
+          type:
+          - string
+          - 'null'
+          example: ABC123
+        platform_product_id:
+          type:
+          - string
+          - 'null'
+          example: '1357908642'
+        platform_variant_id:
+          type:
+          - string
+          - 'null'
+          example: '2468097531'
+        subscription_group_id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        subscription_group_billing_rules_id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        title:
+          type: string
+          example: Monthly Expansion Pack
+        product_name:
+          type:
+          - string
+          - 'null'
+          example: Monthly Expansion Pack
+        variant_name:
+          type:
+          - string
+          - 'null'
+          example: Default Title
+        sku:
+          type: string
+          example: SKU-113-Red
+        url:
+          type: string
+          example: https://example-store.example.com/monthly-expansion-pack
+        image:
+          type:
+          - string
+          - 'null'
+          example: ''
+        quantity:
+          type: integer
+          example: 1
+        price:
+          type: integer
+          example: 3500
+        price_charged:
+          type:
+          - integer
+          - 'null'
+          example: 3200
+        discounted_price:
+          type: integer
+          example: 3200
+        discounted_price_charged:
+          type: integer
+          example: 3200
+        full_price:
+          type:
+          - integer
+          - 'null'
+          example: 3200
+        full_price_charged:
+          type:
+          - integer
+          - 'null'
+          example: 3200
+        requires_shipping:
+          type: boolean
+          example: false
+        grams:
+          type: integer
+          example: 2200
+        weight:
+          type: number
+          example: 2.2
+        weight_unit:
+          type: string
+          example: kg
+        taxable:
+          type: boolean
+          example: true
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItemDiscountEntity'
+          readOnly: true
+        prepaid_metadata:
+          type:
+          - object
+          - 'null'
+          required:
+          - id
+          - line_item_id
+          - prepaid_duration
+          - current_recurrence_count
+          - prepaid_continue
+          properties:
+            id:
+              type:
+              - integer
+              - 'null'
+              example: 1
+            line_item_id:
+              type:
+              - integer
+              - 'null'
+              example: 2
+            prepaid_duration:
+              type: integer
+              example: 2
+            current_recurrence_count:
+              type: integer
+              example: 2
+            prepaid_continue:
+              type: string
+              enum:
+              - no_continue
+              - as_prepaid
+              - as_standard
+        line_item_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItemAttributeEntity'
+        created_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - subscription_id
+      - platform_id
+      - platform_product_id
+      - platform_variant_id
+      - subscription_group_id
+      - subscription_group_billing_rules_id
+      - title
+      - product_name
+      - variant_name
+      - sku
+      - url
+      - image
+      - quantity
+      - price
+      - price_charged
+      - discounted_price
+      - discounted_price_charged
+      - full_price
+      - requires_shipping
+      - grams
+      - weight
+      - weight_unit
+      - taxable
+      - discounts
+      - prepaid_metadata
+      - created_at
+      - updated_at
+      readOnly: true
+  parameters:
+    customerSearch:
+      name: search
+      in: query
+      required: false
+      description: Search with a specific target. It's possible to search by subscription ID or phone number.
+      schema:
+        type: string
+      examples:
+        bySubscription:
+          summary: By subscription ID
+          value: '#1234'
+        byPhone:
+          summary: By phone
+          value: '123456'
+    page:
+      name: page
+      in: query
+      required: false
+      description: The page to request.
+      schema:
+        type: integer
+        default: 1
+        example: 2
+    limit:
+      name: limit
+      in: query
+      required: false
+      description: The maximum number of results to be returned.
+      schema:
+        type: integer
+        example: 10
+        default: 50
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+    customerStatus:
+      name: status
+      in: query
+      required: false
+      description: Customer status to filter.
+      schema:
+        type: string
+        enum:
+        - all
+        - active
+        - inactive
+        default: all
+        example: active
+    customer_id_path_param:
+      name: customer_id
+      in: path
+      description: The customer identifier.
+      required: true
+      schema:
+        type: integer
+        example: 12
+    address_id_path_param:
+      name: address_id
+      in: path
+      description: The address identifier.
+      required: true
+      schema:
+        type: integer
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: 'OAuth 2.0 access token (public integrations) or scoped API access token (private integrations), passed as Authorization: Bearer {token}.'
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

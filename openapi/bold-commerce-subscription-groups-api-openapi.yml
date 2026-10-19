@@ -1,0 +1,890 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Subscription Groups API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Subscription Groups
+  description: Contains information about subscription groups for your store, including shop ID and subscription group configuration. Use these endpoints to add, remove, edit, or list subscription groups.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/selection_options:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    get:
+      tags:
+      - Subscription Groups
+      summary: List Selection Options
+      description: Retrieves a list of selection options. Selection options are the products available in a subscription group. Use this endpoint to view some or all selection options for the active subscription groups on a given store.
+      operationId: ListSelectionOptions
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        description: A base 64 encoded cursor.
+        example: ?cursor=P2lkPTU1
+      - schema:
+          type: string
+        in: query
+        name: filter
+        description: Accepts filtering options as described on the [Query & Pagination page](/guides/subscriptions-v2/resources/query-pagination).
+        example: ?filter=in(platform_entity_id:1,2,3)
+      - schema:
+          type: string
+        in: query
+        name: expand
+        description: Fields to expand on the selection options. Currently accepts `subscription_group` and `products`
+        example: ?expand=subscription_group&expand=products
+      - schema:
+          type: integer
+        in: query
+        name: limit
+        description: Limit the number of returned items.
+        example: ?limit=3L9
+      - $ref: '#/components/parameters/latest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SelectionOptions'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/subscription_groups:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    get:
+      tags:
+      - Subscription Groups
+      summary: List Subscription Groups
+      operationId: ListSubscriptionGroups
+      description: Retrieve a list of subscription groups.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionGroups'
+              examples:
+                example-1:
+                  value:
+                    subscription_groups:
+                    - id: 3
+                      shop_id: 1
+                      internal_name: Standard Subscription
+                      is_enabled: true
+                      platform_id: gid://shopify/SellingPlanGroup/132016692
+                      allow_prepaid: false
+                      is_prepaid_only: false
+                      should_continue_prepaid: false
+                      continue_prepaid_type: as_prepaid
+                      percent_discount: 11
+                      minimum_order_count_before_cancellable: 0
+                      is_product_swappable: false
+                      is_subscription_only: false
+                      selection_type: products
+                      group_type: selectable
+                      selectable_daily_allowed: false
+                      selectable_weekly_allowed: false
+                      selectable_yearly_allowed: false
+                      selectable_max_interval_frequency: 0
+                      fixed_interval_type: monthly
+                      is_fixed_billing: false
+                      can_add_to_cart: true
+                      allow_buffer_days: true
+                      discount_type: fixed
+                      fixed_discount: 10
+                      created_at: '2019-11-20T20:50:07Z'
+                      updated_at: '2019-11-20T20:50:07Z'
+                      deleted_at: null
+                      active_subscribers_count: 1
+                      billing_rules:
+                      - id: 1
+                        shop_id: 1
+                        subscription_group_id: 1
+                        interval_number: 1
+                        interval_type: month
+                        interval_name: Monthly
+                        week_type: ''
+                        week_day: 0
+                        month_type: purchase_day
+                        month_day: ''
+                        month_occurrence: ''
+                        month_occurrence_day: ''
+                        year_type: ''
+                        year_month: ''
+                        year_occurrence: ''
+                        year_occurrence_day: ''
+                        billing_rule: FREQ=MONTHLY
+                        created_at: '2019-11-20T20:50:07Z'
+                        updated_at: '2019-11-20T20:50:07Z'
+                        deleted_at: null
+                      selection_options:
+                      - id: 1
+                        shop_id: 1
+                        subscription_group_id: 1
+                        platform_entity_id: '1357908642'
+                        created_at: '2019-11-20T20:50:07Z'
+                        updated_at: '2019-11-20T20:50:07Z'
+                        deleted_at: null
+                        entity_id: 1472540
+                      prepaid_durations:
+                      - {}
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+    post:
+      tags:
+      - Subscription Groups
+      summary: Create Subscription Group
+      operationId: CreateSubscriptionGroup
+      description: Create a subscription group.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionGroup'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionGroup'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/subscription_groups/{group_id}:
+    get:
+      tags:
+      - Subscription Groups
+      summary: Get Subscription Group
+      operationId: GetSubscriptionGroup
+      description: Retrieve a subscription group by its id.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/group_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionGroup'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+    put:
+      tags:
+      - Subscription Groups
+      summary: Update Subscription Group
+      operationId: UpdateSubscriptionGroup
+      description: Update a subscription group by its id.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/group_id_path_param'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionGroup'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionGroup'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+    delete:
+      tags:
+      - Subscription Groups
+      summary: Delete Subscription Group
+      operationId: DeleteSubscriptionGroup
+      description: Delete a subscription group by its id.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/group_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/subscription_groups/{group_id}/selection_options/{selection_option_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/group_id_path_param'
+    - schema:
+        type: string
+      name: selection_option_id
+      in: path
+      required: true
+      description: Selection option ID of the item to be deleted from the group.
+    delete:
+      summary: Delete Selection Option by ID
+      operationId: DeleteSelectionOptionByID
+      responses:
+        '200':
+          description: Successful operation
+        '401':
+          description: Unauthorized
+        '404':
+          description: Subscription group or selection option not found
+      description: Delete a selection option from inside a subscription group.
+      tags:
+      - Subscription Groups
+  /subscriptions/v1/shops/{shop_identifier}/subscription_groups/{group_id}/selection_options:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/group_id_path_param'
+    delete:
+      summary: Delete Selection Option by Filter
+      operationId: DeleteSelectionOptionByFilter
+      responses:
+        '200':
+          description: Successful operation
+        '401':
+          description: Unauthorized
+        '404':
+          description: Subscription group or selection option not found
+      description: Delete one or more selection options from inside a subscription group.
+      tags:
+      - Subscription Groups
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: filter
+        description: 'Accepts filtering options as described here: https://developer.boldcommerce.com/guides/subscriptions-v2/resources/query-pagination. Example: to remove the platform product IDs 1, 2 and 3 from a subscription group, the following query param must be added: ?filter=in(platform_entity_id:1,2,3)'
+        required: true
+    post:
+      tags:
+      - Subscription Groups
+      summary: Add Selection Options by Platform Product ID(s)
+      operationId: AddSelectionOptionsByPlatformIDs
+      description: Add one or more selection options from inside a subscription group.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  subscription_group:
+                    selection_options:
+                      platform_entity_ids: []
+              properties:
+                subscription_group:
+                  type: object
+                  required:
+                  - selection_options
+                  properties:
+                    selection_options:
+                      type: object
+                      required:
+                      - platform_entity_ids
+                      properties:
+                        platform_entity_ids:
+                          type: array
+                          description: These are product ids we are look
+                          items:
+                            type: integer
+              required:
+              - subscription_group
+            examples:
+              Example Body:
+                value:
+                  subscription_group:
+                    selection_options:
+                      platform_entity_ids:
+                      - 7021943390389
+                      - 7003068956853
+                      - 7014441746613
+        description: Add one or more selection options to a subscription group. Right now the only supported selection option is product. A list of platform product IDs can be passed as platform_entity_ids.
+      responses:
+        '200':
+          description: Successful operation
+        '401':
+          description: Unauthorized
+        '404':
+          description: Subscription group or selection option not found
+components:
+  schemas:
+    SubscriptionGroupEntity:
+      type: object
+      title: ''
+      properties:
+        id:
+          type: integer
+          example: 19364
+          readOnly: true
+        shop_id:
+          type: integer
+          example: 8846
+          readOnly: true
+        internal_name:
+          type: string
+          example: Standard Subscription
+        is_enabled:
+          type: boolean
+          example: true
+        platform_id:
+          type: string
+          example: gid://shopify/SellingPlanGroup/132016692
+        allow_prepaid:
+          type: boolean
+          example: false
+        is_prepaid_only:
+          type: boolean
+          example: false
+        should_continue_prepaid:
+          type: boolean
+          example: false
+        continue_prepaid_type:
+          type: string
+          example: as_prepaid
+          enum:
+          - as_prepaid
+          - as_standard
+        allow_buffer_days:
+          type: boolean
+        discount_type:
+          type: string
+          example: no_discount
+          enum:
+          - no_discount
+          - percentage
+          - fixed
+        percent_discount:
+          type: number
+          example: 11
+        fixed_discount:
+          type: integer
+        minimum_order_count_before_cancellable:
+          type: integer
+          example: 0
+        is_product_swappable:
+          type: boolean
+          example: false
+        is_subscription_only:
+          type: boolean
+          example: false
+        selection_type:
+          type: string
+          example: products
+          enum:
+          - products
+          - collections
+        group_type:
+          type: string
+          example: selectable
+          enum:
+          - selectable
+          - fixed
+        selectable_daily_allowed:
+          type: boolean
+          example: false
+        selectable_weekly_allowed:
+          type: boolean
+          example: false
+        selectable_yearly_allowed:
+          type: boolean
+          example: false
+        selectable_max_interval_frequency:
+          type: integer
+          example: 0
+        fixed_interval_type:
+          type: string
+          example: monthly
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - yearly
+        is_fixed_billing:
+          type: boolean
+          example: false
+        can_add_to_cart:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          format: date-time
+          readOnly: true
+        active_subscribers_count:
+          type: integer
+          example: 1
+          readOnly: true
+        billing_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingRuleEntity'
+        selection_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/SelectionOptionEntity'
+        prepaid_durations:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrepaidDuration'
+        dynamic_discounts:
+          type:
+          - array
+          - 'null'
+          description: "Dynamic Discounts are applied when the provided number of orders are placed. All order numbers must be unique.\nExample:\n  Base product price: $10.00\n  Initial discount: $1.00\n  Discounts:\n    {\"order_number\": 2, \"discount_type\": \"fixed\", \"discount_value\": 250}\n    {\"order_number\": 4, \"discount_type\": \"percentage\", \"discount_value\": 30}\n  Line item prices will be:\n    1st order: $9.00\n    2nd order: $9.00\n    3rd order: $7.50\n    4th order: $7.50\n    5th order: $7.00\n"
+          items:
+            $ref: '#/components/schemas/DynamicDiscount'
+      required:
+      - id
+      - shop_id
+      - internal_name
+      - is_enabled
+      - platform_id
+      - allow_prepaid
+      - is_prepaid_only
+      - should_continue_prepaid
+      - continue_prepaid_type
+      - allow_buffer_days
+      - discount_type
+      - percent_discount
+      - fixed_discount
+      - minimum_order_count_before_cancellable
+      - is_product_swappable
+      - is_subscription_only
+      - selection_type
+      - group_type
+      - selectable_daily_allowed
+      - selectable_weekly_allowed
+      - selectable_yearly_allowed
+      - selectable_max_interval_frequency
+      - fixed_interval_type
+      - is_fixed_billing
+      - can_add_to_cart
+      - created_at
+      - updated_at
+      - deleted_at
+      - active_subscribers_count
+      - billing_rules
+      - selection_options
+      - prepaid_durations
+    SelectionOptionsEntity:
+      type: object
+      title: ''
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Selection Options identifier.
+          readOnly: true
+        shop_id:
+          type: integer
+          example: 10
+          readOnly: true
+          description: The shop ID.
+        subscription_group_id:
+          type: integer
+          example: 9
+          readOnly: true
+          description: The subscription group the selection option belong to.
+        platform_entity_id:
+          type: integer
+          example: 8000319815956
+          readOnly: true
+          description: The platform identifier to the product in the selection option.
+        bold_platform_entity_id:
+          type: integer
+          example: 39
+          readOnly: true
+          description: The Bold identifier of the product in the selection option.
+        created_at:
+          type: string
+          example: '2022-11-09 17:50:37'
+          description: When the selection option was created.
+        updated_at:
+          type: string
+          example: '2022-11-09 17:50:37'
+          description: When the selection option was updated.
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          description: When the selection option was deleted.
+      required:
+      - id
+      - shop_id
+      - subscription_group_id
+      - platform_entity_id
+      - bold_platform_entity_id
+      - created_at
+      - updated_at
+      - deleted_at
+    SelectionOptions:
+      properties:
+        selection_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/SelectionOptionsEntity'
+        pagination:
+          $ref: '#/components/schemas/SubscriptionsCursorPagination'
+      type: object
+    BillingRuleEntity:
+      type: object
+      title: ''
+      properties:
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        shop_id:
+          type: integer
+          example: 1
+          readOnly: true
+        subscription_group_id:
+          type: integer
+          example: 1
+          readOnly: true
+        interval_number:
+          type: integer
+          example: 1
+        interval_type:
+          type: string
+          example: month
+          enum:
+          - custom
+          - day
+          - week
+          - month
+          - year
+        interval_name:
+          type: string
+          example: Monthly
+          maxLength: 255
+        week_type:
+          type: string
+          example: ''
+          enum:
+          - purchase_day
+          - each
+          - ''
+        week_day:
+          type: integer
+          example: 0
+          description: Sets day of week when paired with week_type=each. Valid values are SU, MO, TU, WE, TH, FR, and SA. Can be comma separated list.
+        month_type:
+          type: string
+          example: purchase_day
+          enum:
+          - purchase_day
+          - each
+          - on_the
+          - ''
+        month_day:
+          type: string
+          example: ''
+          description: Sets the day of the month when combined with month_type=each. Numbers in range 1-31. Can be comma separated list of numbers.
+        month_occurrence:
+          type: string
+          example: ''
+          enum:
+          - first
+          - second
+          - third
+          - fourth
+          - fifth
+          - last
+          - ''
+        month_occurrence_day:
+          type: string
+          example: MO
+          description: Sets day of week when paired with month_occurence=on_the. Valid values are SU, MO, TU, WE, TH, FR, SA, day, business_day, weekend_day. Can be comma separated list.
+        year_type:
+          type: string
+          enum:
+          - purchase_day
+          - on_the
+          - ''
+        year_month:
+          type: string
+          example: ''
+          description: Sets month of year when combined with year_type=on_the. Valid values between 1-12. Can be comma separated list.
+        year_occurrence:
+          type: string
+          example: ''
+          enum:
+          - first
+          - second
+          - third
+          - fourth
+          - fifth
+          - last
+          - ''
+        year_occurrence_day:
+          type: string
+          example: ''
+          description: Sets day of week when paired with year_occurence. Valid values are SU, MO, TU, WE, TH, FR, SA, day, business_day, weekend_day. Can be comma separated list.
+        billing_rule:
+          type: string
+          example: FREQ=MONTHLY
+        created_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        updated_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          readOnly: true
+          format: date-time
+        custom_billing_rule:
+          type: string
+          description: A custom RRULE for the subscription group
+        buffer_days:
+          type: integer
+          minimum: 0
+          maximum: 365
+        buffer_time:
+          type: string
+          format: time
+          example: 01:00:00
+          description: Time is in format HH:mm:ss
+    DynamicDiscount:
+      title: DynamicDiscount
+      type: object
+      description: "Dynamic Discount is applied when the provided number of orders are placed. The fixed discount value is in the base currency unit (e.g. cents).\nExample:\n  Base product price: $10.00\n  Discount: {\"order_number\": 2, \"discount_type\": \"fixed\", \"discount_value\": 250}\n  The $2.50 discount will be applied after the second order, and the line item price will be changed to $7.50.\n"
+      properties:
+        order_number:
+          type: integer
+          minimum: 1
+        discount_type:
+          type: string
+          example: fixed
+          enum:
+          - percentage
+          - fixed
+        discount_value:
+          type: number
+          minimum: 0
+          example: 25
+    SelectionOptionEntity:
+      type: object
+      description: ''
+      properties:
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        shop_id:
+          type: integer
+          example: 1
+          readOnly: true
+        subscription_group_id:
+          type: integer
+          example: 1
+          readOnly: true
+        platform_entity_id:
+          type: string
+          example: '1357908642'
+        created_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        updated_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          readOnly: true
+          format: date-time
+        entity_id:
+          type: integer
+          example: 1472540
+          readOnly: true
+        bold_platform_entity_id:
+          type: integer
+          example: 1234
+    PrepaidDuration:
+      title: PrepaidDuration
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        total_duration:
+          type: integer
+          minimum: 1
+        discount_value:
+          type: integer
+        discount_type:
+          type: string
+          enum:
+          - percentage
+          - fixed
+          - no_discount
+        created_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        updated_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          readOnly: true
+          format: date-time
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    SubscriptionGroups:
+      properties:
+        subscription_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionGroupEntity'
+      type: object
+    SubscriptionsCursorPagination:
+      type: object
+      title: CursorPagination
+      description: Pagination result for cursor-based paginated endpoints.
+      properties:
+        next:
+          type: string
+          example: P3NpbmNlX2lkPTE1Mjc0Jm9yZGVyX2J5PWlkJm9yZGVyX2RpcmVjdGlvbj1kZXNj
+          readOnly: true
+        prev:
+          type: string
+          example: P3NpbmNlX2lkPTE1Mjc0Jm9yZGVyX2J5PWlkJm9yZGVyX2RpcmVjdGlvbj1kZXNj
+          readOnly: true
+      readOnly: true
+    SubscriptionGroup:
+      properties:
+        subscription_group:
+          $ref: '#/components/schemas/SubscriptionGroupEntity'
+      type: object
+  parameters:
+    group_id_path_param:
+      name: group_id
+      in: path
+      description: The subscription group identifier.
+      required: true
+      schema:
+        type: integer
+    latest:
+      in: query
+      name: latest
+      required: false
+      description: 'If set to `true`, returns the most recent selection option for each distinct `platform_entity_id` in the response.
+
+
+        This is useful when using the `expand=subscription_group` query parameter by returning only the most recent subscription group a product was added to.'
+      schema:
+        type: boolean
+        default: false
+      example: true
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

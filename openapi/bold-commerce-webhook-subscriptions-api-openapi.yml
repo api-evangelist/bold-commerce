@@ -1,0 +1,2551 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Webhook Subscriptions API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Webhook Subscriptions
+  description: Contains webhook metadata. Use these endpoints to add, remove, edit, or list webhook subscriptions.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/webhooks/subscriptions:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    get:
+      summary: List Webhook Subscriptions
+      operationId: ListWebhookSubscriptions
+      tags:
+      - Webhook Subscriptions
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscriptions'
+              examples:
+                example:
+                  value:
+                    webhook_subscriptions:
+                    - id: 1
+                      shop_id: 1
+                      webhook_topic_id: 1
+                      callback_url: yourapp.com/v2/sub-created
+                      created_at: '2020-09-17T18:27:03Z'
+                      updated_at: '2020-09-17T18:27:03Z'
+                      deleted_at: null
+                    - id: 1
+                      shop_id: 1
+                      webhook_topic_id: 2
+                      callback_url: yourapp.com/sub-updated
+                      created_at: '2020-08-17T18:27:03Z'
+                      updated_at: '2020-08-17T18:27:03Z'
+                      deleted_at: null
+                    pagination:
+                      limit: 10
+                      count: 2
+                      total: 2
+                      total_pages: 1
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      description: Retrieve a list of webhook subscriptions.
+      parameters:
+      - schema:
+          type: integer
+        in: query
+        name: since_id
+        description: ''
+      - schema:
+          type: string
+        in: query
+        name: limit
+        description: Maximum number of results to be returned
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - webhook_topic_id
+            - callback_url
+            - shared_secret
+            - created_at
+            - updated_at
+        in: query
+        name: filters
+        description: Filter subscription webhooks. Multiple filters can be passed in the array.
+    post:
+      summary: Create Webhook Subscription
+      operationId: CreateWebhookSubscription
+      tags:
+      - Webhook Subscriptions
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscription'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      description: 'Create a webhook subscription. For more information, refer to Register for Webhooks.
+
+
+        The `subscription_payment_method_updated` webhook is not supported by default for all Shopify shops installed prior to January 15th 2024 (2024-01-15). Please submit a support request for access.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                webhook_subscription:
+                  type: object
+                  required:
+                  - webhook_topic_id
+                  - callback_url
+                  - shared_secret
+                  properties:
+                    webhook_topic_id:
+                      type: integer
+                      example: 10
+                      minimum: 1
+                      maximum: 10
+                    callback_url:
+                      type: string
+                      format: uri
+                      example: https://webhooks.shop.com
+                    shared_secret:
+                      type: string
+                      example: exMh194qw8JD@A50dA^P
+              required:
+              - webhook_subscription
+      callbacks:
+        Subscription created:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_created
+            post:
+              summary: Subscription Created
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription updated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_updated
+            post:
+              summary: Subscription Updated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription order created:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_order_created
+            post:
+              summary: Subscription Order Created
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionOrder'
+              responses:
+                '200':
+                  description: Successful operation
+        Customer created:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - customer_created
+            post:
+              summary: Customer Created
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/CustomerEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Customer updated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - customer_updated
+            post:
+              summary: Customer Updated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/Customer'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription order transaction failed:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_order_transaction_failed
+            post:
+              summary: Subscription Order Transaction Failed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionOrderTransactionFailed'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription order max retries reached:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_order_max_retries_reached
+            post:
+              summary: Subscription Order Max Retries Reached
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionOrderTransactionFailed'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription payment method updated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_payment_method_updated
+            post:
+              summary: Subscription Payment Method Updated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Upcoming order:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_upcoming_order
+            post:
+              summary: Upcoming Order
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/Subscription'
+              responses:
+                '200':
+                  description: Successful operation
+        Expiring payment method:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_expiring_payment
+            post:
+              summary: Expiring Payment Method
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionAndPaymentMethod'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription cancelled:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_cancelled
+            post:
+              summary: Subscription Cancelled
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription frequency updated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_frequency_updated
+            post:
+              summary: Subscription Frequency Updated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription credit card updated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_credit_card_updated
+            post:
+              summary: Subscription Credit Card Updated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription payment failed:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_payment_failed
+            post:
+              summary: Subscription Payment Failed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription paused:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_paused
+            post:
+              summary: Subscription Paused
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription resumed:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_resumed
+            post:
+              summary: Subscription Resumed
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription reactivated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_reactivated
+            post:
+              summary: Subscription Reactivated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription shipping address updated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_shipping_address_updated
+            post:
+              summary: Subscription Shipping Address Updated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription quantity updated:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_quantity_updated
+            post:
+              summary: Subscription Quantity Updated
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription skipped:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_skipped
+            post:
+              summary: Subscription Skipped
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+        Subscription line items added:
+          '{$request.body#/webhook_subscription.callback_url}':
+            parameters:
+            - $ref: '#/components/parameters/event_actor_type_header'
+            - $ref: '#/components/parameters/shop_identifier_header'
+            - in: header
+              name: Event-Identifier
+              required: true
+              description: The webhook topic name of the event.
+              schema:
+                type: string
+                enum:
+                - subscription_line_items_added
+            post:
+              summary: Subscription Line Items Added
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SubscriptionEntity'
+              responses:
+                '200':
+                  description: Successful operation
+  /subscriptions/v1/shops/{shop_identifier}/webhooks/subscriptions/{webhook_subscription_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/webhook_subscription_id_path_param'
+    get:
+      summary: Get Webhook Subscription
+      operationId: GetWebhookSubscription
+      tags:
+      - Webhook Subscriptions
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscription'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      description: Retrieve a webhook subscription by its id.
+    put:
+      summary: Update Webhook Subscription
+      operationId: UpdateWebhookSubscription
+      tags:
+      - Webhook Subscriptions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscription'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscription'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      description: Update a webhook subscription by its id.
+    delete:
+      tags:
+      - Webhook Subscriptions
+      summary: Delete Webhook Subscription
+      operationId: DeleteWebhookSubscription
+      responses:
+        '200':
+          description: Successful operation
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      description: Delete a webhook subscription by its id.
+components:
+  schemas:
+    SubscriptionOrderCountEntity:
+      properties:
+        order_count:
+          description: The number of orders created for the subscription.
+          type: integer
+          example: 1
+    Subscription:
+      type: object
+      properties:
+        subscription:
+          $ref: '#/components/schemas/SubscriptionEntity'
+    SubscriptionNotesEntity:
+      properties:
+        note:
+          description: An internal-only note that you can add to a subscription. For a subscription recurrence, this note appears in the Additional Details section of the created order. Applicable for Shopify Checkout only.
+          type:
+          - string
+          - 'null'
+          example: Staff note
+        order_note:
+          description: A customer-facing note that you can add to a subscription. For the first order, this field retains the note added by the customer. For a subscription recurrence, this note appears in the Note section of the created order. Applicable for Shopify Checkout only.
+          type:
+          - string
+          - 'null'
+          example: Customer note
+    PaymentMethodEntity:
+      type: object
+      properties:
+        type:
+          type: string
+          example: credit_card
+          enum:
+          - credit_card
+          - paypal
+          - shop_pay
+        name:
+          type:
+          - string
+          - 'null'
+          example: John Doe
+          description: Customer's name
+        billing_address:
+          type:
+          - object
+          - 'null'
+          description: Customer's billing address.
+          properties:
+            street:
+              type:
+              - string
+              - 'null'
+              example: 123 Main Street
+              description: The customer's street address.
+            city:
+              type:
+              - string
+              - 'null'
+              example: Toronto
+              description: The customer's city.
+            province:
+              type:
+              - string
+              - 'null'
+              example: Ontario
+              description: The customer's province or state, as applicable.
+            country:
+              type:
+              - string
+              - 'null'
+              example: Canada
+              description: The customer's country name.
+            zip:
+              type:
+              - string
+              - 'null'
+              example: H0H 0H0
+              description: The customer's postal code.
+        public_id:
+          type:
+          - string
+          - 'null'
+          example: jik1w6HrCn17CxXPDkWhtgyqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+        update_method:
+          type:
+          - string
+          - 'null'
+          example: trigger_email
+          enum:
+          - trigger_email
+          - embedded
+          - url
+        cc_type:
+          type:
+          - string
+          - 'null'
+          example: Visa
+        expiration:
+          type:
+          - object
+          - 'null'
+          required:
+          - date
+          - timezone_type
+          - timezone
+          properties:
+            date:
+              type:
+              - string
+              - 'null'
+              example: 2020-5
+            timezone_type:
+              type:
+              - string
+              - 'null'
+            timezone:
+              type:
+              - string
+              - 'null'
+              example: UTC
+        last_four:
+          type:
+          - string
+          - 'null'
+          example: '1111'
+        is_default:
+          type:
+          - boolean
+          - 'null'
+          example: true
+        paypal_email:
+          type:
+          - string
+          - 'null'
+          example: customer@example.com
+          format: email
+        update_url:
+          type:
+          - object
+          - 'null'
+          required:
+          - url
+          - expiry
+          properties:
+            url:
+              type: string
+              format: uri
+            expiry:
+              type: string
+              format: date-time
+        embed_url:
+          type:
+          - object
+          - 'null'
+          properties:
+            url:
+              type: string
+              format: uri
+            expiry:
+              type:
+              - string
+              - 'null'
+              format: date-time
+          required:
+          - url
+          - expiry
+      required:
+      - type
+      - public_id
+      - update_method
+      - cc_type
+      - expiration
+      - last_four
+      - is_default
+      - paypal_email
+      - update_url
+      readOnly: true
+    CustomerSubscriptionSummary:
+      type: object
+      required:
+      - bold_platform_customer_id
+      - next_order_date
+      - last_order_date
+      - active_subscription_count
+      - inactive_subscription_count
+      - subscription_order_count
+      - lifetime_value_usd
+      description: Summary of the customer's subscriptions.
+      properties:
+        bold_platform_customer_id:
+          type: integer
+          description: The customer's ID.
+          example: 2
+          readOnly: true
+        next_order_date:
+          type: string
+          description: The cext order date and time for the subscription.
+          example: '2020-01-20T18:00:00Z'
+          readOnly: true
+        last_order_date:
+          type: string
+          description: The most recent order date and time for a subscription.
+          example: '2019-11-20T20:55:27Z'
+          readOnly: true
+        active_subscription_count:
+          type: integer
+          description: The number of active subscriptions.
+          example: 2
+          readOnly: true
+        inactive_subscription_count:
+          type: integer
+          description: The number of inactive subscriptions.
+          example: 1
+          readOnly: true
+        subscription_order_count:
+          type: integer
+          description: The number of subscription orders for this customer. Initial orders count toward this total.
+          example: 5
+          readOnly: true
+        lifetime_value_usd:
+          type: number
+          description: The total value of the order made by this customer in USD.
+          example: 152.12
+          readOnly: true
+    OrderEntity:
+      type: object
+      x-examples: {}
+      title: ''
+      properties:
+        id:
+          type: integer
+          example: 185490
+        platform_id:
+          type: integer
+          example: 1
+        platform_customer_id:
+          type: integer
+          example: 123
+        shop_identifier:
+          type: string
+          example: zya0kzb8hu
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItemEntity'
+        billing_address:
+          description: Orders that were deleted from the platform won't have address information available.
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/CustomerAddressEntity'
+        shipping_addresses:
+          description: Orders that were deleted from the platform won't have address information available.
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/CustomerAddressEntity'
+        subtotal:
+          type: integer
+          example: 1337
+        subtotal_charged:
+          type: integer
+          example: 1337
+        subtotal_tax:
+          type: integer
+          example: 144
+        subtotal_tax_charged:
+          type: integer
+          example: 144
+        shipping_subtotal:
+          example: 1000
+          type: integer
+        shipping_subtotal_charged:
+          type: integer
+          example: 1000
+        shipping_tax:
+          example: 0
+          type: integer
+        shipping_tax_charged:
+          example: 0
+          type: integer
+        total:
+          example: 2204
+          type: integer
+        total_charged:
+          example: 2204
+          type: integer
+        total_tax:
+          example: 144
+          type: integer
+        total_tax_charged:
+          example: 144
+          type: integer
+        fulfillment_status:
+          type: string
+          example: pending
+        source:
+          type: string
+        payment_method:
+          type: string
+          example: Shopify Payments
+        payment_method_details:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/PaymentMethodEntity'
+        shipping_method:
+          type: string
+          example: Subscription shipping
+        shipping_rates:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type:
+                - integer
+                - 'null'
+              bold_subscription_id:
+                type:
+                - number
+                - 'null'
+              name:
+                type: string
+              code:
+                type:
+                - string
+                - 'null'
+              price:
+                type: integer
+              price_charged:
+                type:
+                - integer
+                - 'null'
+              value:
+                type: integer
+              value_charged:
+                type:
+                - integer
+                - 'null'
+              tag:
+                type:
+                - string
+                - 'null'
+              hash:
+                type:
+                - string
+                - 'null'
+            required:
+            - id
+            - bold_subscription_id
+            - name
+            - code
+            - price
+            - price_charged
+            - value
+            - value_charged
+            - tag
+            - hash
+        tax_lines:
+          type: array
+          items:
+            type: object
+            properties:
+              amount:
+                type: integer
+              amount_charged:
+                type: integer
+              name:
+                type:
+                - string
+                - 'null'
+              rate:
+                type:
+                - number
+                - 'null'
+            required:
+            - amount
+            - amount_charged
+            - name
+            - rate
+        discounts:
+          type: array
+          items:
+            type: object
+            properties:
+              discount_percentage:
+                type:
+                - integer
+                - 'null'
+                example: 10
+              discount_type:
+                type:
+                - string
+                - 'null'
+                enum:
+                - percentage
+                - fixed
+                - no_discount
+                example: percentage
+              text:
+                type:
+                - string
+                - 'null'
+                example: 10PERCENTOFF
+                readOnly: true
+              value:
+                type: integer
+              value_charged:
+                type: integer
+            required:
+            - discount_percentage
+            - discount_type
+            - text
+            - value
+            - value_charged
+        order_number:
+          type: integer
+          example: 0
+        currency:
+          type: string
+          example: CAD
+        currency_charged:
+          type: string
+        currency_format:
+          type: string
+        currency_format_charged:
+          type: string
+        exchange_rate:
+          type:
+          - number
+          - 'null'
+        test:
+          type: boolean
+          example: false
+        url:
+          type: string
+          example: https://example-store.example.com/account.php?action=view_order&order_id=1
+        updated_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        created_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        placed_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: '2021-07-09T18:13:27Z'
+          format: date-time
+          readOnly: true
+        subscription_id:
+          type: integer
+          example: 5266
+      required:
+      - id
+      - platform_id
+      - platform_customer_id
+      - shop_identifier
+      - line_items
+      - billing_address
+      - shipping_addresses
+      - subtotal
+      - subtotal_charged
+      - subtotal_tax
+      - subtotal_tax_charged
+      - shipping_subtotal
+      - shipping_subtotal_charged
+      - shipping_tax
+      - shipping_tax_charged
+      - total
+      - total_charged
+      - total_tax
+      - total_tax_charged
+      - fulfillment_status
+      - source
+      - payment_method
+      - payment_method_details
+      - shipping_method
+      - shipping_rates
+      - tax_lines
+      - discounts
+      - order_number
+      - currency
+      - currency_charged
+      - currency_format
+      - currency_format_charged
+      - exchange_rate
+      - test
+      - url
+      - updated_at
+      - created_at
+      - placed_at
+      - deleted_at
+      - subscription_id
+      readOnly: true
+    SubscriptionOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1008130
+        subscription_id:
+          type: integer
+          example: 316561
+        shop_id:
+          type: integer
+          example: 6481
+        base_to_charged_exchange_rate:
+          type: number
+          example: 1
+        base_currency:
+          type: string
+          example: CAD
+        order:
+          $ref: '#/components/schemas/OrderEntity'
+        is_multi_currency:
+          type: boolean
+        created_at:
+          type: string
+          example: '2021-07-09T18:13:40Z'
+        updated_at:
+          type:
+          - string
+          - 'null'
+          example: '2021-07-09T18:13:40Z'
+      required:
+      - id
+      - subscription_id
+      - shop_id
+      - base_to_charged_exchange_rate
+      - base_currency
+      - order
+      - is_multi_currency
+      - created_at
+      - updated_at
+      title: ''
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    deletedAt:
+      type:
+      - string
+      - 'null'
+      description: The date and time when the object was deleted. Set to `null` when the object was not deleted.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+    WebhookSubscriptions:
+      title: ''
+      type: object
+      properties:
+        webhook_subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionEntity'
+    SubscriptionAndPaymentMethod:
+      title: SubscriptionAndPaymentMethod
+      type: object
+      properties:
+        payment_method:
+          $ref: '#/components/schemas/PaymentMethodEntity'
+        subscription:
+          $ref: '#/components/schemas/SubscriptionEntity'
+      x-examples:
+        Example:
+          value:
+            payment_method:
+              public_id: jik1w6HrCn17CxXPDkWhtgyqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+              cc_type: Visa
+              expiration:
+                date: 2020-05
+                timezone_type: 'null'
+                timezone: 'null'
+              last_four: '1111'
+              is_default: true
+            subscription:
+              id: 1
+              shop_id: 1
+              next_order_datetime: '2020-01-20T18:00:00Z'
+              next_payment_datetime: '2020-01-20T18:00:00Z'
+              subscription_status: active
+              payment_method_token: jik1w6HrCn17CxXPcKwHTGqqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+              payment_rrule: DTSTART:20200120T180000Z\nRRULE:FREQ=MONTHLY\nEXDATE:20200220T180000Z
+              payment_rrule_text: Monthly
+              order_rrule: DTSTART:20200120T180000Z\nRRULE:FREQ=MONTHLY\nEXDATE:20200220T180000Z
+              order_rrule_text: Monthly
+              last_payment_datetime: '2019-11-20T20:55:26Z'
+              last_order_datetime: '2019-11-20T20:55:26Z'
+              last_processed_datetime: '2019-11-20T20:55:26Z'
+              current_retries: 3
+              charged_currency: CAD
+              base_to_charged_exchange_rate: 1
+              base_currency: CAD
+              line_items:
+              - id: 1
+                subscription_id: 1
+                bold_platform_subscription_id: 1
+                bold_platform_subscription_line_item_id: 1
+                platform_product_id: '1357908642'
+                platform_variant_id: '2468097531'
+                subscription_group_id: 1
+                subscription_group_billing_rules_id: 1
+                product_name: Monthly Expansion Pack
+                variant_name: Default Title
+                title: Monthly Expansion Pack
+                sku: SKU-113-Red
+                url: https://example-store.example.com/monthly-expansion-pack
+                image: ''
+                quantity: 1
+                price: 3500
+                price_charged: 3500
+                discounted_price: 3200
+                discounted_price_charged: 3200
+                full_price: 3200
+                full_price_charged: 3200
+                requires_shipping: false
+                grams: 2200
+                weight: 2.2
+                weight_unit: kg
+                taxable: true
+                discounts:
+                - id: 1
+                  subscription_line_item_id: 1
+                  shop_id: 5
+                  discount_type: percentage
+                  percentage_value: 10
+                  fixed_value: 0
+                  description: Subscription discount (10%) for Monthly Expansion Pack
+                  created_at: '2019-11-20T20:31:55Z'
+                  updated_at: '2019-11-20T20:31:55Z'
+                placed_at: '2012-01-20T18:00:00Z'
+                created_at: '2019-11-20T20:31:55Z'
+                updated_at: '2019-11-20T20:31:55Z'
+              customer:
+                id: 0
+                platform_id: 0
+                cashier_public_id: string
+                first_name: John
+                last_name: Doe
+                phone: 800-555-0102
+                email: john.doe@example.com
+                notes: Loyal customer.
+                addresses:
+                - id: 0
+                  shop_identifier: string
+                  platform_id: 0
+                  customer_id: 0
+                  platform_type: string
+                  platform_customer_id: 123456789
+                  first_name: John
+                  last_name: Doe
+                  company: Example Company
+                  phone: 800-555-0102
+                  street1: 123 example st.
+                  street2: '101'
+                  city: Toronto
+                  province: Ontario
+                  province_code: 'ON'
+                  country: Canada
+                  country_code: CA
+                  zip: M5V 3L9
+                  is_default: true
+                  created_at: '2019-11-20T20:31:55Z'
+                  updated_at: '2019-11-20T20:31:55Z'
+                default_address:
+                  id: 0
+                  shop_identifier: string
+                  platform_id: 0
+                  customer_id: 0
+                  platform_type: string
+                  platform_customer_id: 123456789
+                  first_name: John
+                  last_name: Doe
+                  company: Example Company
+                  phone: 800-555-0102
+                  street1: 123 example st.
+                  street2: '101'
+                  city: Toronto
+                  province: Ontario
+                  province_code: 'ON'
+                  country: Canada
+                  country_code: CA
+                  zip: M5V 3L9
+                  is_default: true
+                  created_at: '2019-11-20T20:31:55Z'
+                  updated_at: '2019-11-20T20:31:55Z'
+                subscription_summary:
+                  customer_id: 0
+                  next_order_date: '2020-01-20T18:00:00Z'
+                  last_order_date: '2019-11-20T20:55:27Z'
+                  active_subscription_count: 2
+                  inactive_subscription_count: 0
+                  subscription_order_count: 5
+                labels:
+                - id: 0
+                  customer_id: 0
+                  name: bsub_subscription_active
+                  created_at: '2019-11-20T20:31:55Z'
+                  updated_at: '2019-11-20T20:31:55Z'
+                  deleted_at: null
+              shipping_lines:
+              - id: 0
+                name: Standard Shipping
+                code: Standard Shipping
+                price: 1000
+                value: 1000
+                tag: Shipping
+                created_at: '2019-11-20T20:31:55Z'
+                updated_at: '2019-11-20T20:31:55Z'
+                subscription_id: 1
+              billing_address:
+                id: 0
+                shop_identifier: string
+                platform_id: 0
+                customer_id: 0
+                platform_type: string
+                platform_customer_id: 123456789
+                first_name: John
+                last_name: Doe
+                company: Example Company
+                phone: 800-555-0102
+                street1: 123 example st.
+                street2: '101'
+                city: Toronto
+                province: Ontario
+                province_code: 'ON'
+                country: Canada
+                country_code: CA
+                zip: M5V 3L9
+                is_default: true
+                created_at: '2019-11-20T20:31:55Z'
+                updated_at: '2019-11-20T20:31:55Z'
+                deleted_at: '2019-11-20T20:31:55Z'
+              shipping_address:
+                id: 0
+                shop_identifier: string
+                platform_id: 0
+                customer_id: 0
+                platform_type: string
+                platform_customer_id: 123456789
+                first_name: John
+                last_name: Doe
+                company: Example Company
+                phone: 800-555-0102
+                street1: 123 example st.
+                street2: '101'
+                city: Toronto
+                province: Ontario
+                province_code: 'ON'
+                country: Canada
+                country_code: CA
+                zip: M5V 3L9
+                is_default: true
+                created_at: '2019-11-20T20:31:55Z'
+                updated_at: '2019-11-20T20:31:55Z'
+                deleted_at: '2019-11-20T20:31:55Z'
+              idempotency_key: JwGdN55C4g1z5FXRO8Hp21CMxUxKyo6VcGSf3cUsjCgNyTtoeZcIsGM1We4p7pCe-0
+              created_at: '2019-11-20T20:31:55Z'
+              updated_at: '2019-11-20T20:31:55Z'
+              percent_discount: 10
+              discount_code: DISCOUNTCODE
+              customer_id: 1697912
+              billing_address_id: 11697812
+              shipping_address_id: 11697812
+              note: Staff note
+              order_note: Customer note
+    CustomerLabel:
+      type: object
+      description: The label assigned to a customer.
+      required:
+      - id
+      - name
+      - created_at
+      - updated_at
+      - deleted_at
+      properties:
+        id:
+          type: integer
+          description: The customer label ID.
+          example: 12
+          readOnly: true
+        customer_id:
+          type: integer
+          description: The customer ID.
+          example: 21
+          readOnly: true
+        name:
+          type: string
+          description: The content of the label.
+          example: bsub_subscription_active
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+        updated_at:
+          $ref: '#/components/schemas/updatedAt'
+        deleted_at:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/deletedAt'
+    WebhookSubscription:
+      title: ''
+      type: object
+      properties:
+        webhook_subscription:
+          $ref: '#/components/schemas/WebhookSubscriptionEntity'
+    LineItemAttributeEntity:
+      title: LineItemAttributeEntity
+      type: object
+      description: This represents a custom field that can be defined and used to store complementary information about a subscription line item.
+      properties:
+        name:
+          type: string
+          example: size_preference
+          description: The name of the custom field/attribute, up to 250 characters.
+        value:
+          type: string
+          example: XL
+          description: The content of the custom field/attribute.
+        created_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this line item attribute was created.
+          example: '2021-01-17T20:30:40Z'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this line item attribute was last updated. The value is the same as the `created_at` value if the line item attribute has never been updated.
+          example: '2021-01-17T20:30:40Z'
+          readOnly: true
+        subscription_id:
+          description: The ID of the subscription associated to this line item attribute.
+          type: integer
+          readOnly: true
+          example: 435989
+        line_item_id:
+          description: The ID of the subscription line item this line item attribute belongs to.
+          type: integer
+          readOnly: true
+          example: 45734
+    CustomerEntity:
+      type: object
+      required:
+      - id
+      - platform_id
+      - cashier_public_id
+      - first_name
+      - last_name
+      - phone
+      - email
+      - notes
+      - addresses
+      - default_address
+      - subscription_summary
+      - labels
+      - created_at
+      properties:
+        id:
+          description: The customer ID.
+          type: integer
+          readOnly: true
+          example: 2
+        platform_id:
+          description: The customer platform ID.
+          type: string
+          readOnly: true
+          example: '123456790'
+        cashier_public_id:
+          type:
+          - string
+          - 'null'
+          description: The public customer ID generated when using Bold Checkout, set to `null` otherwise.
+          example: null
+          readOnly: true
+        first_name:
+          type: string
+          description: The customer's first name.
+          example: Jane
+        last_name:
+          type: string
+          description: The customer's last name.
+          example: Doe
+        email:
+          type: string
+          description: The customer's email
+          example: jane.doe@example.com
+        phone:
+          type: string
+          description: The customer's phone number. For Shopify checkout users, [you can configure phone number requirements in the admin](/guides/subscriptions-v2/create-subscription#how-do-i-make-phone-numbers-optional-when-using-shopify-checkout).
+          example: '12045551234'
+        notes:
+          type: string
+          description: The customer's internal notes. This is applied as a note in the **Customer info** section of Bold Subscriptions admin.
+          example: Loyal customer
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerAddressEntity'
+          readOnly: true
+        default_address:
+          description: The customer's default address.
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/CustomerAddressEntity'
+        subscription_summary:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/CustomerSubscriptionSummary'
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerLabel'
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+    createdAt:
+      type: string
+      description: The date and time when the object was created.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+      readOnly: true
+    WebhookSubscriptionEntity:
+      type: object
+      x-examples:
+        Example:
+          id: 1
+          shop_id: 1
+          webhook_topic_id: 1
+          callback_url: yourapp.com/bold-subscription-creation-callback
+          created_at: '2020-08-13T15:39:01Z'
+          updated_at: '2020-08-13T15:39:01Z'
+          deleted_at: ''
+      properties:
+        id:
+          type: integer
+        shop_id:
+          type: integer
+        webhook_topic_id:
+          type: integer
+        callback_url:
+          type: string
+        shared_secret:
+          type: string
+        created_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        updated_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          readOnly: true
+          format: date-time
+    SubscriptionEntity:
+      allOf:
+      - type: object
+        x-examples: {}
+        properties:
+          id:
+            type: integer
+            example: 1
+            readOnly: true
+          external_id:
+            type:
+            - string
+            - 'null'
+          customer:
+            example: 'null'
+          shop_id:
+            type: integer
+            example: 1
+            readOnly: true
+          next_order_datetime:
+            type: string
+            example: '2020-01-20T18:00:00Z'
+          next_payment_datetime:
+            type: string
+            example: '2020-01-20T18:00:00Z'
+          next_processing_datetime:
+            type: string
+            example: '2020-01-20T18:00:00Z'
+          subscription_status:
+            type: string
+            enum:
+            - active
+            - inactive
+            - paused
+            - scheduled
+            - processing
+            - app_uninstalled
+            - waiting_sca_authorization
+            example: active
+          status_changed_at:
+            type: string
+            example: '2019-11-20T20:31:55Z'
+            format: date-time
+            readOnly: true
+          sca_url:
+            type:
+            - string
+            - 'null'
+            example: https://bank.com/pCkWhtgQQVM8W/sca
+            readOnly: true
+          payment_method_token:
+            type: string
+            example: jik1w6HrCn17CxXPcKwHTGqqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+          payment_gateway_public_id:
+            type:
+            - string
+            - 'null'
+            example: jik1w6HrCn17CxXPcKwHTGqqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+          payment_rrule:
+            type: string
+            example: DTSTART:20200120T180000Z\nRRULE:FREQ=MONTHLY\nEXDATE:20200220T180000Z
+          payment_rrule_text:
+            type:
+            - string
+            - 'null'
+            example: Monthly
+          order_rrule:
+            type: string
+            example: DTSTART:20200120T180000Z\nRRULE:FREQ=MONTHLY\nEXDATE:20200220T180000Z
+          order_rrule_text:
+            type:
+            - string
+            - 'null'
+            example: Monthly
+          last_payment_datetime:
+            type:
+            - string
+            - 'null'
+            example: '2019-11-20T20:55:26Z'
+          last_order_datetime:
+            type:
+            - string
+            - 'null'
+            example: '2019-11-20T20:55:26Z'
+          last_processed_datetime:
+            type:
+            - string
+            - 'null'
+            example: '2019-11-20T20:55:26Z'
+          current_retries:
+            type: integer
+            example: 3
+          charged_currency:
+            type: string
+            example: CAD
+          base_to_charged_exchange_rate:
+            type: integer
+            example: 1
+          base_currency:
+            type: string
+            example: CAD
+          line_items:
+            type: array
+            items:
+              $ref: '#/components/schemas/LineItemEntity'
+            readOnly: true
+          shipping_lines:
+            type:
+            - array
+            - 'null'
+            items:
+              $ref: '#/components/schemas/ShippingLineEntity'
+            readOnly: true
+          billing_address:
+            $ref: '#/components/schemas/CustomerAddressEntity'
+          shipping_address:
+            type:
+            - object
+            - 'null'
+            allOf:
+            - $ref: '#/components/schemas/CustomerAddressEntity'
+          idempotency_key:
+            type: string
+            example: JwGdN55C4g1z5FXRO8Hp21CMxUxKyo6VcGSf3cUsjCgNyTtoeZcIsGM1We4p7pCe-0
+          placed_at:
+            type:
+            - string
+            - 'null'
+            example: '2012-11-20T20:31:55Z'
+            format: data-time
+          created_at:
+            type: string
+            example: '2019-11-20T20:31:55Z'
+            format: date-time
+            readOnly: true
+          updated_at:
+            type: string
+            example: '2019-11-20T20:31:55Z'
+            format: date-time
+            readOnly: true
+          percent_discount:
+            type:
+            - number
+            - 'null'
+            example: 10
+            readOnly: true
+          discount_code:
+            type: string
+            example: DISCOUNTCODE
+            readOnly: true
+          customer_id:
+            type: integer
+            example: 1697912
+            readOnly: true
+          billing_address_id:
+            type: integer
+            example: 11697812
+          shipping_address_id:
+            type: integer
+            example: 11697812
+          orders_processed:
+            type:
+            - integer
+            - 'null'
+            example: 1
+          last_failure_code:
+            type:
+            - string
+            - 'null'
+            example: card_expired
+            description: This code may help to identify the type of the error.
+            enum:
+            - alt_pp_payment_method_required
+            - bigcommerce_error
+            - card_declined
+            - card_expired
+            - credit_card_not_found
+            - discount_code_use_limit
+            - insufficient_funds
+            - invalid_billing_address
+            - invalid_bold_api_token
+            - invalid_card_expiration_month
+            - invalid_card_expiration_year
+            - invalid_card_number
+            - invalid_customer_email
+            - invalid_discount_code
+            - invalid_payment_method
+            - invalid_security_code
+            - invalid_shipping_address
+            - invalid_zip_code
+            - no_payment_provider
+            - payment_method_declined
+            - plugin_event_failed
+            - shopify_error
+            - stripe_support_required
+            - transaction_declined
+            - out_of_stock_product
+            - unaccepted_credit_card
+            - unknown_error
+            - unsupported_card
+            - unsupported_purchase_type
+            - unsupported_shipping_address
+            - woocommerce_error
+          last_failure_details:
+            type:
+            - object
+            - 'null'
+            description: Default error messages for the last_failure_code field
+            required:
+            - message
+            properties:
+              message:
+                type: string
+                description: Error message
+                example: The order couldn't process because the card was declined.
+          last_failure_reason:
+            type:
+            - string
+            - 'null'
+            example: credit_card
+            description: The reason for the failure
+            enum:
+            - credit_card
+            - gateway
+            - cashier
+            - platform
+            - inventory
+            - other
+      - $ref: '#/components/schemas/SubscriptionNotesEntity'
+      - $ref: '#/components/schemas/SubscriptionOrderCountEntity'
+      required:
+      - id
+      - external_id
+      - customer
+      - shop_id
+      - next_order_datetime
+      - next_payment_datetime
+      - next_processing_datetime
+      - subscription_status
+      - status_changed_at
+      - payment_method_token
+      - payment_gateway_public_id
+      - payment_rrule
+      - payment_rrule_text
+      - order_rrule
+      - order_rrule_text
+      - last_payment_datetime
+      - last_order_datetime
+      - last_processed_datetime
+      - current_retries
+      - charged_currency
+      - base_to_charged_exchange_rate
+      - base_currency
+      - idempotency_key
+      - created_at
+      - updated_at
+      - percent_discount
+      - customer_id
+      - billing_address_id
+      - shipping_address_id
+      - note
+      - order_note
+    SubscriptionOrderTransactionFailed:
+      title: SubscriptionOrderTransactionFailed
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123
+        bold_platform_subscription_id:
+          type: integer
+          example: 234
+        shop_platform_app_id:
+          type: integer
+          example: 345
+        failure_reason:
+          type: string
+          example: cashier
+        cashier_response:
+          type: string
+          example: '{"success":false,"errors":{"code":"order_creation_failed","message":"","service":"cashier","service_type":"cashier"}}'
+        current_retries:
+          type: integer
+          example: 3
+        max_retries:
+          type: integer
+          example: 3
+        created_at:
+          type: string
+          format: date-time
+          example: '2019-11-20T20:31:55Z'
+        customer:
+          $ref: '#/components/schemas/CustomerEntity'
+      required:
+      - id
+      - bold_platform_subscription_id
+      - shop_platform_app_id
+      - failure_reason
+      - cashier_response
+      - current_retries
+      - max_retries
+      - created_at
+      - shop_identifier
+    Customer:
+      properties:
+        customer:
+          $ref: '#/components/schemas/CustomerEntity'
+      type: object
+    updatedAt:
+      type:
+      - string
+      - 'null'
+      description: The date and time when the object was most recently updated.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+      readOnly: true
+    LineItemDiscountEntity:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the line item discount.
+          example: 1
+        subscription_line_item_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription line item the discount belongs to.
+          example: 1
+        shop_id:
+          type: integer
+          description: The ID of the shop.
+          example: 5
+        full_price:
+          type:
+          - integer
+          - 'null'
+          description: The price of the subscription line item without this discount applied.
+          example: 5
+        discount_type:
+          type: string
+          description: The type of discount being applied to the subscription line item.
+          enum:
+          - percentage
+          - fixed
+          - no_discount
+          example: percentage
+        percentage_value:
+          type: number
+          description: The percent discount to apply to the line item price in a range of 0 - 100. Only applied when the value for `discount_type` is `percentage`. For example, a value of `12.5` will discount the line item by 12.5%.
+          example: 10
+        fixed_value:
+          type: integer
+          description: The discount amount in base currency units (e.g. cents). Only applied when the value for `discount_type` is `fixed`. For example, a value of `575` on a subscription with a base currency of USD will discount the line item by $5.75 USD.
+          example: 0
+        fixed_value_charged:
+          type: integer
+          description: The discount amount in base currency units (e.g. cents) of the subscription's `charged_currency`. Only applied when the value for `discount_type` is `fixed`. This value is derived from the `fixed_value` and the subscription's currency properties. For example, with a `fixed_value` of 575, a base currency of USD, a charged currency of CAD, and an exchange rate of 1.5, this value would be 575 * 1.5 = `863`.
+          example: 0
+        description:
+          type: string
+          description: A description of the discount to show to the customer.
+          example: Subscription discount (10%) for Monthly Expansion Pack
+        created_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount added to the subscription line item.
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount was last updated. The value is the same as the `created_at` value if the discount has never been updated.
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount was removed from the subscription line item. The value is null if the discount has never been deleted.
+          readOnly: true
+      required:
+      - id
+      - subscription_line_item_id
+      - shop_id
+      - full_price
+      - discount_type
+      - percentage_value
+      - fixed_value
+      - fixed_value_charged
+      - description
+      - created_at
+      - updated_at
+      - deleted_at
+      readOnly: true
+    ShippingLineEntity:
+      type: object
+      description: A shipping line for a subscription.
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the shipping line.
+          readOnly: true
+          example: 36217
+        name:
+          type: string
+          description: The name of the shipping line.
+          example: Standard Shipping
+          readOnly: true
+        code:
+          type: string
+          description: The code of the shipping line.
+          example: Standard Shipping
+          readOnly: true
+        price:
+          type: integer
+          description: The price of the shipping line, in base units (e.g., cents) of the `base_currency` of the associated subscription. For example, a value of `1000` on a subscription with a base currency of USD corresponds to a $10.00 USD shipping line price.
+          example: 1000
+          readOnly: true
+        value:
+          type: integer
+          description: The price of the shipping line, in base units (e.g., cents) of the `base_currency` of the associated subscription. For example, a value of `1000` on a subscription with a base currency of USD corresponds to a $10.00 USD shipping line price.
+          example: 1000
+          readOnly: true
+        value_charged:
+          type:
+          - integer
+          - 'null'
+          description: The price of the shipping line, in base units (e.g., cents) of the `charged_currency` of the associated subscription. For example, a value of `1000` on a subscription with a charged currency of CAD corresponds to a $10.00 CAD shipping line price.
+          example: 1000
+          readOnly: true
+        tag:
+          type:
+          - string
+          - 'null'
+          example: Shipping
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this shipping line was created.
+          example: '2019-10-20T20:31:55Z'
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this shipping line was last updated. The value is the same as the `created_at` value if the shipping line has never been updated.
+          example: '2019-11-20T20:31:55Z'
+          readOnly: true
+        subscription_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription the shipping line belongs to.
+          example: 1
+          readOnly: true
+      required:
+      - id
+      - name
+      - code
+      - price
+      - value
+      - value_charged
+      - tag
+      - created_at
+      - updated_at
+      - subscription_id
+      readOnly: true
+    CustomerAddressEntity:
+      type: object
+      required:
+      - id
+      - shop_identifier
+      - platform_id
+      - customer_id
+      - platform_type
+      - platform_customer_id
+      - first_name
+      - last_name
+      - company
+      - phone
+      - street1
+      - street2
+      - city
+      - province
+      - province_code
+      - country
+      - country_code
+      - zip
+      - is_default
+      - address_use
+      - address_source
+      - created_at
+      - updated_at
+      - deleted_at
+      properties:
+        id:
+          type: integer
+          description: The address ID.
+          readOnly: true
+          example: 1
+        shop_identifier:
+          type: string
+          description: The platform shop identifier.
+          readOnly: true
+          example: '12345'
+        platform_id:
+          type: string
+          description: The platform address identifier.
+          readOnly: true
+          example: '14'
+        customer_id:
+          type: integer
+          description: The customer ID.
+          readOnly: true
+          example: 2
+        platform_type:
+          type: string
+          enum:
+          - bigcommerce
+          - commercetools
+          - custom
+          - shopify
+          - woocommerce
+          description: The e-commerce platform being used by the shop (might also be 'custom' for no specific e-commerce platform).
+          readOnly: true
+          example: shopify
+        platform_customer_id:
+          type: string
+          readOnly: true
+          description: The ID of the customer on the platform.
+          example: '35'
+        first_name:
+          type: string
+          description: The customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: The customer's last name(s).
+          example: Doe
+        company:
+          type: string
+          description: The customer's company name.
+          example: Example Company
+        phone:
+          type: string
+          description: The customer's phone number.
+          example: 123-456-7890
+        street1:
+          type: string
+          description: The customer's street address (street name and number).
+          example: 123 example st.
+        street2:
+          type: string
+          description: The address complement (suite number, unit number, etc.).
+          example: '101'
+        city:
+          type: string
+          description: The customer's city.
+          example: Toronto
+        province:
+          type: string
+          description: The customer's province or state, as applicable. Can be an empty string in case the address has no state/province.
+          example: Ontario
+        province_code:
+          type: string
+          description: The customer's province or state code (usually 2 characters), as applicable. Can be an empty string in case the address has no state/province.
+          example: 'ON'
+        country:
+          type: string
+          description: The customer's country name.
+          example: Canada
+        country_code:
+          type: string
+          description: 'The customer''s alpha 2 country code, according to ISO 3166-1 (reference: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).'
+          example: CA
+        zip:
+          type: string
+          description: The customer's postal code.
+          example: M5V 3L9
+        is_default:
+          type: boolean
+          description: Defines if this address should be considered the default one for the customer.
+          example: true
+        address_use:
+          type:
+          - string
+          - 'null'
+          description: The address usage (billing, shipping). Only set for WooCommerce, `null` otherwise.
+          example: billing
+        address_source:
+          type: string
+          description: The address source.
+          enum:
+          - platform
+          - bold
+          readOnly: true
+          example: platform
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+        updated_at:
+          $ref: '#/components/schemas/updatedAt'
+        deleted_at:
+          $ref: '#/components/schemas/deletedAt'
+    LineItemEntity:
+      type: object
+      title: ''
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        subscription_id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        platform_id:
+          type:
+          - string
+          - 'null'
+          example: ABC123
+        platform_product_id:
+          type:
+          - string
+          - 'null'
+          example: '1357908642'
+        platform_variant_id:
+          type:
+          - string
+          - 'null'
+          example: '2468097531'
+        subscription_group_id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        subscription_group_billing_rules_id:
+          type:
+          - integer
+          - 'null'
+          example: 1
+        title:
+          type: string
+          example: Monthly Expansion Pack
+        product_name:
+          type:
+          - string
+          - 'null'
+          example: Monthly Expansion Pack
+        variant_name:
+          type:
+          - string
+          - 'null'
+          example: Default Title
+        sku:
+          type: string
+          example: SKU-113-Red
+        url:
+          type: string
+          example: https://example-store.example.com/monthly-expansion-pack
+        image:
+          type:
+          - string
+          - 'null'
+          example: ''
+        quantity:
+          type: integer
+          example: 1
+        price:
+          type: integer
+          example: 3500
+        price_charged:
+          type:
+          - integer
+          - 'null'
+          example: 3200
+        discounted_price:
+          type: integer
+          example: 3200
+        discounted_price_charged:
+          type: integer
+          example: 3200
+        full_price:
+          type:
+          - integer
+          - 'null'
+          example: 3200
+        full_price_charged:
+          type:
+          - integer
+          - 'null'
+          example: 3200
+        requires_shipping:
+          type: boolean
+          example: false
+        grams:
+          type: integer
+          example: 2200
+        weight:
+          type: number
+          example: 2.2
+        weight_unit:
+          type: string
+          example: kg
+        taxable:
+          type: boolean
+          example: true
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItemDiscountEntity'
+          readOnly: true
+        prepaid_metadata:
+          type:
+          - object
+          - 'null'
+          required:
+          - id
+          - line_item_id
+          - prepaid_duration
+          - current_recurrence_count
+          - prepaid_continue
+          properties:
+            id:
+              type:
+              - integer
+              - 'null'
+              example: 1
+            line_item_id:
+              type:
+              - integer
+              - 'null'
+              example: 2
+            prepaid_duration:
+              type: integer
+              example: 2
+            current_recurrence_count:
+              type: integer
+              example: 2
+            prepaid_continue:
+              type: string
+              enum:
+              - no_continue
+              - as_prepaid
+              - as_standard
+        line_item_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItemAttributeEntity'
+        created_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - subscription_id
+      - platform_id
+      - platform_product_id
+      - platform_variant_id
+      - subscription_group_id
+      - subscription_group_billing_rules_id
+      - title
+      - product_name
+      - variant_name
+      - sku
+      - url
+      - image
+      - quantity
+      - price
+      - price_charged
+      - discounted_price
+      - discounted_price_charged
+      - full_price
+      - requires_shipping
+      - grams
+      - weight
+      - weight_unit
+      - taxable
+      - discounts
+      - prepaid_metadata
+      - created_at
+      - updated_at
+      readOnly: true
+  parameters:
+    webhook_subscription_id_path_param:
+      name: webhook_subscription_id
+      in: path
+      description: The webhook subscription identifier.
+      required: true
+      schema:
+        type: integer
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+    shop_identifier_header:
+      in: header
+      name: Shop-Identifier
+      required: true
+      description: The unique identifier of the shop.
+      schema:
+        type: string
+        enum:
+        - '{$request.path.shop_identifier}'
+    event_actor_type_header:
+      in: header
+      name: Event-Actor-Type
+      required: true
+      description: The type of actor that triggered the webhook event.
+      schema:
+        type: string
+        enum:
+        - store_admin
+        - customer
+        - integration
+        - subscription_app
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

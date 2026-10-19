@@ -1,0 +1,581 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Subscription Adjustments API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Subscription Adjustments
+  description: A child resource of Subscriptions. Contains information about future adjustments to a subscription or its orders. Use these endpoints to create, list, or delete adjustments for a subscription.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/adjustments:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/subscription_id_path_param'
+    post:
+      summary: Create Subscription Adjustments
+      operationId: CreateSubscriptionAdjustments
+      tags:
+      - Subscription Adjustments
+      description: 'Creates adjustments for a subscription or its orders.
+
+
+        For more information on subscription adjustments, refer to the Adjust Subscription Orders guide.'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionAdjustments'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: The detailed error message.
+                        enum:
+                        - only one of fields count, function, and relative count can be provided
+                        - invalid adjustment.action.type
+              example:
+                errors:
+                  message: only one of fields count, function, and relative count can be provided
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error summary.
+                    example: The given data was invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      minItems: 1
+                      items:
+                        type: string
+                        description: The detailed error message.
+                        example: The adjustments.0.target field is required.
+              example:
+                message: The given data was invalid.
+                errors:
+                  adjustments.0.target:
+                  - The adjustments.0.target field is required.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionAdjustments'
+            examples:
+              'Trigger: One-time order adjustment by order count':
+                value:
+                  adjustments:
+                  - name: Foundation Brush Cross-Sell
+                    description: Loving our beauty box? Up your game with the versatile, made-in-house Foundation Brush!
+                    target: order
+                    trigger:
+                      type: order_count
+                      count: 3
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 1500
+              'Trigger: One-time order adjustment by relative order count':
+                value:
+                  adjustments:
+                  - name: Dessert Upsell
+                    description: There's always room for dessert! Indulge in this dessert add-on with your next order.
+                    target: order
+                    trigger:
+                      type: order_count
+                      relative_count: 1
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 700
+              'Trigger: Recurring order adjustment by function on order count':
+                value:
+                  adjustments:
+                  - name: Loyalty Gift
+                    description: Enjoy a complementary gift every 5th order for being a loyal customer!
+                    target: order
+                    trigger:
+                      type: order_count
+                      function:
+                        step_size: 5
+                        offset: 0
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 0
+              'Trigger: One-time order adjustment by order datetime':
+                value:
+                  adjustments:
+                  - name: 10th Anniversary Give-Away!
+                    description: Celebrate 10 years of cleaning the oceans! Spread our message in style with this free t-shirt!
+                    target: order
+                    trigger:
+                      type: order_datetime
+                      datetime: '2024-02-15T06:00:00Z'
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 0
+              'Trigger: Subscription adjustment by order count':
+                value:
+                  adjustments:
+                  - name: Samples Up! (Trial End)
+                    description: Coffee samples hit the spot!? Time to start receiving the real deal!
+                    target: subscription
+                    trigger:
+                      type: order_count
+                      count: 2
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 1500
+              'Trigger: Subscription adjustment by relative order count':
+                value:
+                  adjustments:
+                  - name: Gryffindor Upsell
+                    description: Are you Slytherin? Are you Gryffindor? Start receiving a second box on your next order and find out!
+                    target: subscription
+                    trigger:
+                      type: order_count
+                      relative_count: 1
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 700
+              'Trigger: Subscription adjustment by order datetime':
+                value:
+                  adjustments:
+                  - name: More Family. More Fun!
+                    description: Expecting? Add a newborn to your baby supply plan in advance!
+                    target: subscription
+                    trigger:
+                      type: order_datetime
+                      datetime: '2024-01-20T06:00:00Z'
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 3500
+              'Action: Add Product':
+                description: 'Adds a product to a subscription or its orders.
+
+
+                  **Supported targets**
+
+
+                  * `subscription`
+
+                  * `order`'
+                value:
+                  adjustments:
+                  - name: Foundation Brush Cross-Sell
+                    description: Loving our beauty box? Up your game with the versatile, made-in-house Foundation Brush!
+                    target: order
+                    trigger:
+                      type: order_count
+                      count: 3
+                    action:
+                      type: add_line_item
+                      platform_variant_id: '17169270472755'
+                      platform_product_id: '1841889509427'
+                      quantity: 1
+                      price: 1500
+              'Action: Update Line Item Quantity':
+                description: 'Updates the quantity of line item to a subscription or its orders.
+
+
+                  **Supported targets**
+
+
+                  * `subscription`
+
+                  * `order`'
+                value:
+                  adjustments:
+                  - name: Coffee Bean Upsell
+                    description: Coffee is temporary but mornings are forever. Prepare for the future and add another bag of coffee to your order!
+                    target: order
+                    trigger:
+                      type: order_count
+                      count: 3
+                    action:
+                      type: update_line_item_quantity
+                      subscription_line_item_id: 35236
+                      quantity: 3
+    get:
+      parameters:
+      - $ref: '#/components/parameters/filter_subscription_adjustments_query_param'
+      summary: List Subscription Adjustments
+      operationId: ListSubscriptionAdjustments
+      tags:
+      - Subscription Adjustments
+      description: Lists adjustments for a subscription or its orders.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionAdjustments'
+    delete:
+      parameters:
+      - $ref: '#/components/parameters/filter_subscription_adjustments_query_param'
+      summary: Delete Subscription Adjustments
+      operationId: DeleteSubscriptionAdjustments
+      tags:
+      - Subscription Adjustments
+      description: Deletes adjustments for a subscription or its orders.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                maxItems: 0
+                items: {}
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/adjustments/{adjustment_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/subscription_id_path_param'
+    - $ref: '#/components/parameters/subscription_adjustment_id_path_param'
+    get:
+      summary: Get Subscription Adjustment by ID
+      operationId: GetSubscriptionAdjustmentByID
+      tags:
+      - Subscription Adjustments
+      description: Gets an adjustment by its ID.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  adjustment:
+                    $ref: '#/components/schemas/SubscriptionAdjustment'
+    delete:
+      summary: Delete Subscription Adjustment by ID
+      operationId: DeleteSubscriptionAdjustmentByID
+      tags:
+      - Subscription Adjustments
+      description: Deletes an adjustment by its ID.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                maxItems: 0
+                items: {}
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                        - not found (<trace-id>)
+              example:
+                errors:
+                  message: not found (subscriptions:1234dde7622ab0.56787371)
+components:
+  parameters:
+    subscription_adjustment_id_path_param:
+      name: adjustment_id
+      in: path
+      description: The subscription adjustment identifier.
+      required: true
+      schema:
+        type: integer
+    filter_subscription_adjustments_query_param:
+      schema:
+        type: string
+      in: query
+      name: filter
+      description: 'Accepts filtering options as described in [Query & Pagination](/guides/getting-started/query-pagination). For example, to limit the request to all future adjustments to individual orders, the following query param may be added: `?filter=eq(target:order)`'
+    subscription_id_path_param:
+      name: subscription_id
+      in: path
+      description: The subscription identifier.
+      required: true
+      schema:
+        type: integer
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+  schemas:
+    SubscriptionAdjustmentMatchConditionCount:
+      type:
+      - integer
+      - 'null'
+      description: The order count of the target that the adjustment will apply to.
+      example: 5
+    SubscriptionAdjustmentActionApplyPrice:
+      required:
+      - type
+      - line_item_id
+      - price
+      properties:
+        type:
+          type: string
+          description: 'The action to perform for the adjustment. It updates the price for the adjustment target.
+
+
+            To update a line item''s price, the `type` value is always "apply_price".'
+          enum:
+          - apply_price
+          example: apply_price
+        line_item_id:
+          type: number
+          description: The ID of the subscription line item to update.
+          example: 35237
+        price:
+          type: integer
+          description: The new price of the line item in the base currency unit (e.g. cents).
+          example: 300
+    SubscriptionAdjustments:
+      properties:
+        adjustments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionAdjustment'
+    SubscriptionAdjustmentMatchConditionFunction:
+      type:
+      - object
+      - 'null'
+      description: Use a "y = mx + b" formula as your match condition for when to apply your adjustment to orders. For example, a "step_size" of 3 and an "offset" of 2 to represent "Every 3rd order starting on the 2nd order."
+      properties:
+        step_size:
+          type: integer
+          minimum: 1
+          example: 5
+        offset:
+          minimum: 0
+          type: integer
+          example: 0
+    SubscriptionAdjustmentTriggerOrderDatetime:
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of trigger to use to determine when this adjustment should apply. The value `order_datetime` is used to match targets based on order date and time.
+          enum:
+          - order_datetime
+          example: order_datetime
+        datetime:
+          type: string
+          format: date-time
+          description: The date and time of an order that will trigger this adjustment.
+          example: '2024-02-15T06:00:00Z'
+    SubscriptionAdjustmentActionAddLineItem:
+      required:
+      - type
+      - platform_product_id
+      - platform_variant_id
+      - quantity
+      properties:
+        type:
+          type: string
+          description: 'The action to perform for the adjustment. Adds a line item to the adjustment target.
+
+
+            To add a line item, the `type` value is always "add_line_item".'
+          enum:
+          - add_line_item
+          example: add_line_item
+        platform_product_id:
+          type: string
+          description: The ID of the product on your platform. Learn more about [finding platform product IDs](/guides/subscriptions-v2/create-subscription#how-do-i-find-the-platform_product_id-and-platform_variant_id-for-a-line-item).
+          example: '1578934692'
+        platform_variant_id:
+          type: string
+          description: The ID of the product variant on your platform. All products, including those with no variants or a single variant, have a platform variant ID. Learn more about [finding platform variant IDs](/guides/subscriptions-v2/create-subscription#how-do-i-find-the-platform_product_id-and-platform_variant_id-for-a-line-item).
+          example: '975285185'
+        quantity:
+          type: integer
+          description: The quantity of the line item to add.
+          example: 1
+        price:
+          type: integer
+          description: The price of the line item in the base currency unit (e.g. cents).
+          example: 1500
+    SubscriptionAdjustment:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 74928
+        name:
+          type: string
+          description: The name of the adjustment.
+          example: One-time Upsell (Gift)
+        description:
+          type: string
+          description: The description of the adjustment being made to the subscription or its orders.
+          example: Enjoy a complementary gift every 5th order for being a loyal customer!
+        target:
+          type: string
+          description: The target of the adjustment.
+          enum:
+          - subscription
+          - order
+          example: order
+        trigger:
+          type: object
+          description: The condition for when and how often the `action` will be made against the `target`.
+          oneOf:
+          - $ref: '#/components/schemas/SubscriptionAdjustmentTriggerOrderCount'
+          - $ref: '#/components/schemas/SubscriptionAdjustmentTriggerOrderDatetime'
+        action:
+          type: object
+          description: The action that should be made against the `target` of the adjustment.
+          oneOf:
+          - $ref: '#/components/schemas/SubscriptionAdjustmentActionAddLineItem'
+          - $ref: '#/components/schemas/SubscriptionAdjustmentActionUpdateLineItemQuantity'
+          - $ref: '#/components/schemas/SubscriptionAdjustmentActionApplyPrice'
+        invalid_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment will be applied and become invalid. The value is null for adjustments that are scheduled to be applied one-time in the future.
+          readOnly: true
+          example: null
+        created_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment was created.
+          readOnly: true
+          example: '2024-10-15T06:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment was last updated. The value is the same as the `created_at` value if the adjustment has never been updated.
+          readOnly: true
+          example: '2024-10-15T06:00:00Z'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment was deleted. The value is null if the adjustment has never been deleted.
+          readOnly: true
+          example: null
+    SubscriptionAdjustmentMatchConditionRelativeCount:
+      type: integer
+      description: Use the subscription's current order count when calculating the final order count.
+      minimum: 1
+      example: 5
+    SubscriptionAdjustmentTriggerOrderCount:
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of trigger to use to determine when this adjustment should apply. The value `order_count` is used to match targets based on order count.
+          enum:
+          - order_count
+          example: order_count
+        count:
+          $ref: '#/components/schemas/SubscriptionAdjustmentMatchConditionCount'
+        relative_count:
+          $ref: '#/components/schemas/SubscriptionAdjustmentMatchConditionRelativeCount'
+        function:
+          $ref: '#/components/schemas/SubscriptionAdjustmentMatchConditionFunction'
+    SubscriptionAdjustmentActionUpdateLineItemQuantity:
+      required:
+      - type
+      - subscription_line_item_id
+      - quantity
+      properties:
+        type:
+          type: string
+          description: 'The action to perform for the adjustment. Updates a line item quantity for the adjustment target.
+
+
+            To update a line item''s quantity, the `type` value is always "update_line_item_quantity".'
+          enum:
+          - update_line_item_quantity
+          example: update_line_item_quantity
+        subscription_line_item_id:
+          type: number
+          description: The ID of the subscription line item to update.
+          example: 35236
+        quantity:
+          type: integer
+          description: The new quantity of the line item.
+          example: 3
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

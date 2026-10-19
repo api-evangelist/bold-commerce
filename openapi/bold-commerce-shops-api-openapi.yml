@@ -1,72 +1,179 @@
 openapi: 3.2.0
 info:
-  title: Bold Commerce Shops API
-  description: Bold Commerce provides modular e-commerce APIs for subscriptions, headless checkout, and pricing, plus supporting Products, Customers, and Shops APIs.
+  title: Bold Subscriptions Shops API
   version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
   contact:
-    name: Bold Commerce
-    url: https://developer.boldcommerce.com
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
 servers:
 - url: https://api.boldcommerce.com
-  description: Bold Commerce API
 security:
-- bearerAuth: []
+- OAuthToken: []
+- APIAccessToken: []
 tags:
 - name: Shops
-  description: Shop configuration and shop_identifier lookup.
+  description: Contains information about your store, including store IDs, domains, platform, and admin configuration. Use these endpoints to manage store information and settings.
 paths:
-  /shops/v1/info:
+  /subscriptions/v1/shops/{shop_identifier}/shop:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
     get:
-      operationId: getShopInfo
       tags:
       - Shops
-      summary: Retrieve shop info
-      description: Retrieve the shop configuration, including the shop_identifier GUID required in the path of most Bold API requests, plus shop name, domain, platform, and default currency.
+      summary: Get Shop Info
+      description: Retrieve basic information about a shop.
+      operationId: GetShopInfo
       responses:
         '200':
-          description: The shop info.
+          description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Shop'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
 components:
   schemas:
-    Error:
+    ShopEntity:
       type: object
+      title: ''
       properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              message:
-                type: string
-              field:
-                type: string
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        shop_domain:
+          type: string
+          example: store-abc123def456.example.com
+          readOnly: true
+        custom_domain:
+          type: string
+          example: example-store.example.com
+          readOnly: true
+        shop_identifer:
+          type: string
+          example: zya0kzb8hu7ji
+          readOnly: true
+        platform_type:
+          type: string
+          example: bigcommerce
+          enum:
+          - bigcommerce
+          - shopify
+          - woocommerce
+          - commercetools
+          - custom
+          readOnly: true
+        timezone:
+          type: string
+          example: Europe/London
+          readOnly: true
+        currency:
+          type: string
+          example: CAD
+          readOnly: true
+        currency_format:
+          type: string
+          example: ${{amount}}
+          readOnly: true
+        shop_owner:
+          type: string
+          example: John Doe
+          readOnly: true
+        admin_email:
+          type: string
+          example: john.doe@example.com
+          readOnly: true
+        pii_redacted_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        created_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - shop_domain
+      - custom_domain
+      - shop_identifer
+      - platform_type
+      - timezone
+      - currency
+      - currency_format
+      - shop_owner
+      - admin_email
+      - pii_redacted_at
+      - created_at
+      - updated_at
+      - deleted_at
     Shop:
+      properties:
+        shop:
+          $ref: '#/components/schemas/ShopEntity'
+      type: object
+    UnauthenticatedResponse:
       type: object
       properties:
-        shop_identifier:
+        error:
           type: string
-        shop_name:
+          description: The error summary.
+          example: invalid_request
+        error_description:
           type: string
-        domain:
-          type: string
-        platform:
-          type: string
-        default_currency:
-          type: string
-  responses:
-    Unauthorized:
-      description: Authentication is missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+  parameters:
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: 'OAuth 2.0 access token (public integrations) or scoped API access token (private integrations), passed as Authorization: Bearer {token}.'
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

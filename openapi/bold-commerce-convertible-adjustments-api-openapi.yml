@@ -1,0 +1,855 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Convertible Adjustments API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Convertible Adjustments
+  description: Use these endpoints to create, update, or delete convertible adjustment plans, enabling automatic product conversions on subscription line items attached to a created plan.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/convertible_adjustment_groups:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    post:
+      tags:
+      - Convertible Adjustments
+      summary: Create Convertible Adjustment Group
+      description: 'Creates a convertible adjustment group for a store. When created, the adjustment group does not have any products associated with it. Convertible adjustments enable customers to convert their subscription after an initial order.
+
+
+        For example, if the initial subscription order included a coffee maker and coffee grounds, a convertible adjustment allows subsequent orders to contain only coffee grounds.
+
+
+        After calling this endpoint, call Create Convertible Adjustment Group Items to attach the created convertible adjustment group items to the adjustment group.'
+      operationId: CreateConvertibleAdjustmentGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: object
+                  required:
+                  - convertible_adjustment_group
+                  properties:
+                    convertible_adjustment_group:
+                      $ref: '#/components/schemas/ConvertibleAdjustmentGroup'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    required:
+                    - convertible_adjustment_group
+                    properties:
+                      convertible_adjustment_group:
+                        $ref: '#/components/schemas/ConvertibleAdjustmentGroup'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error summary.
+                    example: The selected data.convertible adjustment group.on cycle end is invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      minItems: 1
+                      items:
+                        type: string
+                        description: The detailed error message.
+                        example: The selected data.convertible adjustment group.on cycle end is invalid.
+              example:
+                message: The selected data.convertible adjustment group.on cycle end is invalid.
+                errors:
+                  data.convertible_adjustment.on_cycle_end:
+                  - The selected data.convertible adjustment group.on cycle end is invalid.
+  /subscriptions/v1/shops/{shop_identifier}/convertible_adjustment_groups/{adjustment_id}/items:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/convertible_adjustment_group_id_path_param'
+    post:
+      tags:
+      - Convertible Adjustments
+      summary: Create Convertible Adjustment Group Items
+      description: Creates convertible adjustment group items used for a selection option. The first item in the `items` array represents the initial product and the second item represents the product it will convert to after the initial order is placed.
+      operationId: CreateConvertibleAdjustmentGroupItems
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: object
+                  required:
+                  - items
+                  properties:
+                    items:
+                      type: array
+                      minItems: 2
+                      uniqueItems: true
+                      items:
+                        $ref: '#/components/schemas/ConvertibleAdjustmentGroupItemEntity'
+            example:
+              data:
+                items:
+                - type: initial_product
+                  discount_type: no_discount
+                - type: product
+                  product:
+                    platform_product_id: '7873884094619'
+                    platform_variant_id: '44147851264155'
+                  discount_type: percentage
+                  discount_value: 50
+                - type: product
+                  product:
+                    platform_product_id: '7873885831323'
+                    platform_variant_id: '44147858473115'
+                  discount_type: percentage
+                  discount_value: 50
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        minItems: 2
+                        uniqueItems: true
+                        items:
+                          $ref: '#/components/schemas/ConvertibleAdjustmentGroupItem'
+              example:
+                data:
+                  items:
+                  - id: 81
+                    shop_platform_app_id: 1007
+                    convertible_adjustment_group_id: 20
+                    type: initial_product
+                    discount_type: no_discount
+                    discount_value: 0
+                    product: null
+                  - id: 82
+                    shop_platform_app_id: 1007
+                    convertible_adjustment_group_id: 20
+                    type: product
+                    discount_type: percentage
+                    discount_value: 50
+                    product:
+                      id: 82
+                      convertible_adjustment_group_id_item_id: 82
+                      platform_product_id: '7873884094619'
+                      platform_variant_id: '44147851264155'
+                      created_at: '2024-03-19T20:42:47Z'
+                      updated_at: '2024-03-19T20:42:47Z'
+                      deleted_at: null
+                  - id: 83
+                    shop_platform_app_id: 1007
+                    convertible_adjustment_group_id: 20
+                    type: product
+                    discount_type: percentage
+                    discount_value: 50
+                    product:
+                      id: 83
+                      convertible_adjustment_group_id_item_id: 83
+                      platform_product_id: '7873885831323'
+                      platform_variant_id: '44147858473115'
+                      created_at: '2024-03-19T20:42:47Z'
+                      updated_at: '2024-03-19T20:42:47Z'
+                      deleted_at: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: The error message.
+                        example: 'validating items of type "product" failed with reason: platform "[product]:[variant]" data was not found for some items: 123:456'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                        - not found (<trace-id>)
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error summary.
+                    example: The selected data.items.0.type is invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      minItems: 1
+                      items:
+                        type: string
+                        description: The detailed error message.
+                        example: The selected data.items.0.type is invalid.
+              example:
+                errors:
+                  data.items.0.type:
+                  - The selected data.items.0.type is invalid.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: The error message.
+                        example: 'validating items of type "product" failed with reason: failed to fetch variants: variant data missing from response (subscriptions:123.456)'
+    delete:
+      tags:
+      - Convertible Adjustments
+      summary: Delete Convertible Adjustment Group Items
+      description: Deletes all convertible adjustment group items from a convertible adjustment group.
+      operationId: DeleteConvertibleAdjustmentGroupItems
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      deleted_item_count:
+                        type: integer
+                        description: The number of deleted convertible adjustment group items from the convertible adjustment group.
+                        example: 1
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                        - not found (<trace-id>)
+  /subscriptions/v1/shops/{shop_identifier}/convertible_adjustment_groups/{adjustment_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/convertible_adjustment_group_id_path_param'
+    delete:
+      tags:
+      - Convertible Adjustments
+      summary: Delete Convertible Adjustment Group
+      description: Deletes a convertible adjustment group and its items for a store.
+      operationId: DeleteConvertibleAdjustmentGroup
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      convertible_adjustment_group_id:
+                        type: integer
+                        example: 2
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                        - not found (<trace-id>)
+    put:
+      tags:
+      - Convertible Adjustments
+      summary: Update Convertible Adjustment Group
+      description: Updates a convertible adjustment group for a store.
+      operationId: UpdateConvertibleAdjustmentGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: object
+                  required:
+                  - convertible_adjustment_group
+                  properties:
+                    convertible_adjustment_group:
+                      $ref: '#/components/schemas/ConvertibleAdjustmentGroup'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    required:
+                    - convertible_adjustment_group
+                    properties:
+                      convertible_adjustment_group:
+                        $ref: '#/components/schemas/ConvertibleAdjustmentGroup'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error summary.
+                    example: The selected data.convertible adjustment group.on cycle end is invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      minItems: 1
+                      items:
+                        type: string
+                        description: The detailed error message.
+                        example: The selected data.convertible adjustment group.on cycle end is invalid.
+              example:
+                message: The selected data.convertible adjustment group.on cycle end is invalid.
+                errors:
+                  data.convertible_adjustment.on_cycle_end:
+                  - The selected data.convertible adjustment group.on cycle end is invalid.
+  /subscriptions/v1/shops/{shop_identifier}/convertible_adjustment_groups/{adjustment_id}/items/{adjustment_item_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/convertible_adjustment_group_id_path_param'
+    - $ref: '#/components/parameters/convertible_adjustment_group_item_id_path_param'
+    delete:
+      tags:
+      - Convertible Adjustments
+      summary: Delete Convertible Adjustment Group Item
+      description: Deletes a convertible adjustment group item from a convertible adjustment group using the convertible adjustment group item ID
+      operationId: DeleteConvertibleAdjustmentGroupItem
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      item_id:
+                        type: integer
+                        description: The convertible adjustment group item identifier deleted from the convertible adjustment plan.
+                        example: 2
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                        - not found (<trace-id>)
+    put:
+      tags:
+      - Convertible Adjustments
+      summary: Update Convertible Adjustment Group Item
+      description: Updates a convertible adjustment group item from a convertible adjustment group using the convertible adjustment group item ID
+      operationId: UpdateConvertibleAdjustmentGroupItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: object
+                  required:
+                  - item
+                  properties:
+                    item:
+                      $ref: '#/components/schemas/ConvertibleAdjustmentGroupItemEntity'
+            example:
+              data:
+                item:
+                  type: product
+                  product:
+                    platform_product_id: '7873884094619'
+                    platform_variant_id: '44147851264155'
+                  discount_type: percentage
+                  discount_value: 50
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      item:
+                        $ref: '#/components/schemas/ConvertibleAdjustmentGroupItem'
+              example:
+                data:
+                  item:
+                    id: 82
+                    shop_platform_app_id: 1007
+                    convertible_adjustment_group_id: 20
+                    type: product
+                    discount_type: percentage
+                    discount_value: 50
+                    product:
+                      id: 82
+                      convertible_adjustment_group_id_item_id: 82
+                      platform_product_id: '7873884094619'
+                      platform_variant_id: '44147851264155'
+                      created_at: '2024-03-19T20:42:47Z'
+                      updated_at: '2024-03-19T20:42:47Z'
+                      deleted_at: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: The error message.
+                        example: 'validating items of type "product" failed with reason: platform "[product]:[variant]" data was not found for some items: 123:456'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        enum:
+                        - not found (<trace-id>)
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error summary.
+                    example: The selected data.item.type is invalid.
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      minItems: 1
+                      items:
+                        type: string
+                        description: The detailed error message.
+                        example: The selected data.item.type is invalid.
+              example:
+                errors:
+                  data.item.type:
+                  - The selected data.type is invalid.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        description: The error message.
+                        example: 'validating items of type "product" failed with reason: failed to fetch variants: variant data missing from response (subscriptions:123.456)'
+components:
+  schemas:
+    ConvertibleAdjustmentGroup:
+      type: object
+      required:
+      - on_cycle_end
+      - trigger
+      properties:
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        shop_platform_id:
+          type: integer
+          example: 1234
+          readOnly: true
+        on_cycle_end:
+          type: string
+          enum:
+          - repeat_cycle
+          - continue_last_item
+          - remove_from_subscription
+          example: repeat_cycle
+        trigger:
+          type: object
+          required:
+          - type
+          - count
+          properties:
+            type:
+              type: string
+              example: order_count
+            function:
+              type:
+              - object
+              - 'null'
+              readOnly: true
+              example: null
+            count:
+              type: integer
+              example: 1
+        created_at:
+          type: string
+          readOnly: true
+          example: '2024-03-11T18:56:12Z'
+          format: date-time
+        updated_at:
+          type: string
+          readOnly: true
+          example: '2024-03-11T18:56:12Z'
+          format: date-time
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          readOnly: true
+          format: date-time
+    ConvertibleAdjustmentGroupItemProduct:
+      type:
+      - object
+      - 'null'
+      required:
+      - platform_product_id
+      - platform_variant_id
+      properties:
+        platform_product_id:
+          type: string
+          description: The identifier of the product on the platform.
+          example: '7873884881051'
+        platform_variant_id:
+          type: string
+          description: The identifier of the variant on the platform.
+          example: '44147854114971'
+    ConvertibleAdjustmentGroupItemEntity:
+      required:
+      - type
+      - discount_type
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - product
+          - initial_product
+          example: product
+        product:
+          $ref: '#/components/schemas/ConvertibleAdjustmentGroupItemProduct'
+        discount_value:
+          type: integer
+          example: 50
+        discount_type:
+          type: string
+          enum:
+          - percentage
+          - fixed
+          - no_discount
+          example: percentage
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    ConvertibleAdjustmentGroupItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The convertible adjustment item identifier.
+          example: 81
+        shop_platform_app_id:
+          type: integer
+          description: The identifier of the application.
+          example: 1007
+        convertible_adjustment_group_id:
+          type: integer
+          description: The convertible adjustment group identifier, obtained from calling [Create Convertible Adjustment Group](/api/subscriptions#tag/Convertible-Adjustments/operation/CreateConvertibleAdjustmentGroup).
+          example: 20
+        type:
+          type: string
+          description: The type of convertible adjustment group item.
+          enum:
+          - product
+          example: product
+        discount_value:
+          type: integer
+          description: The value given to the discount. For fixed discounts, cents off (e.g. 500 for $5) should be provided. For percent discounts, the percentage off (e.g. 10) should be provided.
+          example: 50
+        discount_type:
+          type: string
+          description: The type of discount applied to the recurring product
+          enum:
+          - percentage
+          - fixed
+          - no_discount
+          example: percentage
+        product:
+          type: object
+          description: The product involved in the convertible adjustment.
+          properties:
+            id:
+              type: integer
+              description: The product identifier.
+              example: 81
+            convertible_adjustment_group_item_id:
+              type: integer
+              description: The convertible adjustment group item identifier.
+              example: 81
+            platform_product_id:
+              type: string
+              description: The identifier of the product on the platform.
+              example: '7873884881051'
+            platform_variant_id:
+              type: string
+              description: The identifier of the variant on the platform.
+              example: '44147854114971'
+            product_id:
+              type:
+              - string
+              - 'null'
+              description: The identifier of the product
+              example: '11'
+            variant_id:
+              type:
+              - string
+              - 'null'
+              description: The identifier of the variant
+              example: '22'
+            created_at:
+              type: string
+              description: The date and time the product was created.
+              format: date-time
+              example: '2024-03-19T20:42:47Z'
+            updated_at:
+              type: string
+              description: The date and time the product was updated.
+              format: date-time
+              example: '2024-03-19T20:42:47Z'
+            deleted_at:
+              type:
+              - string
+              - 'null'
+              description: The date and time the product was deleted.
+              format: date-time
+              example: null
+        created_at:
+          type: string
+          description: The date and time the convertible adjustment group item was created.
+          format: date-time
+          example: '2024-03-19T20:42:47Z'
+        updated_at:
+          type: string
+          description: The date and time the convertible adjustment group item was updated.
+          format: date-time
+          example: '2024-03-19T20:42:47Z'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          description: The date and time the convertible adjustment group item was deleted.
+          format: date-time
+          example: null
+  parameters:
+    convertible_adjustment_group_id_path_param:
+      name: adjustment_id
+      in: path
+      description: The convertible adjustment group identifier, obtained from calling [Create Convertible Adjustment Group](/api/subscriptions#tag/Convertible-Adjustments/operation/CreateConvertibleAdjustmentGroup).
+      required: true
+      schema:
+        type: integer
+    convertible_adjustment_group_item_id_path_param:
+      name: adjustment_item_id
+      in: path
+      description: The convertible adjustment group item identifier, obtained from calling [Create Convertible Adjustment Group Items](/api/subscriptions#tag/Convertible-Adjustments/operation/CreateConvertibleAdjustmentGroupItems).
+      required: true
+      schema:
+        type: integer
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

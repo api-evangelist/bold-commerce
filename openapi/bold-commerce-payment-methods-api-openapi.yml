@@ -1,0 +1,454 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Payment Methods API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Payment Methods
+  description: A child resource of Subscriptions. Contains information about payment methods for subscriptions, including public payment IDs, alternate payment methods, and available methods. Use these endpoints to get, remove, edit, and list payment methods associated with a subscription.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/payment_method:
+    get:
+      tags:
+      - Payment Methods
+      summary: Get Payment Method
+      operationId: GetPaymentMethod
+      description: Retrieve the current payment method information of a subscription.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/subscription_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethod'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/payment_method_email:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/subscription_id_path_param'
+    post:
+      tags:
+      - Payment Methods
+      summary: Trigger Update Payment Method Email
+      operationId: TriggerUpdatePaymentMethodEmail
+      description: '**Note:** Available for Shopify Checkout only.
+
+
+        Trigger an email to the customer that allows them to update their payment method for the subscription. This endpoint can only be called if the subscription''s payment method has an `update_method` of `trigger_email`.
+
+
+        You can change the contents of the email in Shopify''s "Customer payment method update request" email settings.'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/payment_methods:
+    get:
+      tags:
+      - Payment Methods
+      summary: List Payment Methods
+      operationId: ListPaymentMethods
+      description: Retrieve a list of available payment methods for a subscription.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - $ref: '#/components/parameters/subscription_id_path_param'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethods'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/alternative_payments:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/subscription_id_path_param'
+    get:
+      summary: List Alternative Payment Methods
+      operationId: ListAlternativePaymentMethods
+      tags:
+      - Payment Methods
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlternatePaymentMethod'
+      description: Retrieve a list of alternative payment methods for a subscription.
+    post:
+      summary: Create Alternative Payment Method
+      operationId: CreateAlternativePaymentMethods
+      tags:
+      - Payment Methods
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  alternative_payment_methods:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      required:
+                      - subscription_id
+                      - public_payment_token
+                      properties:
+                        subscription_id:
+                          type: number
+                        public_payment_token:
+                          type: string
+                          minLength: 1
+                required:
+                - alternative_payment_methods
+              examples:
+                example-1:
+                  value:
+                    alternative_payment_methods:
+                    - subscription_id: 0
+                      public_payment_token: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                alternative_payment_methods:
+                  type: array
+                  uniqueItems: true
+                  minItems: 1
+                  maxItems: 1
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        minLength: 1
+                      payment_details:
+                        type: object
+                        properties:
+                          card_number:
+                            type: string
+                            minLength: 1
+                          security_key:
+                            type: string
+                        required:
+                        - card_number
+                        - security_key
+                    required:
+                    - type
+              required:
+              - alternative_payment_methods
+            examples:
+              example-1:
+                value:
+                  alternative_payment_methods:
+                  - type: gift_card
+                    payment_details:
+                      card_number: ABC1234
+                      security_key: '123'
+              example-2:
+                value:
+                  alternative_payment_methods:
+                  - type: string
+                    payment_details:
+                      card_number: string
+                      security_key: '0'
+        description: ''
+      description: Add an alternate payment method to a subscription.
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/alternative_payments/{payment_public_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/subscription_id_path_param'
+    - schema:
+        type: string
+      name: payment_public_id
+      in: path
+      required: true
+    delete:
+      summary: Delete Alternative Payment Method
+      operationId: DeleteAlternativePaymentMethod
+      tags:
+      - Payment Methods
+      responses:
+        '200':
+          description: OK
+      description: Remove an alternative payment method from a subscription its paymentPublicID.
+components:
+  schemas:
+    PaymentMethodEntity:
+      type: object
+      properties:
+        type:
+          type: string
+          example: credit_card
+          enum:
+          - credit_card
+          - paypal
+          - shop_pay
+        name:
+          type:
+          - string
+          - 'null'
+          example: John Doe
+          description: Customer's name
+        billing_address:
+          type:
+          - object
+          - 'null'
+          description: Customer's billing address.
+          properties:
+            street:
+              type:
+              - string
+              - 'null'
+              example: 123 Main Street
+              description: The customer's street address.
+            city:
+              type:
+              - string
+              - 'null'
+              example: Toronto
+              description: The customer's city.
+            province:
+              type:
+              - string
+              - 'null'
+              example: Ontario
+              description: The customer's province or state, as applicable.
+            country:
+              type:
+              - string
+              - 'null'
+              example: Canada
+              description: The customer's country name.
+            zip:
+              type:
+              - string
+              - 'null'
+              example: H0H 0H0
+              description: The customer's postal code.
+        public_id:
+          type:
+          - string
+          - 'null'
+          example: jik1w6HrCn17CxXPDkWhtgyqvm8wLDd1PelY6k8mabglNmL8XKBnsde9PdgKZqnG
+        update_method:
+          type:
+          - string
+          - 'null'
+          example: trigger_email
+          enum:
+          - trigger_email
+          - embedded
+          - url
+        cc_type:
+          type:
+          - string
+          - 'null'
+          example: Visa
+        expiration:
+          type:
+          - object
+          - 'null'
+          required:
+          - date
+          - timezone_type
+          - timezone
+          properties:
+            date:
+              type:
+              - string
+              - 'null'
+              example: 2020-5
+            timezone_type:
+              type:
+              - string
+              - 'null'
+            timezone:
+              type:
+              - string
+              - 'null'
+              example: UTC
+        last_four:
+          type:
+          - string
+          - 'null'
+          example: '1111'
+        is_default:
+          type:
+          - boolean
+          - 'null'
+          example: true
+        paypal_email:
+          type:
+          - string
+          - 'null'
+          example: customer@example.com
+          format: email
+        update_url:
+          type:
+          - object
+          - 'null'
+          required:
+          - url
+          - expiry
+          properties:
+            url:
+              type: string
+              format: uri
+            expiry:
+              type: string
+              format: date-time
+        embed_url:
+          type:
+          - object
+          - 'null'
+          properties:
+            url:
+              type: string
+              format: uri
+            expiry:
+              type:
+              - string
+              - 'null'
+              format: date-time
+          required:
+          - url
+          - expiry
+      required:
+      - type
+      - public_id
+      - update_method
+      - cc_type
+      - expiration
+      - last_four
+      - is_default
+      - paypal_email
+      - update_url
+      readOnly: true
+    AlternatePaymentMethod:
+      description: ''
+      type: object
+      properties:
+        gift_card:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            required:
+            - payment_public_id
+            - card_number
+            - balance
+            properties:
+              payment_public_id:
+                type: string
+                minLength: 1
+              card_number:
+                type: string
+                minLength: 1
+              balance:
+                type: number
+      required:
+      - gift_card
+      x-examples:
+        example-1:
+          gift_card:
+          - payment_public_id: Z44qfpucJ1dsQjuZopMpFuQNyKCv7Eui0JLCHq9y1ytE669TlqGChkrl92xxhTXy
+            card_number: SADWIUWRFNRVDTCB
+            balance: 1200
+    PaymentMethod:
+      properties:
+        payment_method:
+          $ref: '#/components/schemas/PaymentMethodEntity'
+      type: object
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    PaymentMethods:
+      properties:
+        payment_methods:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentMethodEntity'
+      type: object
+  parameters:
+    subscription_id_path_param:
+      name: subscription_id
+      in: path
+      description: The subscription identifier.
+      required: true
+      schema:
+        type: integer
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

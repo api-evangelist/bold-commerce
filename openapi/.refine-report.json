@@ -4,27 +4,27 @@
     "_original/bold-commerce-openapi.yml"
   ],
   "outputs": [
-    "bold-commerce-checkout-api-openapi.yml",
+    "bold-commerce-convertible-adjustments-api-openapi.yml",
     "bold-commerce-customers-api-openapi.yml",
-    "bold-commerce-price-rules-api-openapi.yml",
-    "bold-commerce-products-api-openapi.yml",
+    "bold-commerce-future-orders-api-openapi.yml",
+    "bold-commerce-payment-methods-api-openapi.yml",
     "bold-commerce-shops-api-openapi.yml",
-    "bold-commerce-subscriptions-api-openapi.yml"
+    "bold-commerce-subscription-adjustments-api-openapi.yml",
+    "bold-commerce-subscription-groups-api-openapi.yml",
+    "bold-commerce-subscription-line-items-api-openapi.yml",
+    "bold-commerce-subscription-orders-api-openapi.yml",
+    "bold-commerce-subscriptions-api-openapi.yml",
+    "bold-commerce-webhook-events-api-openapi.yml",
+    "bold-commerce-webhook-subscriptions-api-openapi.yml",
+    "bold-commerce-webhook-topics-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "bold-commerce-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "bold-commerce-openapi.yml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+10 apis, 13 total)"
   ],
-  "skipped": [
-    "bold-commerce-checkout-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "bold-commerce-customers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "bold-commerce-price-rules-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "bold-commerce-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "bold-commerce-shops-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "bold-commerce-subscriptions-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

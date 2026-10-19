@@ -1,0 +1,12 @@
+{
+ "url": "https://developer.boldcommerce.com/api/subscriptions.openapi.yaml",
+ "final": "https://developer.boldcommerce.com/api/subscriptions.openapi.yaml",
+ "status": 200,
+ "content_type": "text/yaml; charset=utf-8",
+ "bytes": 301943,
+ "sha256": "b2e9ecd62404ab04babac78f0ec9eb162b5e275f9f5189dd314a227c4acfa43e",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

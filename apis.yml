@@ -59,38 +59,6 @@ created: '2026-07-10'
 modified: '2026-07-10'
 specificationVersion: '0.23'
 apis:
-- aid: bold-commerce:bold-commerce-checkout-api
-  name: Bold Commerce Checkout API
-  description: Headless storefront checkout order operations.
-  humanURL: https://developer.boldcommerce.com/api/subscriptions
-  baseURL: https://api.boldcommerce.com/subscriptions/v1
-  tags:
-  - Checkout
-  properties:
-  - type: OpenAPI
-    url: openapi/bold-commerce-checkout-api-openapi.yml
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/subscriptions
-  - type: APIReference
-    url: https://developer.boldcommerce.com/api/subscriptions
-  - type: PostmanCollection
-    url: collections/bold-commerce.postman_collection.json
-  - type: OpenCollection
-    url: collections/bold-commerce.opencollection.json
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/checkout
-  - type: Documentation
-    url: https://developer.boldcommerce.com/guides/checkout/quick-start
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/price-rules
-  - type: APIReference
-    url: https://developer.boldcommerce.com/api/price-rules
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/products
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/customers
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/shops
 - aid: bold-commerce:bold-commerce-customers-api
   name: Bold Commerce Customers API
   description: Customer records tied to a shop.
@@ -101,72 +69,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/bold-commerce-customers-api-openapi.yml
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/subscriptions
-  - type: APIReference
-    url: https://developer.boldcommerce.com/api/subscriptions
-  - type: PostmanCollection
-    url: collections/bold-commerce.postman_collection.json
-  - type: OpenCollection
-    url: collections/bold-commerce.opencollection.json
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/checkout
-  - type: Documentation
-    url: https://developer.boldcommerce.com/guides/checkout/quick-start
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/price-rules
-  - type: APIReference
-    url: https://developer.boldcommerce.com/api/price-rules
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/products
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/customers
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/shops
-- aid: bold-commerce:bold-commerce-price-rules-api
-  name: Bold Commerce Price Rules API
-  description: Discounts, promotions, and dynamic pricing.
-  humanURL: https://developer.boldcommerce.com/api/subscriptions
-  baseURL: https://api.boldcommerce.com/subscriptions/v1
-  tags:
-  - Price Rules
-  properties:
-  - type: OpenAPI
-    url: openapi/bold-commerce-price-rules-api-openapi.yml
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/subscriptions
-  - type: APIReference
-    url: https://developer.boldcommerce.com/api/subscriptions
-  - type: PostmanCollection
-    url: collections/bold-commerce.postman_collection.json
-  - type: OpenCollection
-    url: collections/bold-commerce.opencollection.json
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/checkout
-  - type: Documentation
-    url: https://developer.boldcommerce.com/guides/checkout/quick-start
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/price-rules
-  - type: APIReference
-    url: https://developer.boldcommerce.com/api/price-rules
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/products
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/customers
-  - type: Documentation
-    url: https://developer.boldcommerce.com/api/shops
-- aid: bold-commerce:bold-commerce-products-api
-  name: Bold Commerce Products API
-  description: Product catalog for a shop.
-  humanURL: https://developer.boldcommerce.com/api/subscriptions
-  baseURL: https://api.boldcommerce.com/subscriptions/v1
-  tags:
-  - Product
-  tags_raw:
-  - Products
-  properties:
-  - type: OpenAPI
-    url: openapi/bold-commerce-products-api-openapi.yml
   - type: Documentation
     url: https://developer.boldcommerce.com/api/subscriptions
   - type: APIReference
@@ -233,6 +135,347 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/bold-commerce-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-convertible-adjustments-api
+  name: Bold Commerce Convertible Adjustments API
+  description: >-
+    Use these endpoints to create, update, or delete convertible adjustment plans, enabling automatic
+    product conversions on subscription line items attached to a created plan.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Convertible Adjustments
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-convertible-adjustments-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-future-orders-api
+  name: Bold Commerce Future Orders API
+  description: >-
+    Contains information about future orders for subscriptions. Use these endpoints to list future orders
+    for a shop or individual subscriptions.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Future Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-future-orders-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-payment-methods-api
+  name: Bold Commerce Payment Methods API
+  description: >-
+    A child resource of Subscriptions. Contains information about payment methods for subscriptions, including
+    public payment IDs, alternate payment methods, and available methods. Use these endpoints to get,
+    remove, edit, and list payment methods associated with a subscription.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Payment Methods
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-payment-methods-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-subscription-adjustments-api
+  name: Bold Commerce Subscription Adjustments API
+  description: >-
+    A child resource of Subscriptions. Contains information about future adjustments to a subscription
+    or its orders. Use these endpoints to create, list, or delete adjustments for a subscription.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Subscription Adjustments
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-subscription-adjustments-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-subscription-groups-api
+  name: Bold Commerce Subscription Groups API
+  description: >-
+    Contains information about subscription groups for your store, including shop ID and subscription
+    group configuration. Use these endpoints to add, remove, edit, or list subscription groups.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Subscription Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-subscription-groups-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-subscription-line-items-api
+  name: Bold Commerce Subscription Line Items API
+  description: >-
+    A child resource of Subscriptions. Contains information about line items in a subscription, including
+    price, details, and swappable products. Use these endpoints to get, remove, edit, or list line items
+    for subscriptions.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Subscription Line Items
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-subscription-line-items-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-subscription-orders-api
+  name: Bold Commerce Subscription Orders API
+  description: >-
+    A child resource of Subscriptions. Contains information about orders in a subscription, including
+    schedules, order histories, and current orders. Use these endpoints to list, get, skip, or unskip
+    orders.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Subscription Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-subscription-orders-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-webhook-events-api
+  name: Bold Commerce Webhook Events API
+  description: >-
+    Contains information about webhook events, including webhook event ID, attempts, and webhook event
+    metadata. Use these endpoints to get webhook event information.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Webhook Events
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-webhook-events-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-webhook-subscriptions-api
+  name: Bold Commerce Webhook Subscriptions API
+  description: >-
+    Contains webhook metadata. Use these endpoints to add, remove, edit, or list webhook subscriptions.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Webhook Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-webhook-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/subscriptions
+  - type: PostmanCollection
+    url: collections/bold-commerce.postman_collection.json
+  - type: OpenCollection
+    url: collections/bold-commerce.opencollection.json
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/checkout
+  - type: Documentation
+    url: https://developer.boldcommerce.com/guides/checkout/quick-start
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: APIReference
+    url: https://developer.boldcommerce.com/api/price-rules
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/products
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/customers
+  - type: Documentation
+    url: https://developer.boldcommerce.com/api/shops
+- aid: bold-commerce:bold-commerce-webhook-topics-api
+  name: Bold Commerce Webhook Topics API
+  description: >-
+    Contains information about webhook topics. Use these endpoints to list all possible webhook topics.
+  humanURL: https://developer.boldcommerce.com/api/subscriptions
+  baseURL: https://api.boldcommerce.com/subscriptions/v1
+  tags:
+  - Webhook Topics
+  properties:
+  - type: OpenAPI
+    url: openapi/bold-commerce-webhook-topics-api-openapi.yml
   - type: Documentation
     url: https://developer.boldcommerce.com/api/subscriptions
   - type: APIReference

@@ -1,0 +1,1148 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Future Orders API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Future Orders
+  description: Contains information about future orders for subscriptions. Use these endpoints to list future orders for a shop or individual subscriptions.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/future_orders:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    get:
+      summary: List Future Orders
+      operationId: ListFutureOrders
+      tags:
+      - Future Orders
+      description: 'Lists future subscription orders for the shop.
+
+
+        For more information, refer to the View Future Orders guide.'
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/filter_future_orders_query_param'
+      - $ref: '#/components/parameters/filter_future_order_subscriptions_query_param'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FutureOrders'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/future_orders:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/subscription_id_path_param'
+    get:
+      summary: List Future Orders by Subscription ID
+      operationId: ListFutureOrdersBySubscriptionID
+      tags:
+      - Future Orders
+      description: 'Lists future orders for a subscription.
+
+
+        For more information, refer to the View Future Orders guide.'
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/filter_future_orders_query_param'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FutureOrders'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+components:
+  schemas:
+    FutureOrdersCursorPagination:
+      type: object
+      title: FutureOrdersCursorPagination
+      description: Cursor-based pagination result for future orders endpoints.
+      properties:
+        count:
+          type: integer
+          description: The count of items on the current response.
+          example: 10
+        next:
+          type:
+          - string
+          - 'null'
+          description: A base-64 encoded cursor that can be used on subsequent requests to get the next page. The value is `null` when no pages remain.
+          example: P3NpbmNlX2lkPTE1Mjc0Jm9yZGVyX2J5PWlkJm9yZGVyX2RpcmVjdGlvbj1kZXNj
+      readOnly: true
+    SubscriptionAdjustmentActionAddLineItem:
+      required:
+      - type
+      - platform_product_id
+      - platform_variant_id
+      - quantity
+      properties:
+        type:
+          type: string
+          description: 'The action to perform for the adjustment. Adds a line item to the adjustment target.
+
+
+            To add a line item, the `type` value is always "add_line_item".'
+          enum:
+          - add_line_item
+          example: add_line_item
+        platform_product_id:
+          type: string
+          description: The ID of the product on your platform. Learn more about [finding platform product IDs](/guides/subscriptions-v2/create-subscription#how-do-i-find-the-platform_product_id-and-platform_variant_id-for-a-line-item).
+          example: '1578934692'
+        platform_variant_id:
+          type: string
+          description: The ID of the product variant on your platform. All products, including those with no variants or a single variant, have a platform variant ID. Learn more about [finding platform variant IDs](/guides/subscriptions-v2/create-subscription#how-do-i-find-the-platform_product_id-and-platform_variant_id-for-a-line-item).
+          example: '975285185'
+        quantity:
+          type: integer
+          description: The quantity of the line item to add.
+          example: 1
+        price:
+          type: integer
+          description: The price of the line item in the base currency unit (e.g. cents).
+          example: 1500
+    FutureOrderLineItemPrepaidMetadataEntity:
+      type: object
+      properties:
+        prepaid_continue:
+          description: "The behavior of the subscription once the number of recurrences has reached the `prepaid_duration`.\n  * `no_continue`: The subscription will be cancelled.\n  * `as_prepaid` : The customer will be charged for new set of order recurrences on the next recurrence.\n  * `as_standard`: The subscription will be converted to a standard subscription, where the customer is charged for one order at each recurrence."
+          type: string
+          enum:
+          - no_continue
+          - as_prepaid
+          - as_standard
+          example: as_prepaid
+        prepaid_duration:
+          description: The number of subscription recurrences that get prepaid for in a cycle.
+          type: integer
+          example: 6
+        recurrence_count:
+          description: Indicates which recurrence of the prepaid cycle the future order will be.
+          type: integer
+          example: 1
+        requires_payment:
+          description: Indicates whether the line item and associated subscription will be charged for a full prepaid cycle. When payment is required, the line item price and shipping line prices of the future order will be multiplied by the appropriate prepaid duration. When payment is required and no other standard line items are present then prices will be 0.
+          type: boolean
+          example: true
+    SubscriptionAdjustmentTriggerOrderCount:
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of trigger to use to determine when this adjustment should apply. The value `order_count` is used to match targets based on order count.
+          enum:
+          - order_count
+          example: order_count
+        count:
+          $ref: '#/components/schemas/SubscriptionAdjustmentMatchConditionCount'
+        relative_count:
+          $ref: '#/components/schemas/SubscriptionAdjustmentMatchConditionRelativeCount'
+        function:
+          $ref: '#/components/schemas/SubscriptionAdjustmentMatchConditionFunction'
+    SubscriptionAdjustmentActionApplyPrice:
+      required:
+      - type
+      - line_item_id
+      - price
+      properties:
+        type:
+          type: string
+          description: 'The action to perform for the adjustment. It updates the price for the adjustment target.
+
+
+            To update a line item''s price, the `type` value is always "apply_price".'
+          enum:
+          - apply_price
+          example: apply_price
+        line_item_id:
+          type: number
+          description: The ID of the subscription line item to update.
+          example: 35237
+        price:
+          type: integer
+          description: The new price of the line item in the base currency unit (e.g. cents).
+          example: 300
+    CustomerSubscriptionSummary:
+      type: object
+      required:
+      - bold_platform_customer_id
+      - next_order_date
+      - last_order_date
+      - active_subscription_count
+      - inactive_subscription_count
+      - subscription_order_count
+      - lifetime_value_usd
+      description: Summary of the customer's subscriptions.
+      properties:
+        bold_platform_customer_id:
+          type: integer
+          description: The customer's ID.
+          example: 2
+          readOnly: true
+        next_order_date:
+          type: string
+          description: The cext order date and time for the subscription.
+          example: '2020-01-20T18:00:00Z'
+          readOnly: true
+        last_order_date:
+          type: string
+          description: The most recent order date and time for a subscription.
+          example: '2019-11-20T20:55:27Z'
+          readOnly: true
+        active_subscription_count:
+          type: integer
+          description: The number of active subscriptions.
+          example: 2
+          readOnly: true
+        inactive_subscription_count:
+          type: integer
+          description: The number of inactive subscriptions.
+          example: 1
+          readOnly: true
+        subscription_order_count:
+          type: integer
+          description: The number of subscription orders for this customer. Initial orders count toward this total.
+          example: 5
+          readOnly: true
+        lifetime_value_usd:
+          type: number
+          description: The total value of the order made by this customer in USD.
+          example: 152.12
+          readOnly: true
+    SubscriptionAdjustmentMatchConditionRelativeCount:
+      type: integer
+      description: Use the subscription's current order count when calculating the final order count.
+      minimum: 1
+      example: 5
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    SubscriptionAdjustmentActionUpdateLineItemQuantity:
+      required:
+      - type
+      - subscription_line_item_id
+      - quantity
+      properties:
+        type:
+          type: string
+          description: 'The action to perform for the adjustment. Updates a line item quantity for the adjustment target.
+
+
+            To update a line item''s quantity, the `type` value is always "update_line_item_quantity".'
+          enum:
+          - update_line_item_quantity
+          example: update_line_item_quantity
+        subscription_line_item_id:
+          type: number
+          description: The ID of the subscription line item to update.
+          example: 35236
+        quantity:
+          type: integer
+          description: The new quantity of the line item.
+          example: 3
+    deletedAt:
+      type:
+      - string
+      - 'null'
+      description: The date and time when the object was deleted. Set to `null` when the object was not deleted.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+    SubscriptionAdjustmentTriggerOrderDatetime:
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The type of trigger to use to determine when this adjustment should apply. The value `order_datetime` is used to match targets based on order date and time.
+          enum:
+          - order_datetime
+          example: order_datetime
+        datetime:
+          type: string
+          format: date-time
+          description: The date and time of an order that will trigger this adjustment.
+          example: '2024-02-15T06:00:00Z'
+    CustomerLabel:
+      type: object
+      description: The label assigned to a customer.
+      required:
+      - id
+      - name
+      - created_at
+      - updated_at
+      - deleted_at
+      properties:
+        id:
+          type: integer
+          description: The customer label ID.
+          example: 12
+          readOnly: true
+        customer_id:
+          type: integer
+          description: The customer ID.
+          example: 21
+          readOnly: true
+        name:
+          type: string
+          description: The content of the label.
+          example: bsub_subscription_active
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+        updated_at:
+          $ref: '#/components/schemas/updatedAt'
+        deleted_at:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/deletedAt'
+    FutureOrderLineItemEntity:
+      type: object
+      properties:
+        future_order_id:
+          type: string
+          description: The unique identifier of the future order in the format `{subscription_id}-{order_date}`, where `{order_date}` uses [RFC 3339 format](https://www.ietf.org/rfc/rfc3339.txt).
+          example: 53236-2024-05-21T08:00:00Z
+        bold_platform_subscription_id:
+          type: integer
+          description: The ID of the subscription associated with this line item.
+          example: 4712349
+        bold_platform_subscription_line_item_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription line item. If a line item is created from a future adjustment, `bold_subscription_line_item_id` is set to `null`.
+          example: 643723
+        adjustment_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription adjustment adding this line item to the order, if applicable.
+          example: 36217
+        platform_id:
+          type:
+          - string
+          - 'null'
+          description: When applicable, the unique ID of the line item on the platform subscription.
+          example: '6434329530'
+        platform_product_id:
+          type: string
+          description: The platform-specific product ID.
+          example: '478723258026'
+        platform_variant_id:
+          type: string
+          description: The platform-specific variant ID.
+          example: '92183258642'
+        title:
+          type: string
+          description: The title of the line item including both product and variant names.
+          example: Roaster's Choice - 2lb
+        product_name:
+          type: string
+          description: The name of the product.
+          example: Roaster's Choice
+        variant_name:
+          type: string
+          description: The name of the variant.
+          example: 2lb
+        sku:
+          type: string
+          description: The SKU of the product variant.
+          example: RC-2LB
+        url:
+          type: string
+          description: The URL of the product on the storefront.
+          example: /products/roasters-choice
+        image:
+          type: string
+          description: The platform image URL for the line item.
+          example: https://cdn.shopify.com/s/files/1/6332/09823/products/roasters-choice.png?v=1555362485
+        quantity:
+          type: integer
+          description: The quantity of the line item in the future order.
+          example: 3
+        price:
+          type: integer
+          description: 'The price of this line item within the subscription, in the base unit (e.g., cents) of the `charged_currency` for this subscription. Example: a value of `1000` in a USD currency corresponds to a $10.00 USD per-unit price on the line item.'
+          example: 1000
+        requires_shipping:
+          type: boolean
+          description: Indicates whether this line item is subject to applicable shipping fees.
+          example: true
+        grams:
+          type: integer
+          description: The weight of a single unit of the line item in grams.
+          example: 1043
+        weight:
+          type: number
+          description: The weight of a single unit of the line item, measured in `weight_unit`.
+          example: 2.3
+        weight_unit:
+          type: string
+          description: Indicates the unit of measurement reflected by the `weight` field.
+          example: lb
+        taxable:
+          type: boolean
+          description: Indicates whether the line item is subject to applicable taxes.
+          example: true
+        line_item_attributes:
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/LineItemAttributeEntity'
+        prepaid_metadata:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/FutureOrderLineItemPrepaidMetadataEntity'
+        subscription_group_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription group that contains this line item's product.
+          example: 36236
+        subscription_group_billing_rules_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription group billing rule associated with the subscription's order frequency.
+          example: 78365
+        discounts:
+          type: array
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/LineItemDiscountEntity'
+    LineItemAttributeEntity:
+      title: LineItemAttributeEntity
+      type: object
+      description: This represents a custom field that can be defined and used to store complementary information about a subscription line item.
+      properties:
+        name:
+          type: string
+          example: size_preference
+          description: The name of the custom field/attribute, up to 250 characters.
+        value:
+          type: string
+          example: XL
+          description: The content of the custom field/attribute.
+        created_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this line item attribute was created.
+          example: '2021-01-17T20:30:40Z'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this line item attribute was last updated. The value is the same as the `created_at` value if the line item attribute has never been updated.
+          example: '2021-01-17T20:30:40Z'
+          readOnly: true
+        subscription_id:
+          description: The ID of the subscription associated to this line item attribute.
+          type: integer
+          readOnly: true
+          example: 435989
+        line_item_id:
+          description: The ID of the subscription line item this line item attribute belongs to.
+          type: integer
+          readOnly: true
+          example: 45734
+    CustomerEntity:
+      type: object
+      required:
+      - id
+      - platform_id
+      - cashier_public_id
+      - first_name
+      - last_name
+      - phone
+      - email
+      - notes
+      - addresses
+      - default_address
+      - subscription_summary
+      - labels
+      - created_at
+      properties:
+        id:
+          description: The customer ID.
+          type: integer
+          readOnly: true
+          example: 2
+        platform_id:
+          description: The customer platform ID.
+          type: string
+          readOnly: true
+          example: '123456790'
+        cashier_public_id:
+          type:
+          - string
+          - 'null'
+          description: The public customer ID generated when using Bold Checkout, set to `null` otherwise.
+          example: null
+          readOnly: true
+        first_name:
+          type: string
+          description: The customer's first name.
+          example: Jane
+        last_name:
+          type: string
+          description: The customer's last name.
+          example: Doe
+        email:
+          type: string
+          description: The customer's email
+          example: jane.doe@example.com
+        phone:
+          type: string
+          description: The customer's phone number. For Shopify checkout users, [you can configure phone number requirements in the admin](/guides/subscriptions-v2/create-subscription#how-do-i-make-phone-numbers-optional-when-using-shopify-checkout).
+          example: '12045551234'
+        notes:
+          type: string
+          description: The customer's internal notes. This is applied as a note in the **Customer info** section of Bold Subscriptions admin.
+          example: Loyal customer
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerAddressEntity'
+          readOnly: true
+        default_address:
+          description: The customer's default address.
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/CustomerAddressEntity'
+        subscription_summary:
+          readOnly: true
+          allOf:
+          - $ref: '#/components/schemas/CustomerSubscriptionSummary'
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerLabel'
+          readOnly: true
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+    createdAt:
+      type: string
+      description: The date and time when the object was created.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+      readOnly: true
+    FutureOrderEntity:
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the future order in the format `{subscription_id}-{order_date}`, where `{order_date}` uses [RFC 3339 format](https://www.ietf.org/rfc/rfc3339.txt).
+          example: 53236-2024-05-21T08:00:00Z
+        date:
+          type: string
+          description: The date and time of the future order, in [RFC 3339 format](https://www.ietf.org/rfc/rfc3339.txt).
+          example: '2024-05-21T08:00:00Z'
+        bold_customer_id:
+          type: integer
+          description: The ID for the customer associated with the future order.
+          example: 1697912
+        bold_platform_subscription_id:
+          type: integer
+          description: The ID of the subscription associated with the future order.
+          example: 4712349
+        currency:
+          type: string
+          description: The currency used for the future order, in [ISO-4217](https://www.iso.org/iso-4217-currency-codes.html) format.
+          example: USD
+        order_count:
+          type:
+          - integer
+          - 'null'
+          description: 'The number ("n") indicates the future order will be the nth order for the subscription. The value will be `null` if the future order is skipped. Example: `order_count: 6` means the future order is the 6th order for the subscription.'
+          example: 6
+        subscription_data:
+          type: object
+          description: Details on the subscription associated with the future order.
+          properties:
+            id:
+              type: integer
+              description: The ID of the subscription associated with the future order.
+              example: 4712349
+            order_count:
+              type: integer
+              description: The number of orders currently processed by the subscription associated with the future order.
+              example: 2
+            discount_code:
+              type: string
+              description: The discount code currently on the subscription. The value is an empty string `""` if no discount is applied.
+              example: BOXINGDAYSUB
+            order_rrule:
+              type: string
+              description: An RRULE describing how frequently orders are processed for the subscription. Learn more about [RRULEs](https://support.boldcommerce.com/hc/en-us/articles/360045174132-Use-RRULES-in-Bold-Subscriptions).
+              example: 'DTSTART:20210521T080000Z
+
+                RRULE:FREQ=MONTHLY'
+            base_currency:
+              type: string
+              description: The base currency of the subscription, in [ISO 4217 format](https://www.iso.org/iso-4217-currency-codes.html). This aligns with the store's platform configuration for primary currency when the subscription was placed, unless later modified.
+              example: CAD
+            charged_currency:
+              type: string
+              description: The currency the customer is charged in, in [ISO 4217 format](https://www.iso.org/iso-4217-currency-codes.html).
+              example: USD
+            base_to_charged_exchange_rate:
+              type: number
+              description: The exchange rate from the subscription's base currency to the charged currency.
+              example: 0.79
+            placed_at:
+              type:
+              - string
+              - 'null'
+              description: The date and time the subscription was placed by the customer, in [RFC 3339 format](https://www.ietf.org/rfc/rfc3339.txt). For programmatically created or migrated subscriptions this value may be `null`.
+              example: '2024-02-21T08:00:00Z'
+        is_skipped:
+          type: boolean
+          description: Indicates if the future order is set to be skipped.
+          example: false
+        customer:
+          $ref: '#/components/schemas/Customer'
+        adjustments:
+          type:
+          - array
+          - 'null'
+          description: The list of subscription adjustments with target "order" to apply to the future order. `adjustments` is `null` if there are no adjustments to return.
+          minItems: 0
+          items:
+            $ref: '#/components/schemas/SubscriptionAdjustment'
+        line_items:
+          type: array
+          minItems: 0
+          description: The line items in the future order.
+          items:
+            $ref: '#/components/schemas/FutureOrderLineItemEntity'
+        shipping_lines:
+          type: array
+          description: 'The shipping lines for the future order.
+
+
+            **Note:** Shipping lines may differ at time of processing. List available shipping lines with the Checkout Frontend [List Shipping Lines endpoint](https://developer.boldcommerce.com/default/api/checkout#tag/Shipping-Lines/operation/ListShippingLines).'
+          items:
+            $ref: '#/components/schemas/ShippingLineEntity'
+        billing_address:
+          $ref: '#/components/schemas/CustomerAddressEntity'
+        shipping_address:
+          type:
+          - object
+          - 'null'
+          allOf:
+          - $ref: '#/components/schemas/CustomerAddressEntity'
+      type: object
+      readOnly: true
+    SubscriptionAdjustmentMatchConditionCount:
+      type:
+      - integer
+      - 'null'
+      description: The order count of the target that the adjustment will apply to.
+      example: 5
+    SubscriptionAdjustmentMatchConditionFunction:
+      type:
+      - object
+      - 'null'
+      description: Use a "y = mx + b" formula as your match condition for when to apply your adjustment to orders. For example, a "step_size" of 3 and an "offset" of 2 to represent "Every 3rd order starting on the 2nd order."
+      properties:
+        step_size:
+          type: integer
+          minimum: 1
+          example: 5
+        offset:
+          minimum: 0
+          type: integer
+          example: 0
+    Customer:
+      properties:
+        customer:
+          $ref: '#/components/schemas/CustomerEntity'
+      type: object
+    updatedAt:
+      type:
+      - string
+      - 'null'
+      description: The date and time when the object was most recently updated.
+      example: '2022-12-25T00:00:00Z'
+      format: date-time
+      readOnly: true
+    FutureOrders:
+      properties:
+        future_orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/FutureOrderEntity'
+        pagination:
+          $ref: '#/components/schemas/FutureOrdersCursorPagination'
+      type: object
+    SubscriptionAdjustment:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 74928
+        name:
+          type: string
+          description: The name of the adjustment.
+          example: One-time Upsell (Gift)
+        description:
+          type: string
+          description: The description of the adjustment being made to the subscription or its orders.
+          example: Enjoy a complementary gift every 5th order for being a loyal customer!
+        target:
+          type: string
+          description: The target of the adjustment.
+          enum:
+          - subscription
+          - order
+          example: order
+        trigger:
+          type: object
+          description: The condition for when and how often the `action` will be made against the `target`.
+          oneOf:
+          - $ref: '#/components/schemas/SubscriptionAdjustmentTriggerOrderCount'
+          - $ref: '#/components/schemas/SubscriptionAdjustmentTriggerOrderDatetime'
+        action:
+          type: object
+          description: The action that should be made against the `target` of the adjustment.
+          oneOf:
+          - $ref: '#/components/schemas/SubscriptionAdjustmentActionAddLineItem'
+          - $ref: '#/components/schemas/SubscriptionAdjustmentActionUpdateLineItemQuantity'
+          - $ref: '#/components/schemas/SubscriptionAdjustmentActionApplyPrice'
+        invalid_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment will be applied and become invalid. The value is null for adjustments that are scheduled to be applied one-time in the future.
+          readOnly: true
+          example: null
+        created_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment was created.
+          readOnly: true
+          example: '2024-10-15T06:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment was last updated. The value is the same as the `created_at` value if the adjustment has never been updated.
+          readOnly: true
+          example: '2024-10-15T06:00:00Z'
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this adjustment was deleted. The value is null if the adjustment has never been deleted.
+          readOnly: true
+          example: null
+    ShippingLineEntity:
+      type: object
+      description: A shipping line for a subscription.
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the shipping line.
+          readOnly: true
+          example: 36217
+        name:
+          type: string
+          description: The name of the shipping line.
+          example: Standard Shipping
+          readOnly: true
+        code:
+          type: string
+          description: The code of the shipping line.
+          example: Standard Shipping
+          readOnly: true
+        price:
+          type: integer
+          description: The price of the shipping line, in base units (e.g., cents) of the `base_currency` of the associated subscription. For example, a value of `1000` on a subscription with a base currency of USD corresponds to a $10.00 USD shipping line price.
+          example: 1000
+          readOnly: true
+        value:
+          type: integer
+          description: The price of the shipping line, in base units (e.g., cents) of the `base_currency` of the associated subscription. For example, a value of `1000` on a subscription with a base currency of USD corresponds to a $10.00 USD shipping line price.
+          example: 1000
+          readOnly: true
+        value_charged:
+          type:
+          - integer
+          - 'null'
+          description: The price of the shipping line, in base units (e.g., cents) of the `charged_currency` of the associated subscription. For example, a value of `1000` on a subscription with a charged currency of CAD corresponds to a $10.00 CAD shipping line price.
+          example: 1000
+          readOnly: true
+        tag:
+          type:
+          - string
+          - 'null'
+          example: Shipping
+          readOnly: true
+        created_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this shipping line was created.
+          example: '2019-10-20T20:31:55Z'
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this shipping line was last updated. The value is the same as the `created_at` value if the shipping line has never been updated.
+          example: '2019-11-20T20:31:55Z'
+          readOnly: true
+        subscription_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription the shipping line belongs to.
+          example: 1
+          readOnly: true
+      required:
+      - id
+      - name
+      - code
+      - price
+      - value
+      - value_charged
+      - tag
+      - created_at
+      - updated_at
+      - subscription_id
+      readOnly: true
+    LineItemDiscountEntity:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the line item discount.
+          example: 1
+        subscription_line_item_id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the subscription line item the discount belongs to.
+          example: 1
+        shop_id:
+          type: integer
+          description: The ID of the shop.
+          example: 5
+        full_price:
+          type:
+          - integer
+          - 'null'
+          description: The price of the subscription line item without this discount applied.
+          example: 5
+        discount_type:
+          type: string
+          description: The type of discount being applied to the subscription line item.
+          enum:
+          - percentage
+          - fixed
+          - no_discount
+          example: percentage
+        percentage_value:
+          type: number
+          description: The percent discount to apply to the line item price in a range of 0 - 100. Only applied when the value for `discount_type` is `percentage`. For example, a value of `12.5` will discount the line item by 12.5%.
+          example: 10
+        fixed_value:
+          type: integer
+          description: The discount amount in base currency units (e.g. cents). Only applied when the value for `discount_type` is `fixed`. For example, a value of `575` on a subscription with a base currency of USD will discount the line item by $5.75 USD.
+          example: 0
+        fixed_value_charged:
+          type: integer
+          description: The discount amount in base currency units (e.g. cents) of the subscription's `charged_currency`. Only applied when the value for `discount_type` is `fixed`. This value is derived from the `fixed_value` and the subscription's currency properties. For example, with a `fixed_value` of 575, a base currency of USD, a charged currency of CAD, and an exchange rate of 1.5, this value would be 575 * 1.5 = `863`.
+          example: 0
+        description:
+          type: string
+          description: A description of the discount to show to the customer.
+          example: Subscription discount (10%) for Monthly Expansion Pack
+        created_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount added to the subscription line item.
+          readOnly: true
+        updated_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount was last updated. The value is the same as the `created_at` value if the discount has never been updated.
+          readOnly: true
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+          description: The date (in [RFC3339 format](https://datatracker.ietf.org/doc/html/rfc3339)) that this discount was removed from the subscription line item. The value is null if the discount has never been deleted.
+          readOnly: true
+      required:
+      - id
+      - subscription_line_item_id
+      - shop_id
+      - full_price
+      - discount_type
+      - percentage_value
+      - fixed_value
+      - fixed_value_charged
+      - description
+      - created_at
+      - updated_at
+      - deleted_at
+      readOnly: true
+    CustomerAddressEntity:
+      type: object
+      required:
+      - id
+      - shop_identifier
+      - platform_id
+      - customer_id
+      - platform_type
+      - platform_customer_id
+      - first_name
+      - last_name
+      - company
+      - phone
+      - street1
+      - street2
+      - city
+      - province
+      - province_code
+      - country
+      - country_code
+      - zip
+      - is_default
+      - address_use
+      - address_source
+      - created_at
+      - updated_at
+      - deleted_at
+      properties:
+        id:
+          type: integer
+          description: The address ID.
+          readOnly: true
+          example: 1
+        shop_identifier:
+          type: string
+          description: The platform shop identifier.
+          readOnly: true
+          example: '12345'
+        platform_id:
+          type: string
+          description: The platform address identifier.
+          readOnly: true
+          example: '14'
+        customer_id:
+          type: integer
+          description: The customer ID.
+          readOnly: true
+          example: 2
+        platform_type:
+          type: string
+          enum:
+          - bigcommerce
+          - commercetools
+          - custom
+          - shopify
+          - woocommerce
+          description: The e-commerce platform being used by the shop (might also be 'custom' for no specific e-commerce platform).
+          readOnly: true
+          example: shopify
+        platform_customer_id:
+          type: string
+          readOnly: true
+          description: The ID of the customer on the platform.
+          example: '35'
+        first_name:
+          type: string
+          description: The customer's first name.
+          example: John
+        last_name:
+          type: string
+          description: The customer's last name(s).
+          example: Doe
+        company:
+          type: string
+          description: The customer's company name.
+          example: Example Company
+        phone:
+          type: string
+          description: The customer's phone number.
+          example: 123-456-7890
+        street1:
+          type: string
+          description: The customer's street address (street name and number).
+          example: 123 example st.
+        street2:
+          type: string
+          description: The address complement (suite number, unit number, etc.).
+          example: '101'
+        city:
+          type: string
+          description: The customer's city.
+          example: Toronto
+        province:
+          type: string
+          description: The customer's province or state, as applicable. Can be an empty string in case the address has no state/province.
+          example: Ontario
+        province_code:
+          type: string
+          description: The customer's province or state code (usually 2 characters), as applicable. Can be an empty string in case the address has no state/province.
+          example: 'ON'
+        country:
+          type: string
+          description: The customer's country name.
+          example: Canada
+        country_code:
+          type: string
+          description: 'The customer''s alpha 2 country code, according to ISO 3166-1 (reference: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).'
+          example: CA
+        zip:
+          type: string
+          description: The customer's postal code.
+          example: M5V 3L9
+        is_default:
+          type: boolean
+          description: Defines if this address should be considered the default one for the customer.
+          example: true
+        address_use:
+          type:
+          - string
+          - 'null'
+          description: The address usage (billing, shipping). Only set for WooCommerce, `null` otherwise.
+          example: billing
+        address_source:
+          type: string
+          description: The address source.
+          enum:
+          - platform
+          - bold
+          readOnly: true
+          example: platform
+        created_at:
+          $ref: '#/components/schemas/createdAt'
+        updated_at:
+          $ref: '#/components/schemas/updatedAt'
+        deleted_at:
+          $ref: '#/components/schemas/deletedAt'
+  parameters:
+    limit:
+      name: limit
+      in: query
+      required: false
+      description: The maximum number of results to be returned.
+      schema:
+        type: integer
+        example: 10
+        default: 50
+    filter_future_orders_query_param:
+      schema:
+        type: string
+        example: lte(order_datetime:2024-05-10T23:59:59)
+      in: query
+      name: filter
+      description: Filter future orders. Accepts filtering options as described in the [Query and Pagination](/guides/subscriptions-v2/resources/query-pagination) reference.
+    subscription_id_path_param:
+      name: subscription_id
+      in: path
+      description: The subscription identifier.
+      required: true
+      schema:
+        type: integer
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+    cursor:
+      name: cursor
+      in: query
+      required: false
+      description: A Base-64 encoded cursor. Used to get a page of data on a cursor paginated request. Obtained from the response of a previous request.
+      schema:
+        type: string
+        example: P3NpbmNlX2lkPTE1Mjc0Jm9yZGVyX2J5PWlkJm9yZGVyX2RpcmVjdGlvbj1kZXNj
+    filter_future_order_subscriptions_query_param:
+      schema:
+        type: string
+        example: eq(bold_customer_id:3623267)
+      in: query
+      name: subscription_filter
+      description: 'Filter future orders. Accepts filtering options as described in the [Query and Pagination](/guides/subscriptions-v2/resources/query-pagination) reference.
+
+
+        To see available filters, refer to the [Future Orders](/guides/subscriptions-v2/view-future-orders) guide.'
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

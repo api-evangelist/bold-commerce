@@ -1,0 +1,152 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Webhook Topics API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Webhook Topics
+  description: Contains information about webhook topics. Use these endpoints to list all possible webhook topics.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/webhooks/topics:
+    get:
+      summary: List Webhook Topics
+      operationId: ListWebhookTopics
+      tags:
+      - Webhook Topics
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookTopics'
+              examples:
+                example:
+                  value:
+                    webhook_topics:
+                    - id: 1
+                      topic_name: subscription_created
+                    - id: 2
+                      topic_name: subscription_updated
+                    - id: 3
+                      topic_name: subscription_order_created
+                    - id: 4
+                      topic_name: customer_created
+                    - id: 5
+                      topic_name: customer_updated
+                    - id: 6
+                      topic_name: subscription_order_transaction_failed
+                    - id: 7
+                      topic_name: subscription_order_max_retries_reached
+                    - id: 8
+                      topic_name: subscription_payment_method_updated
+                    - id: 9
+                      topic_name: subscription_upcoming_order
+                    - id: 10
+                      topic_name: subscription_expiring_payment
+                    - id: 12
+                      topic_name: subscription_cancelled
+                    - id: 13
+                      topic_name: subscription_paused
+                    - id: 14
+                      topic_name: subscription_resumed
+                    - id: 15
+                      topic_name: subscription_reactivated
+                    - id: 16
+                      topic_name: subscription_frequency_updated
+                    - id: 17
+                      topic_name: subscription_quantity_updated
+                    - id: 18
+                      topic_name: subscription_credit_card_updated
+                    - id: 19
+                      topic_name: subscription_shipping_address_updated
+                    - id: 20
+                      topic_name: subscription_payment_failed
+                    - id: 21
+                      topic_name: subscription_skipped
+                    - id: 22
+                      topic_name: subscription_line_items_added
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      description: Retrieve a list of available webhook topics.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+components:
+  schemas:
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    WebhookTopics:
+      properties:
+        webhook_topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookTopicEntity'
+      type: object
+    WebhookTopicEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+        topic_name:
+          type: string
+      x-examples:
+        subscription_created:
+          id: 1
+          topic_name: subscription_created
+        subscription_updated:
+          id: 2
+          topic_name: subscription_updated
+  parameters:
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2

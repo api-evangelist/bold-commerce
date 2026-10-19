@@ -1,0 +1,756 @@
+openapi: 3.0.3
+info:
+  title: Bold Commerce API
+  description: >-
+    Bold Commerce provides modular e-commerce APIs for subscriptions, headless
+    checkout, and pricing, plus supporting Products, Customers, and Shops APIs.
+    All requests are made against https://api.boldcommerce.com and authenticated
+    with a Bearer token - either an OAuth 2.0 access token (public integrations,
+    obtained through the Developer Dashboard authorization-code flow) or a scoped
+    API access token (private integrations, generated in the Bold Account
+    Center). Most paths are scoped to a shop_identifier GUID that is retrieved
+    from the Shops API. Versioned endpoints accept a Bold-API-Version-Date
+    header. Endpoints below are modeled from Bold's public developer
+    documentation; request and response schemas are representative.
+  version: '1.0'
+  contact:
+    name: Bold Commerce
+    url: https://developer.boldcommerce.com
+servers:
+  - url: https://api.boldcommerce.com
+    description: Bold Commerce API
+security:
+  - bearerAuth: []
+tags:
+  - name: Subscriptions
+    description: Recurring orders, intervals, and subscription management.
+  - name: Checkout
+    description: Headless storefront checkout order operations.
+  - name: Price Rules
+    description: Discounts, promotions, and dynamic pricing.
+  - name: Products
+    description: Product catalog for a shop.
+  - name: Customers
+    description: Customer records tied to a shop.
+  - name: Shops
+    description: Shop configuration and shop_identifier lookup.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions:
+    get:
+      operationId: listSubscriptions
+      tags:
+        - Subscriptions
+      summary: List subscriptions
+      description: Retrieve a list of subscriptions for the shop.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      responses:
+        '200':
+          description: A list of subscriptions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscriptions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createSubscription
+      tags:
+        - Subscriptions
+      summary: Create a subscription
+      description: Create a new subscription for the shop.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        '201':
+          description: The created subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}:
+    get:
+      operationId: getSubscription
+      tags:
+        - Subscriptions
+      summary: Retrieve a subscription
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      operationId: replaceSubscription
+      tags:
+        - Subscriptions
+      summary: Update a subscription
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        '200':
+          description: The updated subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+    patch:
+      operationId: patchSubscription
+      tags:
+        - Subscriptions
+      summary: Partially update a subscription
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        '200':
+          description: The updated subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/pause:
+    post:
+      operationId: pauseSubscription
+      tags:
+        - Subscriptions
+      summary: Pause a subscription
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The paused subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/cancel:
+    post:
+      operationId: cancelSubscription
+      tags:
+        - Subscriptions
+      summary: Cancel a subscription
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The cancelled subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/activate:
+    post:
+      operationId: activateSubscription
+      tags:
+        - Subscriptions
+      summary: Reactivate a subscription
+      description: Reactivate an inactive or cancelled subscription.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: The reactivated subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/line_items:
+    post:
+      operationId: addSubscriptionLineItems
+      tags:
+        - Subscriptions
+      summary: Add line items to a subscription
+      description: Add one or more line items to a subscription.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                line_items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LineItem'
+      responses:
+        '200':
+          description: The updated subscription.
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/intervals:
+    get:
+      operationId: listSubscriptionIntervals
+      tags:
+        - Subscriptions
+      summary: List subscription intervals
+      description: Retrieve a list of available intervals for a subscription.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: A list of intervals.
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/orders:
+    get:
+      operationId: listSubscriptionOrders
+      tags:
+        - Subscriptions
+      summary: List subscription orders
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+      responses:
+        '200':
+          description: A list of orders for the subscription.
+  /subscriptions/v1/shops/{shop_identifier}/subscriptions/{subscription_id}/orders/{order_id}/skip:
+    put:
+      operationId: skipSubscriptionOrder
+      tags:
+        - Subscriptions
+      summary: Skip an upcoming order
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - $ref: '#/components/parameters/SubscriptionId'
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The skipped order.
+  /checkout/storefront/{shop_id}/{order_id}/addresses/shipping:
+    post:
+      operationId: setShippingAddress
+      tags:
+        - Checkout
+      summary: Set the shipping address
+      description: Sets the shipping address on the order.
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: The updated order application state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutState'
+    get:
+      operationId: getShippingAddress
+      tags:
+        - Checkout
+      summary: Retrieve the shipping address
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: The shipping address.
+  /checkout/storefront/{shop_id}/{order_id}/addresses/billing:
+    post:
+      operationId: setBillingAddress
+      tags:
+        - Checkout
+      summary: Set the billing address
+      description: Sets the billing address on the order.
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: The updated order application state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutState'
+  /checkout/storefront/{shop_id}/{order_id}/line_items:
+    post:
+      operationId: addCheckoutLineItems
+      tags:
+        - Checkout
+      summary: Add line items to the order
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                line_items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LineItem'
+      responses:
+        '200':
+          description: The updated order application state.
+  /checkout/storefront/{shop_id}/{order_id}/discounts:
+    post:
+      operationId: applyCheckoutDiscount
+      tags:
+        - Checkout
+      summary: Apply a discount code to the order
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+      responses:
+        '200':
+          description: The updated order application state.
+  /checkout/storefront/{shop_id}/{order_id}/payments:
+    post:
+      operationId: addCheckoutPayment
+      tags:
+        - Checkout
+      summary: Add a payment to the order
+      parameters:
+        - $ref: '#/components/parameters/ShopId'
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                amount:
+                  type: integer
+      responses:
+        '200':
+          description: The updated order application state.
+  /price_rules/rules/v2/shops/{shop_identifier}/rulesets:
+    get:
+      operationId: listRulesets
+      tags:
+        - Price Rules
+      summary: List rulesets
+      description: List all rulesets available for the specified shop.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      responses:
+        '200':
+          description: A list of rulesets.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rulesets:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Ruleset'
+    post:
+      operationId: createRuleset
+      tags:
+        - Price Rules
+      summary: Create a ruleset
+      description: Create a new ruleset. Requires the write_price_rulesets scope.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ruleset'
+      responses:
+        '201':
+          description: The created ruleset.
+  /price_rules/rules/v2/shops/{shop_identifier}/rulesets/{ruleset_id}:
+    get:
+      operationId: getRuleset
+      tags:
+        - Price Rules
+      summary: Retrieve a ruleset
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - name: ruleset_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The ruleset.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ruleset'
+    put:
+      operationId: updateRuleset
+      tags:
+        - Price Rules
+      summary: Update a ruleset
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - name: ruleset_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ruleset'
+      responses:
+        '200':
+          description: The updated ruleset.
+    delete:
+      operationId: deleteRuleset
+      tags:
+        - Price Rules
+      summary: Delete a ruleset
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - name: ruleset_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: The ruleset was deleted.
+  /price_rules/rules/v2/shops/{shop_identifier}/process:
+    post:
+      operationId: processPrice
+      tags:
+        - Price Rules
+      summary: Process the final price for a line item
+      description: Return the final price for a line item in a cart.
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                line_items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LineItem'
+      responses:
+        '200':
+          description: The processed prices.
+  /products/v2/shops/{shop_identifier}/products:
+    get:
+      operationId: listProducts
+      tags:
+        - Products
+      summary: List products
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      responses:
+        '200':
+          description: A list of products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+  /products/v2/shops/{shop_identifier}/products/{product_id}:
+    get:
+      operationId: getProduct
+      tags:
+        - Products
+      summary: Retrieve a product
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+  /customers/v2/shops/{shop_identifier}/customers:
+    get:
+      operationId: listCustomers
+      tags:
+        - Customers
+      summary: List customers
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      responses:
+        '200':
+          description: A list of customers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customer'
+    post:
+      operationId: createCustomer
+      tags:
+        - Customers
+      summary: Create a customer
+      parameters:
+        - $ref: '#/components/parameters/ShopIdentifier'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: The created customer.
+  /shops/v1/info:
+    get:
+      operationId: getShopInfo
+      tags:
+        - Shops
+      summary: Retrieve shop info
+      description: >-
+        Retrieve the shop configuration, including the shop_identifier GUID
+        required in the path of most Bold API requests, plus shop name, domain,
+        platform, and default currency.
+      responses:
+        '200':
+          description: The shop info.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        OAuth 2.0 access token (public integrations) or scoped API access token
+        (private integrations), passed as Authorization: Bearer {token}.
+  parameters:
+    ShopIdentifier:
+      name: shop_identifier
+      in: path
+      required: true
+      description: The unique shop GUID, retrieved from the Shops API.
+      schema:
+        type: string
+    ShopId:
+      name: shop_id
+      in: path
+      required: true
+      description: The shop identifier for the checkout order.
+      schema:
+        type: string
+    OrderId:
+      name: order_id
+      in: path
+      required: true
+      description: The public order ID for the checkout session.
+      schema:
+        type: string
+    SubscriptionId:
+      name: subscription_id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Authentication is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+          enum:
+            - active
+            - paused
+            - cancelled
+        customer_id:
+          type: integer
+        interval_id:
+          type: integer
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItem'
+        next_order_datetime:
+          type: string
+          format: date-time
+    LineItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: integer
+    Address:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        address1:
+          type: string
+        city:
+          type: string
+        province:
+          type: string
+        country:
+          type: string
+        postal_code:
+          type: string
+    CheckoutState:
+      type: object
+      properties:
+        application_state:
+          type: object
+          description: Complete order context - customer, items, totals, and more.
+    Ruleset:
+      type: object
+      properties:
+        id:
+          type: string
+        external_id:
+          type: string
+        name:
+          type: string
+        active:
+          type: boolean
+        rules:
+          type: array
+          items:
+            type: object
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        variants:
+          type: array
+          items:
+            type: object
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+    Shop:
+      type: object
+      properties:
+        shop_identifier:
+          type: string
+        shop_name:
+          type: string
+        domain:
+          type: string
+        platform:
+          type: string
+        default_currency:
+          type: string
+    Error:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+              field:
+                type: string

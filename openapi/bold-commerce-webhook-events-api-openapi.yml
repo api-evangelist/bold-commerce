@@ -1,0 +1,227 @@
+openapi: 3.2.0
+info:
+  title: Bold Subscriptions Webhook Events API
+  version: '1.0'
+  description: 'Bold Subscriptions customers use our API to interact with subscription data in unique ways. This includes the ability to modify, cancel, and report on subscriptions.
+
+
+    Refer to the changelog for the latest updates to this API.'
+  termsOfService: https://boldcommerce.com/terms-of-service
+  contact:
+    name: Contact Us
+    url: https://developer-dashboard.boldcommerce.com/default/contactus
+servers:
+- url: https://api.boldcommerce.com
+security:
+- OAuthToken: []
+- APIAccessToken: []
+tags:
+- name: Webhook Events
+  description: Contains information about webhook events, including webhook event ID, attempts, and webhook event metadata. Use these endpoints to get webhook event information.
+paths:
+  /subscriptions/v1/shops/{shop_identifier}/webhooks/events:
+    get:
+      summary: List Webhook Events
+      operationId: ListWebhookEvents
+      tags:
+      - Webhook Events
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEvents'
+              examples:
+                example:
+                  value:
+                    webhook_events:
+                    - id: 0
+                      shop_id: 0
+                      webhook_subscription_id: 0
+                      webhook_topic_id: 0
+                      uuid: string
+                      attempts: 0
+                      last_response_status_code: string
+                      delivered_at: string
+                      created_at: '2019-11-20T20:31:55Z'
+                      updated_at: '2019-11-20T20:31:55Z'
+                      deleted_at: null
+                    pagination:
+                      limit: 10
+                      count: 1
+                      total: 1
+                      total_pages: 1
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+      description: Retrieve a list of webhook events.
+      parameters:
+      - $ref: '#/components/parameters/shop_identifier_path_param'
+      - schema:
+          type: integer
+        in: query
+        name: since_id
+      - schema:
+          type: string
+        in: query
+        name: limit
+        description: Maximum number of results to be returned
+      - schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - shop_id
+            - webhook_subscription_id
+            - webhook_topic_id
+            - uuid
+            - attempts
+            - last_response_status_code
+            - id
+            - created_at
+            - updated_at
+            - delivered_at
+        in: query
+        name: filters
+        description: Filter event webhooks. Mulitple filters can be passed in the array.
+  /subscriptions/v1/shops/{shop_identifier}/webhooks/events/{webhook_event_id}:
+    parameters:
+    - $ref: '#/components/parameters/shop_identifier_path_param'
+    - $ref: '#/components/parameters/webhook_event_id_path_param'
+    get:
+      summary: Get Webhook Event
+      operationId: GetWebhookEvent
+      description: Retrieve a webhook event by its id.
+      tags:
+      - Webhook Events
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEvent'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+components:
+  schemas:
+    WebhookEvents:
+      properties:
+        webhook_events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEventEntity'
+      type: object
+      description: ''
+      x-examples: {}
+    WebhookEventEntity:
+      title: ''
+      type: object
+      properties:
+        id:
+          type: integer
+        shop_id:
+          type: integer
+        webhook_subscription_id:
+          type: integer
+        webhook_topic_id:
+          type: integer
+        uuid:
+          type: string
+        attempts:
+          type: integer
+        last_response_status_code:
+          type: string
+        delivered_at:
+          type: string
+        created_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        updated_at:
+          type: string
+          readOnly: true
+          example: '2019-11-20T20:31:55Z'
+          format: date-time
+        deleted_at:
+          type:
+          - string
+          - 'null'
+          example: null
+          readOnly: true
+          format: date-time
+      x-examples:
+        Example:
+          id: 1
+          shop_id: 1
+          webhook_subscription_id: 1
+          webhook_topic_id: 1
+          uuid: 18418f32-f1ff-4897-94c9-9daacbaa404b
+          attempts: 1
+          last_response_status_code: '200'
+          delivered_at: '2020-08-17T18:27:03Z'
+          created_at: '2020-08-17T18:27:03Z'
+          updated_at: '2020-08-17T18:27:03Z'
+          deleted_at: ''
+      description: ''
+    UnauthenticatedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error summary.
+          example: invalid_request
+        error_description:
+          type: string
+          description: The detailed error message.
+          example: The access token is missing
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    WebhookEvent:
+      type: object
+      properties:
+        webhook_event:
+          $ref: '#/components/schemas/WebhookEventEntity'
+  parameters:
+    shop_identifier_path_param:
+      name: shop_identifier
+      in: path
+      description: The unique identifier of the shop.
+      required: true
+      schema:
+        type: string
+        example: '123456'
+    webhook_event_id_path_param:
+      name: webhook_event_id
+      in: path
+      description: The webhook event identifier.
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    OAuthToken:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://apps.boldapps.net/accounts/dashboard/authorize
+          tokenUrl: https://api.boldcommerce.com/auth/oauth2/token
+          scopes: {}
+      description: Authenticates an API request from a [public integration](/guides/subscriptions-v2/resources/glossary#public-integration). Generate this token in the [Developer Dashboard](https://developer-dashboard.boldcommerce.com/default/dashboard). Refer to [Build Public Integrations](/guides/subscriptions-v2/public-integrations) for more information.
+    APIAccessToken:
+      type: apiKey
+      name: API Access Token
+      in: header
+      description: Authenticates an API request from a [private integration](/guides/subscriptions-v2/resources/glossary#private-integration). Generate this token in the [Bold Account Center](https://account.boldcommerce.com/). Refer to [Making API Calls](/guides/subscriptions-v2/quick-start) for more information.
+externalDocs:
+  description: For more information about Subscriptions, refer to the Overview.
+  url: https://developer.boldcommerce.com/guides/subscriptions-v2
