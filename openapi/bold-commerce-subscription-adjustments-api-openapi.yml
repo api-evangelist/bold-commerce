@@ -579,3 +579,9 @@ components:
 externalDocs:
   description: For more information about Subscriptions, refer to the Overview.
   url: https://developer.boldcommerce.com/guides/subscriptions-v2
+x-provenance:
+  method: harvested
+  publisher: Bold Commerce
+  source: https://developer.boldcommerce.com/api/subscriptions.openapi.yaml
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
