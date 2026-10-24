@@ -302,6 +302,8 @@ apis:
   humanURL: https://developer.boldcommerce.com/api/subscriptions
   baseURL: https://api.boldcommerce.com/subscriptions/v1
   tags:
+  - Subscription groups
+  tags_raw:
   - Subscription Groups
   properties:
   - type: OpenAPI
