@@ -1,4 +1,4 @@
-# Bold Commerce (bold-commerce)
+# Bold Commerce
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,163 +64,129 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Bold Commerce builds modular e-commerce apps and headless commerce APIs for subscriptions, checkout, and pricing. Merchants and developers integrate Bold Subscriptions (recurring orders and branded customer portals), Bold Checkout (a headless, fully customizable checkout across Frontend, Backend, and Admin surfaces), and Bold Price Rules (discounts, promotions, and dynamic pricing), alongside supporting Products, Customers, and Shops APIs.
+Bold Commerce builds modular e-commerce apps and headless commerce APIs for subscriptions, checkout, and pricing. Merchants and developers integrate Bold Subscriptions (recurring orders and branded customer portals), Bold Checkout (a headless, fully customizable checkout across Frontend, Backend, and Admin surfaces), and Bold Price Rules (discounts, promotions, and dynamic pricing), alongside supporting Products, Customers, and Shops APIs. Requests are made against api.boldcommerce.com and authenticated with an OAuth 2.0 access token (public integrations) or a scoped API access token (private integrations), passed as a Bearer token.
 
-All requests are made against `https://api.boldcommerce.com` and authenticated with a Bearer token: an OAuth 2.0 access token for public integrations (authorization-code flow via the Developer Dashboard) or a scoped API access token for private integrations (generated in the Bold Account Center). The storefront checkout surface additionally scopes each order session with a JWT. Most paths are scoped to a `shop_identifier` GUID retrieved from the Shops API, and versioned endpoints accept a `Bold-API-Version-Date` header.
+**Areas:** E-Commerce · Subscription · Checkout · Pricing · Headless Commerce · Shopify
 
-**Access model note:** Bold's APIs are not sold as a standalone metered API product. Access comes with the corresponding merchant app subscription (for example, Bold Subscriptions) and is gated by OAuth scopes and API access tokens. Bold Checkout and Bold Price Rules are generally packaged into platform / headless commerce agreements rather than a public self-service price. The endpoints in this catalog are modeled from Bold's public developer documentation; request and response schemas in the OpenAPI are representative rather than byte-for-byte official.
+## Bold Commerce on APIs.io
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/bold-commerce/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/bold-commerce/refs/heads/main/apis.yml)
+Everything profiled for Bold Commerce is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/bold-commerce/](https://apis.io/providers/bold-commerce/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (6)
 
-- E-Commerce
-- Subscriptions
-- Checkout
-- Pricing
-- Headless Commerce
-- Shopify
+- [Bold Commerce Checkout API](https://apis.io/apis/bold-commerce/bold-commerce-checkout-api/) — Headless storefront checkout order operations.
+- [Bold Commerce Customers API](https://apis.io/apis/bold-commerce/bold-commerce-customers-api/) — Customer records tied to a shop.
+- [Bold Commerce Price Rules API](https://apis.io/apis/bold-commerce/bold-commerce-price-rules-api/) — Discounts, promotions, and dynamic pricing.
+- [Bold Commerce Products API](https://apis.io/apis/bold-commerce/bold-commerce-products-api/) — Product catalog for a shop.
+- [Bold Commerce Shops API](https://apis.io/apis/bold-commerce/bold-commerce-shops-api/) — Shop configuration and shop_identifier lookup.
+- [Bold Commerce Subscriptions API](https://apis.io/apis/bold-commerce/bold-commerce-subscriptions-api/) — Recurring orders, intervals, and subscription management.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-07-10
-- **Modified:** 2026-07-10
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Agentic access (1)
 
-### Bold Subscriptions API
+Which operations an agent can call, which act, and which need a human in the loop.
 
-Create, retrieve, update, pause, cancel, and reactivate subscriptions; manage line items, intervals, discount codes, shipping addresses, orders (skip / unskip), and adjustments. Powers custom subscription rules, integrations, reporting, and branded customer portals.
+- [Bold Commerce Agentic Access](https://apis.io/agentic-access/bold-commerce/bold-commerce-agentic-access/)
 
-- **Human URL:** [https://developer.boldcommerce.com/api/subscriptions](https://developer.boldcommerce.com/api/subscriptions)
-- **Base URL:** `https://api.boldcommerce.com/subscriptions/v1`
+#### Collections (7)
 
-#### Tags
+Postman and Open Collection request collections.
 
-- Subscriptions
-- Recurring Orders
-- Customer Portal
+- [Bold Commerce API](https://apis.io/collections/bold-commerce/open-bold-commerce/)
+- [Bold Commerce Checkout API](https://apis.io/collections/bold-commerce/open-bold-commerce-checkout-api/)
+- [Bold Commerce Checkout Customers API](https://apis.io/collections/bold-commerce/open-bold-commerce-customers-api/)
+- [Bold Commerce Checkout Price Rules API](https://apis.io/collections/bold-commerce/open-bold-commerce-price-rules-api/)
+- [Bold Commerce Checkout Products API](https://apis.io/collections/bold-commerce/open-bold-commerce-products-api/)
+- [Bold Commerce Checkout Shops API](https://apis.io/collections/bold-commerce/open-bold-commerce-shops-api/)
+- [Bold Commerce Checkout Subscriptions API](https://apis.io/collections/bold-commerce/open-bold-commerce-subscriptions-api/)
 
-#### Properties
+#### Security (3)
 
-- [Documentation](https://developer.boldcommerce.com/api/subscriptions)
-- [API Reference](https://developer.boldcommerce.com/api/subscriptions)
-- [OpenAPI](openapi/bold-commerce-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/bold-commerce.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/bold-commerce.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Authentication, trust centre, and vulnerability disclosure.
 
-### Bold Checkout API
+- [Bold Commerce Authentication](https://apis.io/security/bold-commerce/bold-commerce-authentication/)
+- [Bold Commerce Domain Security](https://apis.io/security/bold-commerce/bold-commerce-domain-security/)
+- [Bold Commerce Trust Center](https://apis.io/security/bold-commerce/bold-commerce-trust-center/)
 
-Headless storefront checkout - manage shipping and billing addresses, line items, discounts, shipping lines, taxes, customers, and payments against an order, returning full order and `application_state` context. A JWT scopes each order session on the storefront surface.
+#### Plans and pricing (1)
 
-- **Human URL:** [https://developer.boldcommerce.com/api/checkout](https://developer.boldcommerce.com/api/checkout)
-- **Base URL:** `https://api.boldcommerce.com/checkout/storefront`
+Published plans, tiers and prices.
 
-#### Tags
+- [Bold Commerce Plans Pricing](https://apis.io/plans/bold-commerce/bold-commerce-plans-pricing/)
 
-- Checkout
-- Headless
-- Orders
+#### Rate limits (1)
 
-#### Properties
+Published request limits.
 
-- [Documentation](https://developer.boldcommerce.com/api/checkout)
-- [Documentation](https://developer.boldcommerce.com/guides/checkout/quick-start)
-- [OpenAPI](openapi/bold-commerce-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/bold-commerce.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/bold-commerce.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Bold Commerce Rate Limits](https://apis.io/rate-limits/bold-commerce/bold-commerce-rate-limits/)
 
-### Bold Price Rules API
+#### FinOps (1)
 
-Create and manage discounts, promotions, and dynamic pricing through rulesets and rules, order conditions, bulk activate / deactivate operations, a storefront ruleset lookup, and a process endpoint that returns the final price for a line item in a cart. Scopes include `read_price_rulesets` and `write_price_rulesets`.
+What the API costs to run, by operation.
 
-- **Human URL:** [https://developer.boldcommerce.com/api/price-rules](https://developer.boldcommerce.com/api/price-rules)
-- **Base URL:** `https://api.boldcommerce.com/price_rules`
+- [Bold Commerce Finops](https://apis.io/finops/bold-commerce/bold-commerce-finops/)
 
-#### Tags
+## Where to find this API
 
-- Pricing
-- Discounts
-- Promotions
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-#### Properties
-
-- [Documentation](https://developer.boldcommerce.com/api/price-rules)
-- [API Reference](https://developer.boldcommerce.com/api/price-rules)
-- [OpenAPI](openapi/bold-commerce-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/bold-commerce.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/bold-commerce.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Bold Products API
-
-Read and manage the product catalog for a shop - list, retrieve, create, update, and delete products and variants scoped to a `shop_identifier`.
-
-- **Human URL:** [https://developer.boldcommerce.com/api/products](https://developer.boldcommerce.com/api/products)
-- **Base URL:** `https://api.boldcommerce.com/products/v2`
-
-#### Tags
-
-- Products
-- Catalog
-- Inventory
-
-#### Properties
-
-- [Documentation](https://developer.boldcommerce.com/api/products)
-- [OpenAPI](openapi/bold-commerce-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/bold-commerce.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/bold-commerce.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Bold Customers API
-
-List, retrieve, create, and update customer records tied to a shop, used across checkout, subscriptions, and pricing to associate orders and recurring plans with shoppers.
-
-- **Human URL:** [https://developer.boldcommerce.com/api/customers](https://developer.boldcommerce.com/api/customers)
-- **Base URL:** `https://api.boldcommerce.com/customers/v2`
-
-#### Tags
-
-- Customers
-- Profiles
-
-#### Properties
-
-- [Documentation](https://developer.boldcommerce.com/api/customers)
-- [OpenAPI](openapi/bold-commerce-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/bold-commerce.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/bold-commerce.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Bold Shops API
-
-Retrieve shop configuration and the `shop_identifier` GUID required in the path of most Bold API requests, including shop name, domain, platform, and default currency.
-
-- **Human URL:** [https://developer.boldcommerce.com/api/shops](https://developer.boldcommerce.com/api/shops)
-- **Base URL:** `https://api.boldcommerce.com/shops/v1`
-
-#### Tags
-
-- Shops
-- Platform
-- Configuration
-
-#### Properties
-
-- [Documentation](https://developer.boldcommerce.com/api/shops)
-- [OpenAPI](openapi/bold-commerce-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/bold-commerce.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/bold-commerce.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [GitHub Organization](https://github.com/bold-commerce)
-- [LinkedIn](https://www.linkedin.com/company/bold-commerce)
 - [Website](https://boldcommerce.com)
 - [Documentation](https://developer.boldcommerce.com)
-- [Plans](plans/bold-commerce-plans-pricing.yml)
-- [Rate Limits](rate-limits/bold-commerce-rate-limits.yml)
-- [Fin Ops](finops/bold-commerce-finops.yml)
+- [Blog](https://boldcommerce.com/blog)
+- [GitHub](https://github.com/bold-commerce)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 30.3** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 45.1 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 15.8 |
+
+**Agent readiness 19.6** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 15.2** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/bold-commerce/](https://apis.io/providers/bold-commerce/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Bold Commerce: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/bold-commerce/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
